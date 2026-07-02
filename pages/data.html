@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- ReVerDi — Data (landing page). Open-data commitment; datasets to follow. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReVerDi — Data &amp; open access</title>
+<style>
+  :root{--navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;--violet:#7C5CBF;
+    --lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);line-height:1.7;background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:20px}
+  .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--yellow)}
+  .nav-links{display:flex;gap:22px;font-size:14.5px;font-weight:600;color:var(--muted)}
+  .nav-links a:hover{color:var(--navy)}
+  @media(max-width:760px){.nav-links{display:none}}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead h1{font-size:42px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
+  .phead p{color:#B9C4DE;font-size:17px;max-width:660px}
+  .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
+  .crumb a{color:var(--lblue)}
+  main{padding:52px 0 20px}
+  .lead{font-size:19px;color:var(--muted);max-width:760px}
+  h2{font-size:24px;color:var(--navy);font-weight:800;margin:38px 0 6px}
+  p.body{font-size:16px;color:var(--ink);max-width:760px;margin:10px 0}
+  .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}
+  @media(max-width:760px){.principles{grid-template-columns:1fr}}
+  .pr{border:1px solid var(--border);border-radius:14px;padding:18px 20px;background:#fff}
+  .pr .k{display:inline-flex;width:36px;height:36px;border-radius:9px;align-items:center;justify-content:center;font-weight:800;color:#fff;margin-bottom:10px;font-size:17px}
+  .pr h4{font-size:16px;color:var(--navy);margin-bottom:4px}
+  .pr p{font-size:14px;color:var(--muted)}
+  .ds{display:flex;flex-direction:column;gap:14px;margin:22px 0}
+  .dataset{border:1px solid var(--border);border-radius:14px;padding:18px 22px;background:#fff;display:flex;gap:18px;align-items:flex-start}
+  .dataset .ic{flex:0 0 44px;width:44px;height:44px;border-radius:10px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:800}
+  .dataset h4{font-size:16px;color:var(--navy)}
+  .dataset p{font-size:14px;color:var(--muted);margin-top:3px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:#FBF0D5;color:#9A6B12;margin-top:8px}
+  .cta{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:28px 30px;margin:38px 0 10px}
+  .cta h2{margin-top:0}
+  .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14.5px;margin-top:10px}
+  .btn.primary{background:var(--yellow);color:var(--navy)}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:12px}
+  footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
+  footer a{color:var(--lblue)}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html"><span class="dot"></span> ReVerDi</a>
+    <nav class="nav-links">
+      <a href="../index.html#about">About</a>
+      <a href="method-lcsa.html">Method</a>
+      <a href="lcsa-results.html">Results</a>
+      <a href="open-heritage.html">Wikimedia</a>
+      <a href="data.html">Data</a>
+      <a href="../index.html#team">Team</a>
+      <a href="../index.html#news">News</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="phead">
+  <div class="wrap">
+    <div class="crumb"><a href="../index.html">Home</a> · Data</div>
+    <div class="eyebrow">Open data · Datasets to follow</div>
+    <h1>Data</h1>
+    <p>ReVerDi is committed to open, reproducible research. We aim to publish the datasets behind our studies openly and make them publicly available.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <p class="lead">Wherever possible, the raw data, inventories and code underpinning our results will be shared as open, well-documented datasets — so that others can reuse, verify and build on our work.</p>
+
+    <h2>Our commitment</h2>
+    <div class="principles">
+      <div class="pr"><span class="k" style="background:var(--teal)">↺</span><h4>Open access</h4><p>Datasets released under open licences (such as CC BY or CC0) so anyone can use them.</p></div>
+      <div class="pr"><span class="k" style="background:var(--yellow);color:var(--navy)">◇</span><h4>FAIR &amp; documented</h4><p>Findable, accessible, interoperable and reusable — with clear documentation and metadata.</p></div>
+      <div class="pr"><span class="k" style="background:var(--violet)">↗</span><h4>Publicly hosted</h4><p>Deposited in public repositories and linked to the corresponding publications.</p></div>
+    </div>
+
+    <h2>Datasets — coming soon</h2>
+    <p class="body">We are preparing the following datasets for release, typically alongside their publications:</p>
+    <div class="ds">
+      <div class="dataset"><div class="ic">W</div><div><h4>Wikimedia census</h4><p>Metadata for the 168,030 files uploaded to Wikimedia Commons by the British Library, the Koninklijke Bibliotheek and the Swiss National Library.</p><span class="badge">Coming soon</span></div></div>
+      <div class="dataset"><div class="ic">↻</div><div><h4>Off-platform reuse</h4><p>Detected reuses of library images across the open web, by channel, country and time.</p><span class="badge">Coming soon</span></div></div>
+      <div class="dataset"><div class="ic">E</div><div><h4>Organisational LCSA inventory</h4><p>Environmental, cost and social inventory data for the three national libraries (reference year 2024).</p><span class="badge">Coming soon</span></div></div>
+      <div class="dataset"><div class="ic">N</div><div><h4>Newspaper LCA inventory</h4><p>Process and inventory data for archiving newspapers physically vs. digitally.</p><span class="badge">Coming soon</span></div></div>
+    </div>
+
+    <div class="cta">
+      <div class="eyebrow" style="color:#9A6B12">Early access</div>
+      <h2>Interested in the data?</h2>
+      <p class="body" style="margin-top:6px">Datasets will be published as they are finalised. If you would like early access, have a question, or want to collaborate, please get in touch.</p>
+      <a class="btn primary" href="../index.html#contact">Contact the team</a>
+      <p class="note">Links to the published datasets and repositories will appear on this page as they become available.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>Open access · Open data</span>
+  </div>
+</footer>
+</body>
+</html>
