@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!-- ReVerDi — the LCSA method (sub-page). Figure loads from ../figures/lcsa_venn.png -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReVerDi — The LCSA method</title>
+<style>
+  :root{--navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;--violet:#7C5CBF;
+    --lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);line-height:1.7;background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:20px}
+  .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--yellow)}
+  .nav-links{display:flex;gap:24px;font-size:14.5px;font-weight:600;color:var(--muted)}
+  .nav-links a:hover{color:var(--navy)}
+  @media(max-width:680px){.nav-links{display:none}}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
+  .phead p{color:#B9C4DE;font-size:17px;max-width:640px}
+  .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
+  .crumb a{color:var(--lblue)}
+  main{padding:52px 0 20px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+  @media(max-width:760px){.split{grid-template-columns:1fr;gap:20px}}
+  .split img{max-width:100%;height:auto}
+  .lead{font-size:18px;color:var(--muted)}
+  .formula{margin:18px 0;padding:14px 18px;background:var(--navy);color:#fff;border-radius:12px;text-align:center;font-weight:800;font-size:16px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:36px 0}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--border);border-radius:14px;padding:20px 22px;background:#fff}
+  .card .k{display:inline-flex;width:38px;height:38px;border-radius:9px;align-items:center;justify-content:center;font-weight:800;color:#fff;margin-bottom:10px}
+  .card h4{font-size:16px;color:var(--navy);margin-bottom:4px}
+  .card .sub{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .card p{font-size:14px;color:var(--muted)}
+  h2{font-size:24px;color:var(--navy);font-weight:800;margin:34px 0 6px}
+  p.body{font-size:16px;color:var(--ink);max-width:760px;margin:10px 0}
+  .keys{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:680px){.keys{grid-template-columns:1fr}}
+  .keycard{border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:16px 18px;background:var(--card)}
+  .keycard h4{font-size:15px;color:var(--navy);margin-bottom:3px}
+  .keycard p{font-size:14px;color:var(--muted)}
+  .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14.5px;margin-top:10px}
+  .btn.primary{background:var(--yellow);color:var(--navy)}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:12px}
+  footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
+  footer a{color:var(--lblue)}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html"><span class="dot"></span> ReVerDi</a>
+    <nav class="nav-links">
+      <a href="../index.html#about">About</a>
+      <a href="method-lcsa.html">Method</a>
+      <a href="lcsa-results.html">Results</a>
+      <a href="open-heritage.html">Open heritage</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="phead">
+  <div class="wrap">
+    <div class="crumb"><a href="../index.html">Home</a> · Method</div>
+    <div class="eyebrow">Method · Life Cycle Sustainability Assessment</div>
+    <h1>One method for three pillars</h1>
+    <p>ReVerDi measures environmental, economic and social sustainability together — using a single, established framework so the three can be compared and traded off.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="lead">A Life Cycle Sustainability Assessment (LCSA) brings three well-established methods under one roof. Rather than judging a library on its carbon footprint alone, it looks at the environment, the money, and the people at the same time — across the full life cycle of a service.</p>
+        <div class="formula">LCSA&nbsp; = &nbsp;LCA&nbsp; + &nbsp;LCC&nbsp; + &nbsp;S-LCA</div>
+      </div>
+      <div><img src="../figures/lcsa_venn.png" alt="Venn diagram: Life Cycle Assessment (environmental), Life Cycle Costing (economic) and Social LCA overlap to form Life Cycle Sustainability Assessment."></div>
+    </div>
+
+    <div class="cards">
+      <div class="card"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h4>Environmental</h4><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p></div>
+      <div class="card"><span class="k" style="background:var(--yellow);color:var(--navy)">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p></div>
+      <div class="card"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h4>Social</h4><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p></div>
+    </div>
+
+    <h2>Why combine them?</h2>
+    <p class="body">Looking at only one pillar hides the trade-offs. Digital access, for example, can raise social reach while adding to energy use; a cheaper option might cut cultural value. Assessing all three together makes those tensions visible — and turns them into informed decisions rather than guesses.</p>
+
+    <h2>How it works</h2>
+    <div class="keys">
+      <div class="keycard"><h4>Functional unit</h4><p>A clear, quantifiable unit of a library's service — e.g. one year of operating a collection, or one reading session of a newspaper — so physical and digital can be compared like for like.</p></div>
+      <div class="keycard"><h4>System boundaries</h4><p>An explicit definition of what is in and out of scope, from acquisition and storage to digitisation and access.</p></div>
+      <div class="keycard"><h4>Consistent indicators</h4><p>Standardised environmental indicators, life-cycle costs, and a set of social indicators adapted for libraries.</p></div>
+      <div class="keycard"><h4>Interpretation</h4><p>Results are read together to surface hotspots, trade-offs and “low-hanging fruit” for improvement.</p></div>
+    </div>
+
+    <a class="btn primary" href="lcsa-results.html">See the first results →</a>
+    <p class="note">In ReVerDi the LCSA is applied to three national libraries and to specific media processes such as newspapers, comparing physical and digital pathways.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>Environmental · Economic · Social</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--
+  ReVerDi — Open cultural heritage (sub-page). Lives in /pages, loads figures from ../figures/.
+  Figures come from the Wikimedia research programme. Edit text freely.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReVerDi — Open cultural heritage on Wikimedia Commons</title>
+<style>
+  :root{
+    --navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;
+    --violet:#7C5CBF;--lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);line-height:1.7;background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:20px}
+  .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--yellow)}
+  .nav-links{display:flex;gap:24px;font-size:14.5px;font-weight:600;color:var(--muted)}
+  .nav-links a:hover{color:var(--navy)}
+  @media(max-width:680px){.nav-links{display:none}}
+
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
+  .phead p{color:#B9C4DE;font-size:17px;max-width:680px}
+  .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
+  .crumb a{color:var(--lblue)}
+
+  main{padding:52px 0 20px}
+  .lead{font-size:18px;color:var(--muted);max-width:740px}
+  .statrow{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 8px}
+  .stat{flex:1 1 150px;background:var(--navy);color:#fff;border-radius:12px;padding:16px 18px}
+  .stat .v{font-size:26px;font-weight:800;color:var(--yellow)}
+  .stat .l{font-size:12.5px;color:#B9C4DE;margin-top:2px}
+
+  h2{font-size:26px;color:var(--navy);font-weight:800;margin:8px 0 4px;letter-spacing:-.01em}
+  p.body{font-size:16px;color:var(--ink);max-width:760px;margin:10px 0}
+  .fig{margin:20px 0 8px;border:1px solid var(--border);border-radius:14px;background:#fff;padding:14px;text-align:center}
+  .fig img{max-width:100%;height:auto;border-radius:6px}
+  .fig .cap{font-size:13px;color:var(--muted);text-align:left;margin-top:8px;font-style:italic}
+  .figgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+  @media(max-width:680px){.figgrid{grid-template-columns:1fr}}
+  .figgrid .fig{margin:0}
+
+  .paper{border:1px solid var(--border);border-radius:18px;padding:30px 32px;margin:40px 0;background:#fff}
+  .paper .ptag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--card2);color:var(--navy);padding:5px 12px;border-radius:999px}
+  .paper .status{font-size:12px;color:var(--muted);margin-left:8px}
+  .paper h2{margin-top:12px}
+  .rq{background:var(--card);border-left:4px solid var(--yellow);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:15px;color:var(--ink)}
+  .rq b{color:var(--navy)}
+  .strats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+  @media(max-width:680px){.strats{grid-template-columns:1fr}}
+  .strat{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:var(--card)}
+  .strat h4{font-size:15px;color:var(--navy);margin-bottom:4px}
+  .strat p{font-size:13px;color:var(--muted)}
+  .drivers{margin:18px 0}
+  .driver{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
+  .driver .ar{font-weight:800;font-size:15px;flex:0 0 20px}
+  .driver .up{color:#1E7B45}.driver .dn{color:#A32D2D}.driver .di{color:#9A6B12}
+  .driver p{font-size:14.5px;color:var(--ink)}
+  .plain{background:var(--card2);border-radius:12px;padding:16px 20px;margin-top:18px;font-size:15px;color:var(--navy);font-weight:600}
+  .chips{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+  .chip{flex:1 1 140px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 16px}
+  .chip .v{font-size:22px;font-weight:800;color:var(--yellow)}
+  .chip .l{font-size:12px;color:#B9C4DE;margin-top:2px}
+
+  .teaser{background:linear-gradient(180deg,#141f3a,#0e1a40);color:#fff;border-radius:18px;padding:30px 32px;margin:40px 0}
+  .teaser .ptag{background:rgba(255,255,255,.12);color:#fff}
+  .teaser h2{color:#fff}
+  .teaser p{color:#B9C4DE;font-size:15.5px;max-width:680px;margin-top:8px}
+  .teaser .wip{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow)}
+
+  footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:40px;font-size:14px}
+  footer a{color:var(--lblue)}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html"><span class="dot"></span> ReVerDi</a>
+    <nav class="nav-links">
+      <a href="../index.html#about">About</a>
+      <a href="lcsa-results.html">Results</a>
+      <a href="open-heritage.html">Open heritage</a>
+      <a href="../index.html#team">Team</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="phead">
+  <div class="wrap">
+    <div class="crumb"><a href="../index.html">Home</a> · Open cultural heritage</div>
+    <div class="eyebrow">Open cultural heritage · Wikimedia Commons</div>
+    <h1>What libraries open — and where it travels</h1>
+    <p>A three-paper research programme on the public value of digitised public-domain heritage — and its place in the age of generative AI.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <p class="lead">Three national libraries have each uploaded tens of thousands of public-domain images to Wikimedia Commons. We built two large, original datasets on the same images to ask three questions in turn: what gets opened, where it travels, and what generative AI does to its value.</p>
+    <div class="statrow">
+      <div class="stat"><div class="v">168,030</div><div class="l">files in the Wikimedia census</div></div>
+      <div class="stat"><div class="v">173,287</div><div class="l">detected reuses across the open web</div></div>
+      <div class="stat"><div class="v">3</div><div class="l">national libraries — UK · NL · CH</div></div>
+    </div>
+
+    <h2>What we study</h2>
+    <p class="body">The same heritage image can be given away for free on Wikimedia, sold as a stock photo for a licence fee, and reused on social media — all at once. We follow each uploaded image across the open web to see where it goes and what it is worth.</p>
+    <div class="fig">
+      <img src="../figures/wiki_comparison.png" alt="The same public-domain image shown three ways: free on Wikimedia Commons, sold for a licence fee on a stock-photo site, and reused on social media.">
+      <div class="cap">The same image, three worlds — free on Wikimedia Commons (left), sold on a commercial stock site (centre, ~$193), and reused on social media (right).</div>
+    </div>
+
+    <!-- PAPER 1 -->
+    <div class="paper">
+      <span class="ptag">Paper 1 · the provision side</span><span class="status">Invited · special issue</span>
+      <h2>Open by Design — putting it online is itself a strategy</h2>
+      <div class="rq"><b>Research question:</b> How do national libraries enact a digitisation strategy through what they actually upload — and what does that mean for public value?</div>
+      <p class="body">From the outside, uploading public-domain images looks like one good deed. Look at what each library actually uploaded — the format, the rights labels, the metadata, the timing — and three very different strategies appear.</p>
+      <div class="figgrid">
+        <div class="fig"><img src="../figures/wiki_format.png" alt="File format: archival TIFF versus access JPEG across the three libraries."><div class="cap">Format — archival TIFF vs. access JPEG.</div></div>
+        <div class="fig"><img src="../figures/wiki_uploadtiming.png" alt="Upload timing shows three distinct signatures across libraries."><div class="cap">Upload timing — three distinct signatures.</div></div>
+        <div class="fig"><img src="../figures/wiki_rights.png" alt="Rights labels: clarity versus ambiguity across libraries."><div class="cap">Rights labels — clarity vs. ambiguity.</div></div>
+        <div class="fig"><img src="../figures/wiki_curation.png" alt="Curation: coverage of descriptions and creator metadata."><div class="cap">Curation — description &amp; creator coverage.</div></div>
+      </div>
+      <div class="strats">
+        <div class="strat"><h4>British Library</h4><p>Decentralised mass-release — huge volume, ambiguous rights, 52 % templated metadata.</p></div>
+        <div class="strat"><h4>Koninklijke Bibliotheek</h4><p>Curator-led — steady, clean public domain, its oldest holdings.</p></div>
+        <div class="strat"><h4>Swiss National Library</h4><p>Centralised uploads; metadata taken straight from the archive database — high-res TIFF masters, multilingual, 95 % attributed.</p></div>
+      </div>
+      <div class="plain">The lesson: format, licence and metadata are not paperwork — they decide how much public value each upload actually realises.</div>
+    </div>
+
+    <!-- PAPER 2 -->
+    <div class="paper">
+      <span class="ptag">Paper 2 · the diffusion side</span><span class="status">Under review · Journal of Cultural Economics</span>
+      <h2>From Digitization to Diffusion — where open heritage travels</h2>
+      <div class="rq"><b>Research question:</b> Once heritage is on Commons, where does it actually go — and which upload choices make an image diffuse?</div>
+      <p class="body">We followed 15,000 library images out into the wild and found them again 173,000 times — on stock sites, in news stories, on Wikipedia, on social media, across dozens of countries. Roughly two in three images were reused at least once.</p>
+      <div class="fig">
+        <img src="../figures/wiki_map.png" alt="World map of detected reuse of library images — wide, international, concentrated in Europe.">
+        <div class="cap">Geography of detected reuse — wide, international, Europe-centred.</div>
+      </div>
+      <div class="chips">
+        <div class="chip"><div class="v">64 %</div><div class="l">of images reused at least once</div></div>
+        <div class="chip"><div class="v">173k</div><div class="l">detected reuses</div></div>
+        <div class="chip"><div class="v">Millions</div><div class="l">in avoided licence cost vs. stock prices</div></div>
+      </div>
+      <p class="body" style="font-weight:700;color:var(--navy);margin-top:6px">What drives reuse (image-level analysis)</p>
+      <div class="drivers">
+        <div class="driver"><span class="ar up">▲</span><p><b>Public domain</b> — the strongest positive lever, especially for commercial and news reuse.</p></div>
+        <div class="driver"><span class="ar up">▲</span><p><b>JPEG access format</b> — reused far more than archival TIFF.</p></div>
+        <div class="driver"><span class="ar up">▲</span><p><b>Years online</b> — each year online ≈ +29 % odds of reuse.</p></div>
+        <div class="driver"><span class="ar dn">▼</span><p><b>Very high resolution</b> — less likely to be reused at all…</p></div>
+        <div class="driver"><span class="ar di">◆</span><p>…but once adopted, high-resolution images are reused more intensively.</p></div>
+      </div>
+      <div class="plain">Open images travel far — but design decides how far. A clear licence and a friendly file format spread heritage the most.</div>
+    </div>
+
+    <!-- PAPER 3 teaser -->
+    <div class="teaser">
+      <span class="ptag">Paper 3 · heritage in the AI economy</span>
+      <h2>Stock or Prompt</h2>
+      <p>Since late 2022, anyone can generate a convincing picture from a sentence. So we ask a simple question of our heritage images: when synthetic images become free, does the world still want the real, authenticated one? Early evidence suggests demand splits — falling where any old-looking image will do, rising where it matters that the picture is genuine.</p>
+      <span class="wip">Work in progress · full results coming soon</span>
+    </div>
+
+    <p class="body"><a href="../index.html#publications" style="color:#2456C7;font-weight:700">See all publications →</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>Open heritage · Wikimedia Commons</span>
+  </div>
+</footer>
+</body>
+</html>
