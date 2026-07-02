@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!-- ReVerDi — Outputs (interactive). Each output is tagged with the sustainability pillars it addresses;
+     filter by pillar with the buttons. To add an output, copy an <article class="output"> block and set
+     its data-pillars (any of: env econ soc) and its three dots accordingly. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReVerDi — Research outputs</title>
+<style>
+  :root{--navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;--violet:#7C5CBF;
+    --lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);line-height:1.7;background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:20px}
+  .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--yellow)}
+  .nav-links{display:flex;gap:20px;font-size:14px;font-weight:600;color:var(--muted)}
+  .nav-links a:hover{color:var(--navy)}
+  @media(max-width:860px){.nav-links{display:none}}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead h1{font-size:42px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
+  .phead p{color:#B9C4DE;font-size:17px;max-width:680px}
+  .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
+  .crumb a{color:var(--lblue)}
+  main{padding:44px 0 20px}
+
+  /* pillar legend + filter */
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:18px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .ldot{width:12px;height:12px;border-radius:50%}
+  .env{background:var(--teal)} .econ{background:var(--yellow)} .soc{background:var(--violet)}
+  .filterbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:16px 0 4px;position:sticky;top:64px;background:var(--bg);z-index:5}
+  .flabel{font-size:13px;font-weight:700;color:var(--navy);margin-right:2px}
+  .fbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:#fff;font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;transition:.12s}
+  .fbtn:hover{border-color:#c9d3e6}
+  .fbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .fbtn .d{width:11px;height:11px;border-radius:50%}
+  .count{font-size:13px;color:var(--muted);margin-left:auto}
+
+  .list{margin-top:12px}
+  .output{border:1px solid var(--border);border-radius:14px;padding:20px 22px;background:#fff;display:flex;gap:20px;align-items:flex-start;margin-bottom:14px;transition:.15s}
+  .output.hide{display:none}
+  .pcol{flex:0 0 auto;display:flex;flex-direction:column;gap:8px;padding-top:3px}
+  .pdot{width:15px;height:15px;border-radius:50%}
+  .pdot.off{background:transparent;border:2px solid var(--border)}
+  .obody{flex:1}
+  .otop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .output h3{font-size:17px;color:var(--navy);line-height:1.3}
+  .venue{font-size:13.5px;color:var(--ink);font-weight:600;margin-top:3px}
+  .output p{font-size:14px;color:var(--muted);margin-top:7px}
+  .tags{margin-top:9px;display:flex;gap:7px;flex-wrap:wrap}
+  .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .t-env{background:#E1F2F0;color:#1B7F77}.t-econ{background:#FBF0D5;color:#9A6B12}.t-soc{background:#ECE6F7;color:#543C86}
+  .badge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
+  .b-pub{background:#E6F4EA;color:#1E7B45}.b-rev{background:#E7EEFB;color:#2456C7}.b-prep{background:#FBF0D5;color:#9A6B12}
+  .more{display:inline-block;margin-top:10px;font-weight:700;font-size:13.5px;color:#2456C7}
+  footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
+  footer a{color:var(--lblue)}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html"><span class="dot"></span> ReVerDi</a>
+    <nav class="nav-links">
+      <a href="../index.html#about">About</a>
+      <a href="method-lcsa.html">Method</a>
+      <a href="lcsa-results.html">Results</a>
+      <a href="open-heritage.html">Wikimedia</a>
+      <a href="outputs.html">Outputs</a>
+      <a href="data.html">Data</a>
+      <a href="../index.html#team">Team</a>
+      <a href="../index.html#news">News</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="phead">
+  <div class="wrap">
+    <div class="crumb"><a href="../index.html">Home</a> · Outputs</div>
+    <div class="eyebrow">Research outputs</div>
+    <h1>Outputs</h1>
+    <p>Every output is tagged with the sustainability pillars it speaks to. Filter by a pillar to see which papers and studies connect to environmental, economic or social sustainability.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+    <div class="legend">
+      <span><span class="ldot env"></span> Environmental</span>
+      <span><span class="ldot econ"></span> Economic</span>
+      <span><span class="ldot soc"></span> Social</span>
+      <span style="color:#9aa6c4">· a filled dot means the output addresses that pillar</span>
+    </div>
+
+    <div class="filterbar">
+      <span class="flabel">Filter by pillar:</span>
+      <button class="fbtn active" data-filter="all">All</button>
+      <button class="fbtn" data-filter="env"><span class="d env"></span>Environmental</button>
+      <button class="fbtn" data-filter="econ"><span class="d econ"></span>Economic</button>
+      <button class="fbtn" data-filter="soc"><span class="d soc"></span>Social</button>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="list" id="list">
+
+      <article class="output" data-pillars="env econ soc">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot econ" title="Economic"></span><span class="pdot soc" title="Social"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>National Libraries: An organisational Life Cycle Sustainability Assessment</h3><span class="badge b-rev">Under review</span></div>
+          <div class="venue">Chenoweth, Bieser, Sahli et al.</div>
+          <p>The first organisational LCSA of three national libraries — environmental, economic and social impacts assessed together.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span><span class="tag t-econ">Economic</span><span class="tag t-soc">Social</span></div>
+          <a class="more" href="lcsa-results.html">See the results →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env econ">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot econ" title="Economic"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Does the digitalization of the book industry reduce its environmental impact?</h3><span class="badge b-pub">Published</span></div>
+          <div class="venue">Sahli et al. · Cleaner and Responsible Consumption, 2026 · Open access</div>
+          <p>Combines life-cycle assessment with economic evidence — e-books cut emissions only if they genuinely replace print.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span><span class="tag t-econ">Economic</span></div>
+          <a class="more" href="https://doi.org/10.1016/j.clrc.2026.100440" target="_blank" rel="noopener">Read (DOI) →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env econ soc">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot econ" title="Economic"></span><span class="pdot soc" title="Social"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Sustainability in Context: an evidence-based (digital) preservation lifecycle investigation</h3><span class="badge b-pub">Published</span></div>
+          <div class="venue">Pennock, Sahli, Chenoweth · iPRES 2025</div>
+          <p>Introduces the LCSA approach for sustainable preservation across all three pillars.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span><span class="tag t-econ">Economic</span><span class="tag t-soc">Social</span></div>
+          <a class="more" href="https://arbor.bfh.ch/server/api/core/bitstreams/30195c4d-7dbb-4b1e-b3f8-76283d8bbbf2/content" target="_blank" rel="noopener">Read (PDF) →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="econ soc">
+        <div class="pcol"><span class="pdot off" title="Environmental — not a focus"></span><span class="pdot econ" title="Economic"></span><span class="pdot soc" title="Social"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Open by Design — how national libraries open heritage on Wikimedia Commons</h3><span class="badge b-prep">Invited</span></div>
+          <div class="venue">Sahli, Bertacchini, Bieser · Wikimedia programme, Paper 1</div>
+          <p>How libraries enact a digitisation strategy through what they upload — and what that means for public value.</p>
+          <div class="tags"><span class="tag t-econ">Economic</span><span class="tag t-soc">Social</span></div>
+          <a class="more" href="open-heritage.html">Explore the strand →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="econ">
+        <div class="pcol"><span class="pdot off" title="Environmental — not a focus"></span><span class="pdot econ" title="Economic"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>From Digitization to Diffusion: evidence on the economic value of open cultural heritage</h3><span class="badge b-rev">Under review</span></div>
+          <div class="venue">Sahli, Bertacchini, Bieser · Journal of Cultural Economics · Paper 2</div>
+          <p>Where library images travel across the open web — and what that openness is worth.</p>
+          <div class="tags"><span class="tag t-econ">Economic</span></div>
+          <a class="more" href="open-heritage.html">Explore the strand →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env econ soc">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot econ" title="Economic"></span><span class="pdot soc" title="Social"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>The National Library 2050 — three future scenarios</h3><span class="badge b-prep">In progress</span></div>
+          <div class="venue">ReVerDi consortium</div>
+          <p>Three strategic scenarios for the national library of the future, assessed for environmental impact, accessibility and cost.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span><span class="tag t-econ">Economic</span><span class="tag t-soc">Social</span></div>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot off" title="Economic — not a focus"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Newspapers physical vs. digital — a life-cycle assessment</h3><span class="badge b-prep">In preparation</span></div>
+          <div class="venue">Suckling, Chenoweth, Bieser and the ReVerDi consortium</div>
+          <p>A detailed environmental life-cycle assessment of archiving newspapers physically versus digitally.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span></div>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="econ">
+        <div class="pcol"><span class="pdot off" title="Environmental — not a focus"></span><span class="pdot econ" title="Economic"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Stock or Prompt — heritage image demand under generative AI</h3><span class="badge b-prep">In progress</span></div>
+          <div class="venue">Sahli, Bertacchini · Wikimedia programme, Paper 3</div>
+          <p>Does demand for the real, authenticated heritage image hold once synthetic images become free?</p>
+          <div class="tags"><span class="tag t-econ">Economic</span></div>
+          <a class="more" href="open-heritage.html">Explore the strand →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot off" title="Economic — not a focus"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Understanding digitalization's environmental impact: why LCA is essential</h3><span class="badge b-pub">Published</span></div>
+          <div class="venue">Bluhm, … Bieser, … · npj Climate Action, 2025</div>
+          <p>Why life-cycle assessment is essential for informed decisions on digitalisation.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span></div>
+          <a class="more" href="https://doi.org/10.1038/s44168-025-00246-1" target="_blank" rel="noopener">Read (DOI) →</a>
+        </div>
+      </article>
+
+      <article class="output" data-pillars="env">
+        <div class="pcol"><span class="pdot env" title="Environmental"></span><span class="pdot off" title="Economic — not a focus"></span><span class="pdot off" title="Social — not a focus"></span></div>
+        <div class="obody">
+          <div class="otop"><h3>Guidelines for assessing the ICT sector's direct energy use and climate impact</h3><span class="badge b-pub">Published</span></div>
+          <div class="venue">Furberg, … Bieser, … Finnveden · Renewable and Sustainable Energy Reviews, 2026</div>
+          <p>Community guidelines for assessing the global ICT sector's direct energy use and climate impact.</p>
+          <div class="tags"><span class="tag t-env">Environmental</span></div>
+          <a class="more" href="https://www.sciencedirect.com/science/article/pii/S1364032125008494" target="_blank" rel="noopener">Read →</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>Environmental · Economic · Social</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var btns=document.querySelectorAll('.fbtn');
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.output'));
+  var count=document.getElementById('count');
+  function apply(f){
+    var shown=0;
+    cards.forEach(function(c){
+      var ok=(f==='all')||(c.dataset.pillars.split(' ').indexOf(f)>-1);
+      c.classList.toggle('hide',!ok); if(ok) shown++;
+    });
+    count.textContent='Showing '+shown+' of '+cards.length;
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); apply(b.dataset.filter);
+    });
+  });
+  apply('all');
+})();
+</script>
+</body>
+</html>

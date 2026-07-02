@@ -49,9 +49,9 @@
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);font-size:20px;letter-spacing:-.01em}
   .brand .dot{width:12px;height:12px;border-radius:3px;background:var(--yellow);display:inline-block}
-  .nav-links{display:flex;gap:26px;font-size:14.5px;font-weight:600;color:var(--muted)}
+  .nav-links{display:flex;gap:20px;font-size:14px;font-weight:600;color:var(--muted)}
   .nav-links a:hover{color:var(--navy)}
-  @media(max-width:760px){.nav-links{display:none}}
+  @media(max-width:860px){.nav-links{display:none}}
 
   /* HERO */
   .hero{background:radial-gradient(1200px 500px at 80% -10%,#1c2c58 0,var(--navy) 55%);color:#fff;padding:96px 0 84px}
@@ -138,6 +138,21 @@
 
   .subhead{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:30px 0 4px}
 
+  /* LATEST OUTPUTS teaser */
+  .olist{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+  .ocard{display:flex;align-items:center;gap:18px;border:1px solid var(--border);border-radius:14px;padding:16px 20px;background:#fff;transition:.15s}
+  .ocard:hover{border-color:#c9d3e6;box-shadow:0 6px 18px rgba(20,32,58,.06)}
+  .odots{display:flex;gap:6px;flex:0 0 auto}
+  .od{width:14px;height:14px;border-radius:50%}
+  .od.env{background:var(--teal)}.od.econ{background:var(--yellow)}.od.soc{background:var(--violet)}
+  .od.off{background:transparent;border:2px solid var(--border)}
+  .ocard .otxt{flex:1}
+  .ocard .oh{font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.3}
+  .ocard .ov{font-size:13px;color:var(--muted);margin-top:2px}
+  .ob{margin-left:auto;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
+  .ob.b-pub{background:#E6F4EA;color:#1E7B45}.ob.b-rev{background:#E7EEFB;color:#2456C7}
+  @media(max-width:640px){.ocard{flex-wrap:wrap;gap:10px}.ob{margin-left:0}}
+
   /* NEWS carousel */
   .news{position:relative;margin-top:32px;border:1px solid var(--border);border-radius:16px;background:#fff;overflow:hidden}
   .news-track{display:flex;transition:transform .5s ease}
@@ -180,6 +195,7 @@
       <a href="pages/method-lcsa.html">Method</a>
       <a href="pages/lcsa-results.html">Results</a>
       <a href="pages/open-heritage.html">Wikimedia</a>
+      <a href="pages/outputs.html">Outputs</a>
       <a href="pages/data.html">Data</a>
       <a href="#team">Team</a>
       <a href="#news">News</a>
@@ -293,17 +309,17 @@
     <h2 class="section-title">Research &amp; outputs</h2>
     <p class="lead">The project runs across several strands. Each will grow into its own page — for now, start with the publications.</p>
     <div class="explore">
-      <a class="xcard" href="#publications">
-        <div class="tag">Strand</div><h4>Publications</h4>
+      <a class="xcard" href="pages/outputs.html">
+        <div class="tag">Strand</div><h4>Outputs</h4>
         <p>Peer-reviewed papers on the environmental, economic and social sustainability of libraries and digitisation.</p>
-        <div class="arrow">View publications →</div>
+        <div class="arrow">Explore outputs →</div>
       </a>
       <a class="xcard" href="pages/open-heritage.html">
         <div class="tag">Wikimedia strand</div><h4>Open heritage on Wikimedia</h4>
         <p>What national libraries open on Wikimedia Commons, where it travels, and what generative AI does to its value.</p>
         <div class="arrow">Explore →</div>
       </a>
-      <a class="xcard" href="#publications">
+      <a class="xcard" href="pages/outputs.html">
         <div class="tag">Strand</div><h4>The future library 2050</h4>
         <p>Three strategic scenarios for the national library of the future — and their sustainability trade-offs.</p>
         <div class="arrow">Coming soon →</div>
@@ -314,93 +330,30 @@
 
 <div class="divider"></div>
 
-<!-- PUBLICATIONS -->
-<section id="publications">
+<!-- LATEST OUTPUTS -->
+<section id="outputs">
   <div class="wrap">
     <div class="eyebrow">Outputs</div>
-    <h2 class="section-title">Publications</h2>
-    <p class="lead">A selection of published and forthcoming work from the project and its team.</p>
-
-    <div class="subhead">Published</div>
-    <div class="pubwrap">
-      <article class="pub feature">
-        <div class="yearbox"><div class="yr">2026</div><div class="tp">Journal · Open access</div></div>
-        <div class="body">
-          <h4>Does the digitalization of the book industry reduce its environmental impact?</h4>
-          <div class="auth">M. Sahli, J. Bieser, J. Chenoweth, J. Love, M. Lin, M. Martens, M. Pennock, U. Pottgiesser</div>
-          <div class="venue">Cleaner and Responsible Consumption, 22, 100440</div>
-          <p class="ab">Combines life-cycle assessment with economic evidence to show that e-books cut emissions only if they substantially displace print — and that “digital = green” is too simple once rebound effects are considered.</p>
-          <span class="badge b-pub">Published</span>
-          <a class="doi" href="https://doi.org/10.1016/j.clrc.2026.100440" target="_blank" rel="noopener">Read (DOI) →</a>
-        </div>
-      </article>
-
-      <article class="pub">
-        <div class="yearbox"><div class="yr">2025</div><div class="tp">Journal</div></div>
-        <div class="body">
-          <h4>Understanding digitalization's environmental impact: why LCA is essential for informed decision-making</h4>
-          <div class="auth">H. Bluhm, D. Wohlschlager, J. Pohl, S. Beucker, J. Bieser, D. Schien, … G. S. Blair</div>
-          <div class="venue">npj Climate Action, 4(1), 41</div>
-          <span class="badge b-pub">Published</span>
-          <a class="doi" href="https://doi.org/10.1038/s44168-025-00246-1" target="_blank" rel="noopener">Read (DOI) →</a>
-        </div>
-      </article>
-
-      <article class="pub">
-        <div class="yearbox"><div class="yr">2026</div><div class="tp">Journal</div></div>
-        <div class="body">
-          <h4>Guidelines for assessments of the global ICT sector's direct energy use and climate impact</h4>
-          <div class="auth">A. Furberg, S. Azizi, J. Bieser, D. Bol, V. Coroamă, E. Eriksson, … G. Finnveden</div>
-          <div class="venue">Renewable and Sustainable Energy Reviews, 226, 116176</div>
-          <span class="badge b-pub">Published</span>
-          <a class="doi" href="https://www.sciencedirect.com/science/article/pii/S1364032125008494" target="_blank" rel="noopener">Read →</a>
-        </div>
-      </article>
-
-      <article class="pub">
-        <div class="yearbox"><div class="yr">2025</div><div class="tp">Conference</div></div>
-        <div class="body">
-          <h4>Sustainability in Context: An Evidence-based (Digital) Preservation Lifecycle Investigation</h4>
-          <div class="auth">M. Pennock, M. Sahli, J. Chenoweth</div>
-          <div class="venue">iPRES 2025 — 21st International Conference on Digital Preservation</div>
-          <span class="badge b-pub">Published</span>
-          <a class="doi" href="https://arbor.bfh.ch/server/api/core/bitstreams/30195c4d-7dbb-4b1e-b3f8-76283d8bbbf2/content" target="_blank" rel="noopener">Read (PDF) →</a>
-        </div>
-      </article>
+    <h2 class="section-title">Latest outputs</h2>
+    <p class="lead">Each output is tagged with the sustainability pillars it addresses — <span style="color:#2b8f97;font-weight:700">● environmental</span>, <span style="color:#a8781f;font-weight:700">● economic</span>, <span style="color:#6a4c93;font-weight:700">● social</span>.</p>
+    <div class="olist">
+      <a class="ocard" href="pages/lcsa-results.html">
+        <div class="odots"><span class="od env" title="Environmental"></span><span class="od econ" title="Economic"></span><span class="od soc" title="Social"></span></div>
+        <div class="otxt"><div class="oh">National Libraries: an organisational LCSA</div><div class="ov">Chenoweth, Bieser, Sahli et al.</div></div>
+        <span class="ob b-rev">Under review</span>
+      </a>
+      <a class="ocard" href="https://doi.org/10.1016/j.clrc.2026.100440" target="_blank" rel="noopener">
+        <div class="odots"><span class="od env" title="Environmental"></span><span class="od econ" title="Economic"></span><span class="od off" title="Social — not a focus"></span></div>
+        <div class="otxt"><div class="oh">Does digitalising the book industry reduce its footprint?</div><div class="ov">Cleaner and Responsible Consumption, 2026 · open access</div></div>
+        <span class="ob b-pub">Published</span>
+      </a>
+      <a class="ocard" href="pages/open-heritage.html">
+        <div class="odots"><span class="od off" title="Environmental — not a focus"></span><span class="od econ" title="Economic"></span><span class="od off" title="Social — not a focus"></span></div>
+        <div class="otxt"><div class="oh">From Digitization to Diffusion — value of open heritage</div><div class="ov">Journal of Cultural Economics</div></div>
+        <span class="ob b-rev">Under review</span>
+      </a>
     </div>
-
-    <div class="subhead">Working papers &amp; under review</div>
-    <div class="pubwrap">
-      <article class="pub">
-        <div class="yearbox"><div class="yr">2026</div><div class="tp">Under review</div></div>
-        <div class="body">
-          <h4>National Libraries: An organisational Life Cycle Sustainability Assessment</h4>
-          <div class="auth">J. Chenoweth, J. Bieser, M. Day, N. Ilott, M. Lin, J. Love, M. Martens, R. Murphy, M. Nepfer, M. Pennock, U. Pottgiesser, M. Sahli, O. Sievi, J. Suckling</div>
-          <div class="venue">The first organisational LCSA of three national libraries — environmental, economic and social impacts in one study.</div>
-          <span class="badge b-rev">Under review</span>
-        </div>
-      </article>
-
-      <article class="pub">
-        <div class="yearbox"><div class="yr">2026</div><div class="tp">Under review</div></div>
-        <div class="body">
-          <h4>From Digitization to Diffusion: Evidence on the Economic Value of Open Cultural Heritage</h4>
-          <div class="auth">M. Sahli, E. Bertacchini, J. Bieser</div>
-          <div class="venue">Journal of Cultural Economics</div>
-          <span class="badge b-rev">Under review</span>
-        </div>
-      </article>
-
-      <article class="pub">
-        <div class="yearbox"><div class="yr">—</div><div class="tp">In preparation</div></div>
-        <div class="body">
-          <h4>Understanding trade-offs of archiving newspapers physically or digitally using life cycle assessment</h4>
-          <div class="auth">J. Suckling, J. Chenoweth, J. Bieser, and the ReVerDi consortium</div>
-          <div class="venue">A detailed environmental life-cycle assessment of the newspaper process, physical vs. digital.</div>
-          <span class="badge b-prep">In preparation</span>
-        </div>
-      </article>
-    </div>
+    <a class="btn primary" href="pages/outputs.html" style="margin-top:22px">Explore all outputs →</a>
   </div>
 </section>
 
@@ -486,7 +439,7 @@
           <a href="#about">About</a><br>
           <a href="#partners">Partners</a><br>
           <a href="#team">Team</a><br>
-          <a href="#publications">Publications</a>
+          <a href="pages/outputs.html">Outputs</a>
         </p>
       </div>
     </div>
