@@ -63,6 +63,26 @@
   .btn.primary{background:var(--yellow);color:var(--navy)}
   .btn.ghost{border:1px solid var(--border);color:var(--navy);margin-left:8px}
   .note{font-size:13px;color:var(--muted);font-style:italic;margin-top:14px}
+  /* interactive chart */
+  .ic{border:1px solid var(--border);border-radius:14px;background:#fff;padding:22px 24px 16px;margin:24px 0 8px}
+  .ic-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .ic-seg{padding:7px 15px;border-radius:999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s}
+  .ic-seg:hover{border-color:#c9d3e6}
+  .ic-seg.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .ic-title{font-size:14.5px;font-weight:700;color:var(--navy);margin-top:14px}
+  .ic-unit{font-size:12.5px;color:var(--muted);font-style:italic}
+  .ic-bars{position:relative;display:flex;align-items:flex-end;justify-content:space-around;gap:24px;height:230px;margin:20px 8px 42px;border-bottom:1px solid var(--border)}
+  .ic-bar{position:relative;flex:1;max-width:150px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;cursor:pointer}
+  .ic-bar .v{font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:6px;white-space:nowrap}
+  .ic-bar .f{width:74%;max-width:110px;border-radius:8px 8px 0 0;transition:height .55s cubic-bezier(.22,.61,.36,1)}
+  .ic-bar .nm{position:absolute;bottom:-36px;font-size:12px;font-weight:600;color:var(--muted);text-align:center;width:150%;line-height:1.2}
+  .ic-bar:hover .f{filter:brightness(1.07)}
+  .ic-tip{position:absolute;transform:translate(-50%,-100%);background:var(--navy);color:#fff;font-size:12.5px;line-height:1.45;padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:12;box-shadow:0 6px 16px rgba(20,32,58,.22)}
+  .ic-tip b{color:var(--yellow)}
+  .ic-hint{font-size:12px;color:var(--muted);font-style:italic}
+  /* jargon tooltip */
+  .term{border-bottom:1px dotted #9aa6c4;cursor:help;position:relative}
+  .term:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 9px);width:min(300px,78vw);background:var(--navy);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none;padding:10px 13px;border-radius:9px;z-index:40;box-shadow:0 8px 22px rgba(20,32,58,.24)}
   footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:50px;font-size:14px}
   footer a{color:var(--lblue)}
   .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
@@ -98,7 +118,7 @@
 
 <main>
   <div class="wrap">
-    <p class="lead">We compared the British Library (UK), the Koninklijke Bibliotheek (Netherlands) and the Swiss National Library as organisations for the year 2024, combining three established methods into one Life Cycle Sustainability Assessment (LCSA).</p>
+    <p class="lead">We compared the British Library (UK), the Koninklijke Bibliotheek (Netherlands) and the Swiss National Library as organisations for the year 2024, combining three established methods into one <span class="term" data-tip="Life Cycle Sustainability Assessment — brings environmental (LCA), economic (LCC) and social (S-LCA) assessment together in a single framework.">Life Cycle Sustainability Assessment (LCSA)</span>.</p>
     <div class="pillstrip">
       <span class="pill"><span class="pd" style="background:var(--teal)"></span>Environmental — LCA</span>
       <span class="pill"><span class="pd" style="background:var(--yellow)"></span>Economic — Life Cycle Costing</span>
@@ -107,16 +127,20 @@
 
     <h2><span class="num">1.</span> Where the emissions are</h2>
     <p class="body">In absolute terms, the British Library — by far the largest of the three — has the highest environmental impact across every category. Yet even the largest library's footprint is modest: all three sit at roughly 0.003–0.004 % of their country's emissions, and each emits less than a typical university. Around a third to a half of emissions come from buildings and energy.</p>
-    <div class="fig">
-      <img src="../figures/fig1_absolute_ghg.png" alt="Absolute greenhouse-gas emissions per library: British Library 17,258 t, Koninklijke Bibliotheek 4,829 t, Swiss National Library 1,799 t CO2-eq.">
-      <div class="cap">Figure 1 — Absolute greenhouse-gas emissions per library in 2024 (tonnes CO₂-equivalent).</div>
-    </div>
 
     <h2><span class="num">2.</span> Bigger, but more efficient per item</h2>
-    <p class="body">Normalise by the size of the collection and the picture flips: the British Library has the <em>lowest</em> impact and cost per archived item, thanks to economies of scale and highly efficient high-density storage. The Swiss National Library also scores low on emissions per item, helped by Switzerland's low-carbon electricity mix.</p>
-    <div class="fig">
-      <img src="../figures/fig2_per_item.png" alt="Emissions and cost per archived item. Emissions: BL 0.10, KB 1.19, Swiss NL 0.25 kg CO2. Cost: BL EUR1.05, KB EUR14.34, Swiss NL EUR5.37.">
-      <div class="cap">Figure 2 — Greenhouse-gas emissions and cost per archived item. Smaller is better; scale reduces both.</div>
+    <p class="body">Normalise by the size of the collection and the picture flips: the British Library has the <em>lowest</em> impact and cost per archived item, thanks to <span class="term" data-tip="Economies of scale — spreading fixed infrastructure and running costs across a much larger collection lowers the impact and cost of each individual item.">economies of scale</span> and highly efficient high-density storage. The Swiss National Library also scores low on emissions per item, helped by Switzerland's low-carbon electricity mix.</p>
+
+    <div class="ic">
+      <div class="ic-toggle">
+        <button class="ic-seg active" data-v="abs">Absolute emissions</button>
+        <button class="ic-seg" data-v="per">Emissions per item</button>
+        <button class="ic-seg" data-v="cost">Cost per item</button>
+      </div>
+      <div class="ic-title" id="icTitle"></div>
+      <div class="ic-unit" id="icUnit"></div>
+      <div class="ic-bars" id="icBars"></div>
+      <div class="ic-hint">Hover a bar for the exact figure and context · use the buttons to switch the view.</div>
     </div>
 
     <h2><span class="num">3.</span> The full environmental picture</h2>
@@ -129,9 +153,9 @@
     <h2><span class="num">4.</span> A broad, positive social impact</h2>
     <p class="body">On the social side, all three libraries score well: they are exemplary employers with fair pay, gender balance and active unions, and they reach a large share of their populations — especially online. Twenty indicators were assessed as positive, neutral or negative; a few neutral scores (accessibility, opening hours, documented sustainability targets) could be improved with modest changes.</p>
     <div class="statrow">
-      <div class="stat"><div class="v">18 / 20</div><div class="l">British Library — positive indicators</div></div>
-      <div class="stat"><div class="v">15 / 20</div><div class="l">Koninklijke Bibliotheek</div></div>
-      <div class="stat"><div class="v">17 / 20</div><div class="l">Swiss National Library</div></div>
+      <div class="stat"><div class="v"><span class="cu" data-to="18">0</span> / 20</div><div class="l">British Library — positive indicators</div></div>
+      <div class="stat"><div class="v"><span class="cu" data-to="15">0</span> / 20</div><div class="l">Koninklijke Bibliotheek</div></div>
+      <div class="stat"><div class="v"><span class="cu" data-to="17">0</span> / 20</div><div class="l">Swiss National Library</div></div>
     </div>
 
     <h2>What it means in practice</h2>
@@ -159,5 +183,62 @@
     <span>Environmental · Economic · Social</span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var el=document.getElementById('icBars'); if(!el) return;
+  var colors=['#4FC2C9','#E8B83A','#0E1A40'];
+  var libs=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
+  var views={
+    abs:{t:'Absolute greenhouse-gas emissions (2024)',u:'tonnes CO₂-eq per year',max:19500,
+      d:[[17258,'17,258 t','≈0.0036% of UK emissions'],[4829,'4,829 t','≈0.0033% of Dutch emissions'],[1799,'1,799 t','≈0.0044% of Swiss emissions']]},
+    per:{t:'Emissions per archived item',u:'kg CO₂-eq per item — smaller is better',max:1.35,
+      d:[[0.102,'0.10 kg','Lowest — economies of scale'],[1.185,'1.19 kg','Highest per item'],[0.249,'0.25 kg','Low — Swiss low-carbon power']]},
+    cost:{t:'Cost per archived item',u:'EUR per item — smaller is better',max:16,
+      d:[[1.05,'€1.05','Lowest cost per item'],[14.34,'€14.34','Highest per item'],[5.37,'€5.37','Mid-range']]}
+  };
+  var title=document.getElementById('icTitle'),unit=document.getElementById('icUnit');
+  var tip=document.createElement('div'); tip.className='ic-tip';
+  function render(k){
+    var v=views[k]; title.textContent=v.t; unit.textContent=v.u;
+    el.innerHTML=''; el.appendChild(tip); tip.style.opacity=0;
+    v.d.forEach(function(row,i){
+      var pct=Math.max(2,row[0]/v.max*100);
+      var bar=document.createElement('div'); bar.className='ic-bar';
+      bar.innerHTML='<div class="v">'+row[1]+'</div><div class="f" style="background:'+colors[i]+';height:0%"></div><div class="nm">'+libs[i]+'</div>';
+      el.appendChild(bar);
+      var f=bar.querySelector('.f');
+      requestAnimationFrame(function(){requestAnimationFrame(function(){f.style.height=pct+'%';});});
+      bar.addEventListener('mouseenter',function(){
+        var pr=el.getBoundingClientRect(), vr=bar.querySelector('.v').getBoundingClientRect();
+        tip.innerHTML='<b>'+libs[i]+'</b> · '+row[1]+'<br>'+row[2];
+        tip.style.left=(vr.left-pr.left+vr.width/2)+'px';
+        tip.style.top=(vr.top-pr.top-8)+'px'; tip.style.opacity=1;
+      });
+      bar.addEventListener('mouseleave',function(){tip.style.opacity=0;});
+    });
+  }
+  document.querySelectorAll('.ic-seg').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.ic-seg').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); render(b.dataset.v);
+    });
+  });
+  render('abs');
+})();
+(function(){
+  var els=document.querySelectorAll('.cu'); if(!els.length||!('IntersectionObserver' in window)){els.forEach(function(e){e.textContent=e.dataset.to;});return;}
+  var io=new IntersectionObserver(function(en){
+    en.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target, to=+el.dataset.to, start=null;
+      (function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/900,1);
+        el.textContent=Math.round(p*to); if(p<1) requestAnimationFrame(step); })(performance.now());
+      io.unobserve(el);
+    });
+  },{threshold:.6});
+  els.forEach(function(e){io.observe(e);});
+})();
+</script>
 </body>
 </html>
