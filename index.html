@@ -78,10 +78,10 @@
   .logo-tile{position:relative;flex:1 1 180px;min-height:120px;border:1px solid var(--border);border-radius:14px;background:#fff;
     display:flex;align-items:center;justify-content:center;text-align:center;padding:18px 22px;transition:.15s}
   .logo-tile:hover{border-color:#c9d3e6;box-shadow:0 6px 18px rgba(20,32,58,.06)}
-  .logo-tile img{max-height:84px;max-width:88%;object-fit:contain}
+  .logo-tile img{max-height:68px;max-width:90%;object-fit:contain}
   .logo-tile .cc{position:absolute;top:10px;right:13px;font-size:10.5px;color:var(--muted);font-weight:700;letter-spacing:.06em}
   .logo-tile.sm{min-height:96px;padding:14px 18px}
-  .logo-tile.sm img{max-height:52px;max-width:82%}
+  .logo-tile.sm img{max-height:50px;max-width:88%}
 
   /* ABOUT / highlights */
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
@@ -104,6 +104,11 @@
   .c1{background:var(--navy)}.c2{background:var(--teal)}.c3{background:var(--violet)}
   .c4{background:var(--green)}.c5{background:var(--rose)}.c6{background:#3B5BA5}
   .cy{background:var(--yellow);color:var(--navy)!important}
+.avatar.i-bfh{background:#BE8A00}.avatar.i-surrey{background:#0E4C92}.avatar.i-delft{background:#0086A8}
+  .avatar.i-kb{background:#7A3E9D}.avatar.i-bl{background:#C8102E}.avatar.i-nb{background:#2E7D4F}.avatar.i-turin{background:#B5651D}
+  .teamlegend{display:flex;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12.5px;color:var(--muted)}
+  .teamlegend span{display:inline-flex;align-items:center;gap:6px}
+  .teamlegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
   .assoc{display:flex;gap:14px;align-items:center;margin-top:28px;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px}
   .assoc .avatar{width:52px;height:52px;flex:0 0 52px;font-size:15px}
   .assoc .lbl{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--rose)}
@@ -289,22 +294,30 @@
     <h2 class="section-title">Team</h2>
     <p class="lead">Researchers from the partner universities and national libraries, bridging economics, data science, environmental assessment, architecture, law and conservation.</p>
     <div class="team-grid">
-      <div class="member"><div class="avatar c2"><span>JB</span></div><div class="nm"><a href="https://www.bfh.ch/en/about-bfh/people/weq3e2mdi523/" target="_blank" rel="noopener">Jan Bieser</a></div><div class="rl">BFH</div></div>
-      <div class="member"><div class="avatar c1"><span>MS</span></div><div class="nm"><a href="https://www.bfh.ch/en/about-bfh/people/22mazslhtcjg/" target="_blank" rel="noopener">Matthias Sahli</a></div><div class="rl">BFH</div></div>
-      <div class="member"><div class="avatar c6"><span>JC</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/jonathan-chenoweth" target="_blank" rel="noopener">Jonathan Chenoweth</a></div><div class="rl">Surrey</div></div>
-      <div class="member"><div class="avatar c3"><span>JS</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/james-suckling" target="_blank" rel="noopener">James Suckling</a></div><div class="rl">Surrey</div></div>
-      <div class="member"><div class="avatar c4"><span>RM</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/richard-murphy" target="_blank" rel="noopener">Richard Murphy</a></div><div class="rl">Surrey</div></div>
-      <div class="member"><div class="avatar c5"><span>JL</span></div><div class="nm">Jeff Love</div><div class="rl">TU Delft</div></div>
-      <div class="member"><div class="avatar c2"><span>UP</span></div><div class="nm"><a href="https://www.tudelft.nl/en/staff/u.pottgiesser/" target="_blank" rel="noopener">Uta Pottgiesser</a></div><div class="rl">TU Delft</div></div>
-      <div class="member"><div class="avatar c3"><span>EL</span></div><div class="nm"><a href="https://www.tudelft.nl/staff/m.lin/" target="_blank" rel="noopener">Emeline Lin</a></div><div class="rl">TU Delft</div></div>
-      <div class="member"><div class="avatar c1"><span>MM</span></div><div class="nm">Marco Martens</div><div class="rl">KB · Initiator</div></div>
-      <div class="member"><div class="avatar c6"><span>MP</span></div><div class="nm">Maureen Pennock</div><div class="rl">British Library</div></div>
-      <div class="member"><div class="avatar c4"><span>MD</span></div><div class="nm">Michael Day</div><div class="rl">British Library</div></div>
-      <div class="member"><div class="avatar cy"><span>MN</span></div><div class="nm">Matthias Nepfer</div><div class="rl">Swiss National Library</div></div>
-      <div class="member"><div class="avatar cy"><span>OS</span></div><div class="nm">Oliver Sievi</div><div class="rl">Swiss National Library</div></div>
+      <div class="member"><div class="avatar i-bfh"><span>JB</span></div><div class="nm"><a href="https://www.bfh.ch/en/about-bfh/people/weq3e2mdi523/" target="_blank" rel="noopener">Jan Bieser</a></div><div class="rl">BFH</div></div>
+      <div class="member"><div class="avatar i-bfh"><span>MS</span></div><div class="nm"><a href="https://www.bfh.ch/en/about-bfh/people/22mazslhtcjg/" target="_blank" rel="noopener">Matthias Sahli</a></div><div class="rl">BFH</div></div>
+      <div class="member"><div class="avatar i-surrey"><span>JC</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/jonathan-chenoweth" target="_blank" rel="noopener">Jonathan Chenoweth</a></div><div class="rl">Surrey</div></div>
+      <div class="member"><div class="avatar i-surrey"><span>JS</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/james-suckling" target="_blank" rel="noopener">James Suckling</a></div><div class="rl">Surrey</div></div>
+      <div class="member"><div class="avatar i-surrey"><span>RM</span></div><div class="nm"><a href="https://www.surrey.ac.uk/people/richard-murphy" target="_blank" rel="noopener">Richard Murphy</a></div><div class="rl">Surrey</div></div>
+      <div class="member"><div class="avatar i-delft"><span>JL</span></div><div class="nm">Jeff Love</div><div class="rl">TU Delft</div></div>
+      <div class="member"><div class="avatar i-delft"><span>UP</span></div><div class="nm"><a href="https://www.tudelft.nl/en/staff/u.pottgiesser/" target="_blank" rel="noopener">Uta Pottgiesser</a></div><div class="rl">TU Delft</div></div>
+      <div class="member"><div class="avatar i-delft"><span>EL</span></div><div class="nm"><a href="https://www.tudelft.nl/staff/m.lin/" target="_blank" rel="noopener">Emeline Lin</a></div><div class="rl">TU Delft</div></div>
+      <div class="member"><div class="avatar i-kb"><span>MM</span></div><div class="nm">Marco Martens</div><div class="rl">KB · Initiator</div></div>
+      <div class="member"><div class="avatar i-bl"><span>MP</span></div><div class="nm">Maureen Pennock</div><div class="rl">British Library</div></div>
+      <div class="member"><div class="avatar i-bl"><span>MD</span></div><div class="nm">Michael Day</div><div class="rl">British Library</div></div>
+      <div class="member"><div class="avatar i-nb"><span>MN</span></div><div class="nm">Matthias Nepfer</div><div class="rl">Swiss National Library</div></div>
+      <div class="member"><div class="avatar i-nb"><span>OS</span></div><div class="nm">Oliver Sievi</div><div class="rl">Swiss National Library</div></div>
+    </div>
+    <div class="teamlegend">
+      <span><i style="background:#BE8A00"></i>BFH</span>
+      <span><i style="background:#0E4C92"></i>Surrey</span>
+      <span><i style="background:#0086A8"></i>TU Delft</span>
+      <span><i style="background:#7A3E9D"></i>KB</span>
+      <span><i style="background:#C8102E"></i>British Library</span>
+      <span><i style="background:#2E7D4F"></i>Swiss National Library</span>
     </div>
     <div class="assoc">
-      <div class="avatar c5"><span>EB</span></div>
+      <div class="avatar i-turin"><span>EB</span></div>
       <div>
         <div class="lbl">Co-author</div>
         <p><a href="https://nexa.polito.it/people/ebertacchini" target="_blank" rel="noopener">Enrico Bertacchini</a> (University of Turin) co-authors the open cultural heritage strand, bringing deep expertise in cultural economics and Wikimedia / GLAM research.</p>

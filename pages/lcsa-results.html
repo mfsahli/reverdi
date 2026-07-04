@@ -63,6 +63,21 @@
   .btn.primary{background:var(--yellow);color:var(--navy)}
   .btn.ghost{border:1px solid var(--border);color:var(--navy);margin-left:8px}
   .note{font-size:13px;color:var(--muted);font-style:italic;margin-top:14px}
+  /* pillar sections + linked pills */
+  .pillstrip a.pill{cursor:pointer;transition:.12s}
+  .pillstrip a.pill:hover{border-color:#c9d3e6;background:var(--card2)}
+  .psec{border-left:4px solid var(--pc);padding:2px 0 2px 22px;margin:42px 0}
+  .psec .peb{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--pcd);display:inline-flex;align-items:center;gap:8px}
+  .psec .peb .d{width:11px;height:11px;border-radius:50%;background:var(--pc)}
+  .psec h2{margin-top:3px}
+  .psec.env{--pc:#4FC2C9;--pcd:#177C74}
+  .psec.econ{--pc:#E8B83A;--pcd:#9A6B12}
+  .psec.social{--pc:#7C5CBF;--pcd:#543C86}
+  .scard{flex:1 1 150px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--sc)}
+  .scard .v{font-size:26px;font-weight:800;color:var(--scd)}
+  .scard .l{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .scard.econ{--sc:#E8B83A;--scd:#9A6B12}
+  .scard.soc{--sc:#7C5CBF;--scd:#543C86}
   /* interactive chart */
   .ic{border:1px solid var(--border);border-radius:14px;background:#fff;padding:22px 24px 16px;margin:24px 0 8px}
   .ic-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
@@ -120,43 +135,56 @@
   <div class="wrap">
     <p class="lead">We compared the British Library (UK), the Koninklijke Bibliotheek (Netherlands) and the Swiss National Library as organisations for the year 2024, combining three established methods into one <span class="term" data-tip="Life Cycle Sustainability Assessment — brings environmental (LCA), economic (LCC) and social (S-LCA) assessment together in a single framework.">Life Cycle Sustainability Assessment (LCSA)</span>.</p>
     <div class="pillstrip">
-      <span class="pill"><span class="pd" style="background:var(--teal)"></span>Environmental — LCA</span>
-      <span class="pill"><span class="pd" style="background:var(--yellow)"></span>Economic — Life Cycle Costing</span>
-      <span class="pill"><span class="pd" style="background:var(--violet)"></span>Social — S-LCA</span>
+      <a class="pill" href="#env"><span class="pd" style="background:var(--teal)"></span>Environmental — LCA</a>
+      <a class="pill" href="#econ"><span class="pd" style="background:var(--yellow)"></span>Economic — Life Cycle Costing</a>
+      <a class="pill" href="#social"><span class="pd" style="background:var(--violet)"></span>Social — S-LCA</a>
     </div>
 
-    <h2><span class="num">1.</span> Where the emissions are</h2>
-    <p class="body">In absolute terms, the British Library — by far the largest of the three — has the highest environmental impact across every category. Yet even the largest library's footprint is modest: all three sit at roughly 0.003–0.004 % of their country's emissions, and each emits less than a typical university. Around a third to a half of emissions come from buildings and energy.</p>
+    <section class="psec env" id="env">
+      <div class="peb"><span class="d"></span>Environmental — LCA</div>
+      <h2>Where the emissions are</h2>
+      <p class="body">In absolute terms, the British Library — by far the largest of the three — has the highest environmental impact across every category. Yet even the largest library's footprint is modest: all three sit at roughly 0.003–0.004 % of their country's emissions, and each emits less than a typical university. Around a third to a half of emissions come from buildings and energy.</p>
+      <p class="body">Normalise by the size of the collection and the picture flips: the British Library has the <em>lowest</em> impact per archived item, thanks to <span class="term" data-tip="Economies of scale — spreading fixed infrastructure and running costs across a much larger collection lowers the impact and cost of each individual item.">economies of scale</span> and highly efficient high-density storage. The Swiss National Library also scores low on emissions per item, helped by Switzerland's low-carbon electricity mix.</p>
 
-    <h2><span class="num">2.</span> Bigger, but more efficient per item</h2>
-    <p class="body">Normalise by the size of the collection and the picture flips: the British Library has the <em>lowest</em> impact and cost per archived item, thanks to <span class="term" data-tip="Economies of scale — spreading fixed infrastructure and running costs across a much larger collection lowers the impact and cost of each individual item.">economies of scale</span> and highly efficient high-density storage. The Swiss National Library also scores low on emissions per item, helped by Switzerland's low-carbon electricity mix.</p>
-
-    <div class="ic">
-      <div class="ic-toggle">
-        <button class="ic-seg active" data-v="abs">Absolute emissions</button>
-        <button class="ic-seg" data-v="per">Emissions per item</button>
-        <button class="ic-seg" data-v="cost">Cost per item</button>
+      <div class="ic">
+        <div class="ic-toggle">
+          <button class="ic-seg active" data-v="abs">Absolute emissions</button>
+          <button class="ic-seg" data-v="per">Emissions per item</button>
+        </div>
+        <div class="ic-title" id="icTitle"></div>
+        <div class="ic-unit" id="icUnit"></div>
+        <div class="ic-bars" id="icBars"></div>
+        <div class="ic-hint">Hover a bar for the exact figure · use the buttons to switch view. Bar colours mark the three libraries (not the pillars).</div>
       </div>
-      <div class="ic-title" id="icTitle"></div>
-      <div class="ic-unit" id="icUnit"></div>
-      <div class="ic-bars" id="icBars"></div>
-      <div class="ic-hint">Hover a bar for the exact figure and context · use the buttons to switch the view.</div>
-    </div>
 
-    <h2><span class="num">3.</span> The full environmental picture</h2>
-    <p class="body">Across all five environmental categories — greenhouse gas, human toxicity, land use, mineral resources and water — the largest library carries the highest gross impact. The chart shows each library relative to the largest in each category.</p>
-    <div class="fig">
-      <img src="../figures/fig3_relative.png" alt="Relative environmental impact across five categories, each library shown relative to the largest (British Library = 100%).">
-      <div class="cap">Figure 3 — Relative environmental impact across five categories (largest library = 100 %).</div>
-    </div>
+      <p class="body" style="margin-top:24px">Across all five environmental categories — greenhouse gas, human toxicity, land use, mineral resources and water — the largest library carries the highest gross impact. Each library is shown relative to the largest in each category.</p>
+      <div class="fig">
+        <img src="../figures/fig3_relative.png" alt="Relative environmental impact across five categories, each library shown relative to the largest (British Library = 100%).">
+        <div class="cap">Relative environmental impact across five categories (largest library = 100 %).</div>
+      </div>
+    </section>
 
-    <h2><span class="num">4.</span> A broad, positive social impact</h2>
-    <p class="body">On the social side, all three libraries score well: they are exemplary employers with fair pay, gender balance and active unions, and they reach a large share of their populations — especially online. Twenty indicators were assessed as positive, neutral or negative; a few neutral scores (accessibility, opening hours, documented sustainability targets) could be improved with modest changes.</p>
-    <div class="statrow">
-      <div class="stat"><div class="v"><span class="cu" data-to="18">0</span> / 20</div><div class="l">British Library — positive indicators</div></div>
-      <div class="stat"><div class="v"><span class="cu" data-to="15">0</span> / 20</div><div class="l">Koninklijke Bibliotheek</div></div>
-      <div class="stat"><div class="v"><span class="cu" data-to="17">0</span> / 20</div><div class="l">Swiss National Library</div></div>
-    </div>
+    <section class="psec econ" id="econ">
+      <div class="peb"><span class="d"></span>Economic — Life Cycle Costing</div>
+      <h2>Cost — and value</h2>
+      <p class="body">The same economies of scale show up in cost: the British Library spends the least per archived item, the Koninklijke Bibliotheek the most. Beyond cost, all three libraries generate large public value through access, exhibitions and reuse — only partly captured by these figures.</p>
+      <div class="statrow">
+        <div class="scard econ"><div class="v">€1.05</div><div class="l">British Library — cost per item</div></div>
+        <div class="scard econ"><div class="v">€14.34</div><div class="l">Koninklijke Bibliotheek</div></div>
+        <div class="scard econ"><div class="v">€5.37</div><div class="l">Swiss National Library</div></div>
+      </div>
+    </section>
+
+    <section class="psec social" id="social">
+      <div class="peb"><span class="d"></span>Social — S-LCA</div>
+      <h2>A broad, positive social impact</h2>
+      <p class="body">On the social side, all three libraries score well: they are exemplary employers with fair pay, gender balance and active unions, and they reach a large share of their populations — especially online. Twenty indicators were assessed as positive, neutral or negative; a few neutral scores (accessibility, opening hours, documented sustainability targets) could be improved with modest changes.</p>
+      <div class="statrow">
+        <div class="scard soc"><div class="v"><span class="cu" data-to="18">0</span> / 20</div><div class="l">British Library — positive indicators</div></div>
+        <div class="scard soc"><div class="v"><span class="cu" data-to="15">0</span> / 20</div><div class="l">Koninklijke Bibliotheek</div></div>
+        <div class="scard soc"><div class="v"><span class="cu" data-to="17">0</span> / 20</div><div class="l">Swiss National Library</div></div>
+      </div>
+    </section>
 
     <h2>What it means in practice</h2>
     <div class="keys">
@@ -187,7 +215,7 @@
 <script>
 (function(){
   var el=document.getElementById('icBars'); if(!el) return;
-  var colors=['#4FC2C9','#E8B83A','#0E1A40'];
+  var colors=['#3B6EA5','#E0894A','#0E1A40'];
   var libs=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
   var views={
     abs:{t:'Absolute greenhouse-gas emissions (2024)',u:'tonnes CO₂-eq per year',max:19500,
