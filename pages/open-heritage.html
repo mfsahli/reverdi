@@ -135,6 +135,35 @@
   .pl{flex:1 1 150px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px}
   .pl .pln{display:block;font-size:12px;color:var(--muted)}
   .pl .plv{font-size:20px;font-weight:800;color:var(--navy)}
+
+  /* interactive reuse map */
+  .rmap{border:1px solid var(--border);border-radius:14px;background:#fff;padding:20px 22px 14px;margin:20px 0 8px}
+  .rmap-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .rmap-title{font-size:14.5px;font-weight:700;color:var(--navy)}
+  .rmap-unit{font-size:12.5px;color:var(--muted)}
+  .rmap-toggle{display:flex;gap:6px;flex-wrap:wrap}
+  .rm-seg{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s}
+  .rm-seg:hover{border-color:#c9d3e6}
+  .rm-seg.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .rmap-body{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;align-items:start;margin-top:14px}
+  @media(max-width:720px){.rmap-body{grid-template-columns:1fr}}
+  .rmap-svg{position:relative}
+  .rmap-svgel{width:100%;height:auto;display:block}
+  .rmap-svgel path{cursor:pointer;transition:fill .5s}
+  .rmap-svgel path:hover{stroke:var(--navy);stroke-width:0.8}
+  .rm-tip{position:absolute;transform:translate(-50%,-115%);background:var(--navy);color:#fff;font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:20;box-shadow:0 6px 16px rgba(20,32,58,.22)}
+  .rm-tip b{color:var(--yellow)}
+  .rmap-tot{font-size:13.5px;color:var(--ink);margin-bottom:8px}
+  .rmap-top{list-style:none;margin:0;padding:0;counter-reset:r}
+  .rmap-top li{display:grid;grid-template-columns:18px 1fr 60px 46px;gap:8px;align-items:center;font-size:12.5px;padding:3px 0}
+  .rmap-top li::before{counter-increment:r;content:counter(r);color:var(--muted);font-size:11px;font-weight:700;text-align:right}
+  .rmap-top .cn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+  .rmap-top .cbwrap{height:8px;background:var(--card);border-radius:4px;overflow:hidden}
+  .rmap-top .cb{display:block;height:100%;border-radius:4px}
+  .rmap-top .cv{text-align:right;font-weight:700;color:var(--navy)}
+  .rmap-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 2px 2px;font-size:11.5px;color:var(--muted)}
+  .rmap-legend .lgk{display:inline-flex;align-items:center;gap:5px}
+  .rmap-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
 </style>
 <noscript><style>.reveal{opacity:1;transform:none}.lfill{width:auto}</style></noscript>
 </head>
@@ -214,9 +243,27 @@
       <h2>From Digitization to Diffusion — where open heritage travels</h2>
       <div class="rq"><b>Research question:</b> Once heritage is on Commons, where does it actually go — and which upload choices make an image diffuse?</div>
       <p class="body">We followed 15,000 library images out into the wild and found them again 173,000 times — on stock sites, in news stories, on Wikipedia, on social media, across dozens of countries. Roughly two in three images were reused at least once.</p>
-      <div class="fig">
-        <img src="../figures/wiki_map.png" alt="World map of detected reuse of library images — wide, international, concentrated in Europe.">
-        <div class="cap">Geography of detected reuse — wide, international, Europe-centred.</div>
+      <div class="rmap">
+        <div class="rmap-head">
+          <div>
+            <div class="rmap-title">Where reuse happens — by library</div>
+            <div class="rmap-unit">detected reuses by country · hover a country for the exact count</div>
+          </div>
+          <div class="rmap-toggle">
+            <button class="rm-seg active" data-l="BL">British Library</button>
+            <button class="rm-seg" data-l="KB">Koninklijke Bibliotheek</button>
+            <button class="rm-seg" data-l="SNL">Swiss National Library</button>
+          </div>
+        </div>
+        <div class="rmap-body">
+          <div class="rmap-svg" id="rmapSvg"></div>
+          <div class="rmap-side">
+            <div class="rmap-tot" id="rmapTot"></div>
+            <ol class="rmap-top" id="rmapTop"></ol>
+          </div>
+        </div>
+        <div class="rmap-legend" id="rmapLegend"></div>
+        <p class="note">Colour intensity = detected reuses in that country. Reuse is strongly European-centred; the Swiss National Library peaks at home, the KB in the Netherlands, while the British Library reaches furthest into English-speaking countries. Excludes an aggregated &ldquo;European Union&rdquo; label.</p>
       </div>
       <div class="chips">
         <div class="chip"><div class="v cu" data-to="64" data-suffix=" %">0</div><div class="l">of images reused at least once</div></div>
@@ -341,6 +388,63 @@
   document.querySelectorAll('.fig img').forEach(function(im){im.addEventListener('click',function(){img.src=im.getAttribute('src');lb.classList.add('open');});});
   lb.addEventListener('click',function(){lb.classList.remove('open');});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('open');});
+})();
+</script>
+
+<script>window.RMAP={"008":{"name":"Albania","BL":7},"012":{"name":"Algeria","BL":2},"020":{"name":"Andorra","BL":1},"024":{"name":"Angola","BL":2,"KB":1,"SNL":1},"032":{"name":"Argentina","BL":18,"KB":20,"SNL":6},"051":{"name":"Armenia","BL":8,"KB":1},"036":{"name":"Australia","BL":423,"KB":222,"SNL":90},"040":{"name":"Austria","BL":228,"KB":145,"SNL":94},"031":{"name":"Azerbaijan","BL":17,"KB":4,"SNL":1},"048":{"name":"Bahrain","BL":3,"KB":2},"050":{"name":"Bangladesh","BL":1},"112":{"name":"Belarus","BL":50,"KB":5,"SNL":1},"056":{"name":"Belgium","BL":108,"KB":226,"SNL":32},"204":{"name":"Benin","BL":3,"KB":1},"068":{"name":"Bolivia","BL":2},"070":{"name":"Bosnia and Herzegovina","BL":7},"072":{"name":"Botswana","BL":3},"076":{"name":"Brazil","BL":244,"KB":245,"SNL":22},"100":{"name":"Bulgaria","BL":12,"KB":21},"108":{"name":"Burundi","BL":1},"116":{"name":"Cambodia","BL":1,"SNL":1},"124":{"name":"Canada","BL":616,"KB":241,"SNL":64},"152":{"name":"Chile","BL":19,"KB":60,"SNL":1},"156":{"name":"China","BL":83,"KB":48,"SNL":16},"170":{"name":"Colombia","BL":144,"KB":92,"SNL":24},"188":{"name":"Costa Rica","BL":5},"384":{"name":"Cote d'Ivoire","BL":2,"SNL":1},"191":{"name":"Croatia","BL":24,"KB":3,"SNL":1},"192":{"name":"Cuba","BL":11,"KB":12},"196":{"name":"Cyprus","BL":12,"KB":4},"203":{"name":"Czechia","BL":185,"KB":157,"SNL":38},"208":{"name":"Denmark","BL":72,"KB":65,"SNL":36},"214":{"name":"Dominican Republic","BL":8,"KB":8},"218":{"name":"Ecuador","BL":5,"KB":7,"SNL":2},"818":{"name":"Egypt","BL":3,"KB":2,"SNL":3},"222":{"name":"El Salvador","BL":3,"KB":2},"233":{"name":"Estonia","BL":14,"KB":12,"SNL":8},"231":{"name":"Ethiopia","BL":1,"KB":1},"246":{"name":"Finland","BL":57,"KB":36,"SNL":9},"250":{"name":"France","BL":2992,"KB":2696,"SNL":1028},"268":{"name":"Georgia","BL":15,"KB":1,"SNL":1},"276":{"name":"Germany","BL":2041,"KB":2035,"SNL":1830},"288":{"name":"Ghana","BL":2,"KB":3},"300":{"name":"Greece","BL":86,"KB":56,"SNL":3},"320":{"name":"Guatemala","BL":1,"KB":1},"332":{"name":"Haiti","BL":5},"340":{"name":"Honduras","BL":5,"KB":1},"344":{"name":"Hong Kong","BL":88,"KB":14,"SNL":5},"348":{"name":"Hungary","BL":118,"KB":150,"SNL":15},"352":{"name":"Iceland","BL":9,"KB":18},"356":{"name":"India","BL":410,"KB":122,"SNL":47},"360":{"name":"Indonesia","BL":31,"KB":99,"SNL":2},"364":{"name":"Iran","BL":41,"KB":34,"SNL":62},"372":{"name":"Ireland","BL":658,"KB":309,"SNL":82},"376":{"name":"Israel","BL":57,"KB":9,"SNL":4},"380":{"name":"Italy","BL":2189,"KB":2084,"SNL":621},"388":{"name":"Jamaica","BL":4,"SNL":1},"392":{"name":"Japan","BL":458,"KB":301,"SNL":41},"400":{"name":"Jordan","BL":6,"KB":1},"398":{"name":"Kazakhstan","BL":13,"KB":6},"404":{"name":"Kenya","BL":3,"KB":4},"414":{"name":"Kuwait","BL":9,"KB":5},"417":{"name":"Kyrgyzstan","BL":9,"KB":2},"418":{"name":"Laos","BL":1},"428":{"name":"Latvia","BL":16,"KB":4,"SNL":2},"422":{"name":"Lebanon","BL":2,"KB":2},"430":{"name":"Liberia","BL":3,"SNL":1},"434":{"name":"Libya","BL":4,"KB":5,"SNL":2},"438":{"name":"Liechtenstein","BL":2,"KB":1,"SNL":1},"440":{"name":"Lithuania","BL":27,"KB":36,"SNL":7},"442":{"name":"Luxembourg","BL":46,"KB":32,"SNL":6},"458":{"name":"Malaysia","BL":22,"KB":12,"SNL":7},"484":{"name":"Mexico","BL":310,"KB":70,"SNL":19},"583":{"name":"Micronesia","BL":8,"KB":4},"498":{"name":"Moldova","BL":5,"KB":4},"496":{"name":"Mongolia","BL":4,"KB":3},"499":{"name":"Montenegro","BL":19,"KB":21,"SNL":4},"504":{"name":"Morocco","BL":8,"KB":2},"104":{"name":"Myanmar","BL":1},"516":{"name":"Namibia","BL":1,"KB":1},"524":{"name":"Nepal","BL":1,"KB":1},"528":{"name":"Netherlands","BL":244,"KB":1897,"SNL":64},"554":{"name":"New Zealand","BL":90,"KB":26,"SNL":6},"562":{"name":"Niger","BL":1},"566":{"name":"Nigeria","BL":13,"KB":12,"SNL":8},"807":{"name":"North Macedonia","BL":3,"KB":3},"578":{"name":"Norway","BL":92,"KB":95,"SNL":20},"512":{"name":"Oman","BL":5,"KB":1,"SNL":1},"586":{"name":"Pakistan","BL":5,"KB":5},"275":{"name":"Palestine","BL":1,"KB":1},"591":{"name":"Panama","BL":1},"600":{"name":"Paraguay","BL":19,"KB":1,"SNL":2},"604":{"name":"Peru","BL":5,"KB":5,"SNL":1},"608":{"name":"Philippines","BL":9,"KB":14},"616":{"name":"Poland","BL":288,"KB":320,"SNL":74},"620":{"name":"Portugal","BL":130,"KB":116,"SNL":16},"634":{"name":"Qatar","BL":14,"KB":103,"SNL":1},"642":{"name":"Romania","BL":37,"KB":24,"SNL":2},"643":{"name":"Russia","BL":714,"KB":564,"SNL":106},"646":{"name":"Rwanda","BL":1,"KB":1},"882":{"name":"Samoa","BL":24,"KB":56},"682":{"name":"Saudi Arabia","BL":1,"KB":4,"SNL":5},"688":{"name":"Serbia","BL":32,"KB":14,"SNL":3},"702":{"name":"Singapore","BL":36,"KB":41,"SNL":6},"703":{"name":"Slovakia","BL":24,"KB":31,"SNL":6},"705":{"name":"Slovenia","BL":2,"KB":6},"710":{"name":"South Africa","BL":25,"KB":34,"SNL":1},"410":{"name":"South Korea","BL":37,"KB":34,"SNL":6},"724":{"name":"Spain","BL":778,"KB":480,"SNL":126},"144":{"name":"Sri Lanka","BL":6,"KB":18},"752":{"name":"Sweden","BL":146,"KB":152,"SNL":27},"756":{"name":"Switzerland","BL":168,"KB":140,"SNL":2394},"158":{"name":"Taiwan","BL":35,"KB":12,"SNL":2},"762":{"name":"Tajikistan","BL":6},"834":{"name":"Tanzania","BL":1,"KB":1},"764":{"name":"Thailand","BL":30,"KB":23,"SNL":2},"768":{"name":"Togo","BL":1},"776":{"name":"Tonga","BL":1,"KB":2},"792":{"name":"Türkiye","BL":173,"KB":47,"SNL":19},"788":{"name":"Tunisia","BL":2,"KB":5,"SNL":1},"800":{"name":"Uganda","BL":1},"804":{"name":"Ukraine","BL":43,"KB":94,"SNL":8},"784":{"name":"United Arab Emirates","BL":76,"KB":70,"SNL":21},"826":{"name":"United Kingdom","BL":2165,"KB":1203,"SNL":384},"840":{"name":"United States","BL":544,"KB":333,"SNL":64},"858":{"name":"Uruguay","BL":14,"KB":5,"SNL":1},"860":{"name":"Uzbekistan","BL":8,"SNL":1},"704":{"name":"Vietnam","BL":23,"KB":18,"SNL":3},"894":{"name":"Zambia","BL":5,"KB":1},"716":{"name":"Zimbabwe","BL":2,"KB":5},"686":{"name":"Senegal","KB":2,"SNL":3},"862":{"name":"Venezuela","KB":2}};</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script>
+(function(){
+  var host=document.getElementById('rmapSvg'); if(!host) return;
+  var D=window.RMAP, IDX={}; for(var k in D){ IDX[String(parseInt(k,10))]=D[k]; }
+  var ramps={
+    BL:['#EAF1FB','#C6DCF3','#93BCE6','#5A93D4','#3B6EA5','#1E4B7E'],
+    KB:['#FBEEDD','#F6D3A6','#EDAE63','#E0894A','#B96A2E','#8A4D1C'],
+    SNL:['#E4E7F0','#B9C0D8','#8A93B8','#59648F','#2E3A63','#0E1A40']};
+  var th=[10,50,200,500,1000], labels=['1\u20139','10\u201349','50\u2013199','200\u2013499','500\u2013999','1000+'];
+  var NODATA='#EEF2F9', cur='BL';
+  function bucket(v){ if(!v) return -1; for(var i=0;i<th.length;i++){ if(v<th[i]) return i;} return th.length; }
+  function getc(id){ return IDX[String(parseInt(id,10))]; }
+  function totals(l){var t=0,c=0; for(var k in D){ if(D[k][l]){t+=D[k][l];c++;}} return {t:t,c:c};}
+  function renderSide(l){
+    var arr=[]; for(var k in D){ if(D[k][l]) arr.push([D[k].name,D[k][l]]); }
+    arr.sort(function(a,b){return b[1]-a[1];});
+    var max=arr.length?arr[0][1]:1, top=arr.slice(0,12), tt=totals(l);
+    document.getElementById('rmapTot').innerHTML='<b>'+tt.t.toLocaleString('en-US')+'</b> detected reuses across <b>'+tt.c+'</b> countries';
+    var ol=document.getElementById('rmapTop'); ol.innerHTML='';
+    top.forEach(function(r){var li=document.createElement('li');
+      li.innerHTML='<span class="cn">'+r[0]+'</span><span class="cbwrap"><span class="cb" style="width:'+(r[1]/max*100)+'%;background:'+ramps[l][4]+'"></span></span><span class="cv">'+r[1].toLocaleString('en-US')+'</span>';
+      ol.appendChild(li);});
+  }
+  function renderLegend(l){var lg=document.getElementById('rmapLegend'); lg.innerHTML='';
+    ramps[l].forEach(function(col,i){var sp=document.createElement('span'); sp.className='lgk';
+      sp.innerHTML='<i style="background:'+col+'"></i>'+labels[i]; lg.appendChild(sp);});}
+  var paths=null, tip=null;
+  function paint(l){ if(!paths) return;
+    paths.attr('fill',function(d){var e=getc(d.id); var v=e?(e[l]||0):0; var b=bucket(v); return b<0?NODATA:ramps[l][b];}); }
+  function initMap(){
+    if(typeof d3==='undefined'||typeof topojson==='undefined') return;
+    var W=680,H=340;
+    tip=document.createElement('div'); tip.className='rm-tip'; host.appendChild(tip);
+    var svg=d3.select(host).append('svg').attr('viewBox','0 0 '+W+' '+H).attr('class','rmap-svgel');
+    d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(topo){
+      var fc=topojson.feature(topo,topo.objects.countries);
+      var feats=fc.features.filter(function(f){return String(f.id)!=='10';});
+      var proj=d3.geoNaturalEarth1(); proj.fitSize([W,H],{type:'FeatureCollection',features:feats});
+      var gp=d3.geoPath(proj);
+      paths=svg.selectAll('path').data(feats).enter().append('path').attr('d',gp).attr('stroke','#fff').attr('stroke-width',0.4)
+        .on('mousemove',function(ev,d){var e=getc(d.id); var v=e?(e[cur]||0):0; var nm=e?e.name:(d.properties&&d.properties.name)||'';
+          tip.innerHTML='<b>'+nm+'</b><br>'+(v?v.toLocaleString('en-US')+' reuses':'no detected reuse');
+          var r=host.getBoundingClientRect(); tip.style.left=(ev.clientX-r.left)+'px'; tip.style.top=(ev.clientY-r.top)+'px'; tip.style.opacity=1;})
+        .on('mouseleave',function(){tip.style.opacity=0;});
+      paint(cur);
+    }).catch(function(){ host.innerHTML='<p class="note">Interactive map needs an internet connection; the ranking on the right shows the same data.</p>'; });
+  }
+  document.querySelectorAll('.rm-seg').forEach(function(b){
+    b.addEventListener('click',function(){document.querySelectorAll('.rm-seg').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); cur=b.dataset.l; paint(cur); renderSide(cur); renderLegend(cur);});});
+  renderSide('BL'); renderLegend('BL'); initMap();
 })();
 </script>
 </body>
