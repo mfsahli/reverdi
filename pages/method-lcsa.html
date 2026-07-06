@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ReVerDi — the LCSA method (sub-page). Figure loads from ../figures/lcsa_venn.png -->
+<!-- ReVerDi — the LCSA method (sub-page). Pillars shown as an interactive inline SVG (links to results). -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -53,6 +53,21 @@
   footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
   footer a{color:var(--lblue)}
   .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  /* interactive pillars venn */
+  .venn-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+  .venn{width:100%;max-width:380px;height:auto;overflow:visible}
+  .venn a{cursor:pointer}
+  .venn a circle{transition:fill-opacity .18s}
+  .venn a:hover circle{fill-opacity:.78}
+  .venn .sub{fill:var(--navy);font-weight:700;font-size:10px;letter-spacing:.06em}
+  .venn .lbl{fill:var(--navy);font-weight:800}
+  .venn .ctr{fill:var(--navy);font-weight:800;font-size:15px}
+  .venn-tip{position:absolute;transform:translate(-50%,-115%);background:var(--navy);color:#fff;font-size:12px;line-height:1.45;padding:8px 11px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:230px;text-align:center;z-index:20;box-shadow:0 6px 16px rgba(20,32,58,.22)}
+  .venn-tip b{color:var(--yellow)}
+  .venn-hint{text-align:center;font-size:12px;color:var(--muted);font-style:italic;margin-top:8px}
+  .card{transition:.15s}
+  .card:hover{border-color:#c9d3e6;box-shadow:0 6px 18px rgba(20,32,58,.06);transform:translateY(-1px)}
+  .card .go{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:700;color:#2456C7}
 </style>
 </head>
 <body>
@@ -89,13 +104,35 @@
         <p class="lead">A Life Cycle Sustainability Assessment (LCSA) brings three well-established methods under one roof. Rather than judging a library on its carbon footprint alone, it looks at the environment, the money, and the people at the same time — across the full life cycle of a service.</p>
         <div class="formula">LCSA&nbsp; = &nbsp;LCA&nbsp; + &nbsp;LCC&nbsp; + &nbsp;S-LCA</div>
       </div>
-      <div><img src="../figures/lcsa_venn.png" alt="Venn diagram: Life Cycle Assessment (environmental), Life Cycle Costing (economic) and Social LCA overlap to form Life Cycle Sustainability Assessment."></div>
+      <div class="venn-wrap">
+        <svg class="venn" viewBox="0 0 380 360" role="img" aria-label="Interactive diagram: the three sustainability pillars — environmental (LCA), economic (LCC) and social (S-LCA) — combine into LCSA. Each pillar links to its results.">
+          <a href="lcsa-results.html#env" data-tip="<b>Environmental — LCA</b><br>energy, CO₂, water &amp; resources across the life cycle<br>click to see the results →">
+            <circle cx="140" cy="140" r="100" fill="#4FC2C9" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <text class="sub" x="83" y="110" text-anchor="middle">LCA</text>
+            <text class="lbl" x="92" y="125" text-anchor="middle" font-size="11">Environmental</text>
+          </a>
+          <a href="lcsa-results.html#econ" data-tip="<b>Economic — LCC</b><br>investment &amp; operating costs and the value created<br>click to see the results →">
+            <circle cx="240" cy="140" r="100" fill="#E8B83A" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <text class="sub" x="300" y="110" text-anchor="middle">LCC</text>
+            <text class="lbl" x="300" y="125" text-anchor="middle" font-size="12">Economic</text>
+          </a>
+          <a href="lcsa-results.html#social" data-tip="<b>Social — S-LCA</b><br>access, inclusion, working conditions &amp; heritage<br>click to see the results →">
+            <circle cx="190" cy="225" r="100" fill="#7C5CBF" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <text class="sub" x="190" y="300" text-anchor="middle">S-LCA</text>
+            <text class="lbl" x="190" y="315" text-anchor="middle" font-size="12">Social</text>
+          </a>
+          <rect x="161" y="157" width="58" height="21" rx="5" fill="#fff" fill-opacity=".72"/>
+          <text class="ctr" x="190" y="172" text-anchor="middle">LCSA</text>
+        </svg>
+        <div class="venn-tip"></div>
+        <div class="venn-hint">Hover a pillar for a quick explanation · click to jump to its results</div>
+      </div>
     </div>
 
     <div class="cards">
-      <div class="card"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h4>Environmental</h4><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p></div>
-      <div class="card"><span class="k" style="background:var(--yellow);color:var(--navy)">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p></div>
-      <div class="card"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h4>Social</h4><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p></div>
+      <a class="card" href="lcsa-results.html#env"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h4>Environmental</h4><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p><span class="go">See results →</span></a>
+      <a class="card" href="lcsa-results.html#econ"><span class="k" style="background:var(--yellow);color:var(--navy)">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p><span class="go">See results →</span></a>
+      <a class="card" href="lcsa-results.html#social"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h4>Social</h4><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p><span class="go">See results →</span></a>
     </div>
 
     <h2>Why combine them?</h2>
@@ -120,5 +157,19 @@
     <span>Environmental · Economic · Social</span>
   </div>
 </footer>
+<script>
+(function(){
+  var wrap=document.querySelector('.venn-wrap'); if(!wrap) return;
+  var tip=wrap.querySelector('.venn-tip');
+  wrap.querySelectorAll('a[data-tip]').forEach(function(a){
+    a.addEventListener('mousemove',function(ev){
+      tip.innerHTML=a.getAttribute('data-tip');
+      var r=wrap.getBoundingClientRect();
+      tip.style.left=(ev.clientX-r.left)+'px'; tip.style.top=(ev.clientY-r.top)+'px'; tip.style.opacity=1;
+    });
+    a.addEventListener('mouseleave',function(){tip.style.opacity=0;});
+  });
+})();
+</script>
 </body>
 </html>
