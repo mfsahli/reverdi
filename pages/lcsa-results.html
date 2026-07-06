@@ -107,6 +107,18 @@
   .rc-lab{position:absolute;bottom:-32px;left:0;right:0;font-size:12px;color:var(--muted);text-align:center;line-height:1.2}
   .rc-hint{font-size:12px;color:var(--muted);font-style:italic;margin-top:6px}
   @media(max-width:560px){.rc-bar{flex-basis:15px;width:15px}.rc-lab{font-size:11px}}
+  /* access reach table */
+  .atable-wrap{overflow-x:auto;margin:14px 0 4px}
+  .atable{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+  .atable th,.atable td{padding:9px 12px;border-bottom:1px solid var(--border);text-align:right}
+  .atable th:first-child,.atable td:first-child{text-align:left}
+  .atable thead th{font-size:12px;font-weight:700;color:var(--navy);border-bottom:1.5px solid var(--border)}
+  .atable td{color:var(--navy);font-weight:700}
+  .atable td:first-child{font-weight:400;color:var(--muted)}
+  .atable tbody tr:last-child td{border-bottom:none}
+  /* indicator category chips */
+  .icats{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px}
+  .icat{font-size:12px;font-weight:600;color:#543C86;background:#F1ECFA;border:1px solid #E5DBF5;border-radius:999px;padding:5px 12px}
   /* jargon tooltip */
   .term{border-bottom:1px dotted #9aa6c4;cursor:help;position:relative}
   .term:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 9px);width:min(300px,78vw);background:var(--navy);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none;padding:10px 13px;border-radius:9px;z-index:40;box-shadow:0 8px 22px rgba(20,32,58,.24)}
@@ -126,7 +138,6 @@
       <a href="lcsa-results.html">Results</a>
       <a href="open-heritage.html">Wikimedia</a>
       <a href="outputs.html">Outputs</a>
-      <a href="data.html">Data</a>
       <a href="../index.html#team">Team</a>
       <a href="../index.html#news">News</a>
       <a href="../index.html#contact">Contact</a>
@@ -186,23 +197,34 @@
     <section class="psec econ" id="econ">
       <div class="peb"><span class="d"></span>Economic — Life Cycle Costing</div>
       <h2>Cost — and value</h2>
-      <p class="body">The same economies of scale show up in cost: the British Library spends the least per archived item, the Koninklijke Bibliotheek the most. Beyond cost, all three libraries generate large public value through access, exhibitions and reuse — only partly captured by these figures.</p>
+      <p class="body">The same economies of scale show up in cost: the British Library spends the least per archived item, the Koninklijke Bibliotheek the most.</p>
       <div class="statrow">
         <div class="scard econ"><div class="v">€1.05</div><div class="l">British Library — cost per item</div></div>
         <div class="scard econ"><div class="v">€14.34</div><div class="l">Koninklijke Bibliotheek</div></div>
         <div class="scard econ"><div class="v">€5.37</div><div class="l">Swiss National Library</div></div>
       </div>
+      <p class="body" style="margin-top:18px">Beyond cost, all three libraries generate large public value through the provision of access to their collections and exhibitions. The scale of use in 2024 is an indirect but telling measure of that value:</p>
+      <div class="atable-wrap">
+        <table class="atable">
+          <thead><tr><th>Access in 2024</th><th>British Library</th><th>Koninklijke Bibliotheek</th><th>Swiss National Library</th></tr></thead>
+          <tbody>
+            <tr><td>Physical items accessed (reading rooms)</td><td>488,193</td><td>42,195</td><td>50,881</td></tr>
+            <tr><td>Physical visitors (incl. events &amp; exhibitions)</td><td>1,361,002</td><td>47,746</td><td>41,328</td></tr>
+            <tr><td>Virtual visitors (associated websites)</td><td>≈ 25 million</td><td>≈ 10 million</td><td>≈ 9 million</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="body">While it is not possible to quantify the full economic value delivered to society by these national libraries, the substantial use they receive suggests real economic and social impact.</p>
     </section>
 
     <section class="psec social" id="social">
       <div class="peb"><span class="d"></span>Social — S-LCA</div>
       <h2>A broad, positive social impact</h2>
-      <p class="body">On the social side, all three libraries score well: they are exemplary employers with fair pay, gender balance and active unions, and they reach a large share of their populations — especially online. Twenty indicators were assessed as positive, neutral or negative; a few neutral scores (accessibility, opening hours, documented sustainability targets) could be improved with modest changes.</p>
-      <div class="statrow">
-        <div class="scard soc"><div class="v"><span class="cu" data-to="18">0</span> / 20</div><div class="l">British Library — positive indicators</div></div>
-        <div class="scard soc"><div class="v"><span class="cu" data-to="15">0</span> / 20</div><div class="l">Koninklijke Bibliotheek</div></div>
-        <div class="scard soc"><div class="v"><span class="cu" data-to="17">0</span> / 20</div><div class="l">Swiss National Library</div></div>
+      <p class="body">The libraries were assessed against a range of social indicators covering three stakeholder categories — workers, service users and society — and seven indicator categories: working conditions, health and safety, cultural heritage, service-user feedback, inclusion, community engagement, and a public commitment to sustainability. In total, 20 social indicators were each assessed as positive, neutral or negative.</p>
+      <div class="icats">
+        <span class="icat">Working conditions</span><span class="icat">Health &amp; safety</span><span class="icat">Cultural heritage</span><span class="icat">Service-user feedback</span><span class="icat">Inclusion</span><span class="icat">Community engagement</span><span class="icat">Commitment to sustainability</span>
       </div>
+      <p class="body">All three libraries score well across the indicators: they reach a large share of their countries&#39; populations — especially online — and each runs a range of initiatives to engage children and users from minority groups. The libraries are exemplary employers, with fair pay, gender balance and active unions. A few indicator categories were scored neutral for some of the libraries (accessibility, opening hours, documented sustainability targets) and could be improved with modest changes.</p>
     </section>
 
     <h2>What it means in practice</h2>
@@ -210,7 +232,6 @@
       <div class="keycard accent"><h4>Digital access is a powerful lever</h4><p>Online access expands social reach enormously without raising the environmental footprint proportionally — libraries reach many times their in-person audience online.</p></div>
       <div class="keycard accent"><h4>Buildings &amp; energy: big lever, shared responsibility</h4><p>A third to a half of emissions come from buildings and energy. The levers are renovation and procurement — often shared with the property owner rather than the library alone.</p></div>
       <div class="keycard accent"><h4>Trade-offs made visible</h4><p>There are tensions between emissions, cost and social reach. The LCSA makes them explicit and gives a basis for informed decisions.</p></div>
-      <div class="keycard accent"><h4>Exemplary employers</h4><p>All three libraries score strongly on social indicators; some neutral scores can be improved simply through better documentation.</p></div>
     </div>
 
     <div class="glam" id="glam">
