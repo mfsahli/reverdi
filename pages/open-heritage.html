@@ -170,6 +170,26 @@
   .rmap-legend{display:flex;gap:12px;flex-wrap:wrap;margin:12px 2px 2px;font-size:11.5px;color:var(--muted)}
   .rmap-legend .lgk{display:inline-flex;align-items:center;gap:5px}
   .rmap-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  /* paper-1 figure gallery */
+  .pgal-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+  .pg-seg{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s}
+  .pg-seg:hover{border-color:#c9d3e6}
+  .pg-seg.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pgal-panel{position:relative}
+  .pgc-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:2px 0 10px}
+  .pgc-legend span{display:inline-flex;align-items:center;gap:6px}
+  .pgc-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .pgc-plot{position:relative;display:flex;align-items:flex-end;justify-content:space-around;gap:16px;height:230px;border-bottom:1px solid var(--border);margin:6px 6px 44px}
+  .pgc-col{position:relative;flex:1;max-width:130px;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+  .pgc-seg{width:78%;max-width:110px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;cursor:pointer;transition:filter .15s;min-height:0}
+  .pgc-seg:hover{filter:brightness(1.1)}
+  .pgc-col .pgc-seg:first-child{border-radius:6px 6px 0 0}
+  .pgc-grp{position:relative;flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:6px}
+  .pgc-bar{flex:0 0 24px;width:24px;border-radius:5px 5px 0 0;cursor:pointer;transition:filter .15s}
+  .pgc-bar:hover{filter:brightness(1.1)}
+  .pgc-xlab{position:absolute;bottom:-38px;left:-12%;right:-12%;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.2}
+  .pgc-tip{position:absolute;transform:translate(-50%,-115%);background:var(--navy);color:#fff;font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:20;box-shadow:0 6px 16px rgba(20,32,58,.22)}
+  .pgc-tip b{color:var(--yellow)}
 </style>
 <noscript><style>.reveal{opacity:1;transform:none}.lfill{width:auto}</style></noscript>
 </head>
@@ -229,16 +249,24 @@
       <h2>Open by Design — putting it online is itself a strategy</h2>
       <div class="rq"><b>Research question:</b> How do national libraries enact a digitisation strategy through what they actually upload — and what does that mean for public value?</div>
       <p class="body">From the outside, uploading public-domain images looks like one good deed. Look at what each library actually uploaded — the format, the rights labels, the metadata, the timing — and three very different strategies appear.</p>
-      <div class="figgrid">
-        <div class="fig"><img src="../figures/wiki_format.png" alt="File format: archival TIFF versus access JPEG across the three libraries."><div class="cap">Format — archival TIFF vs. access JPEG.</div></div>
-        <div class="fig"><img src="../figures/wiki_uploadtiming.png" alt="Upload timing shows three distinct signatures across libraries."><div class="cap">Upload timing — three distinct signatures.</div></div>
-        <div class="fig"><img src="../figures/wiki_rights.png" alt="Rights labels: clarity versus ambiguity across libraries."><div class="cap">Rights labels — clarity vs. ambiguity.</div></div>
-        <div class="fig"><img src="../figures/wiki_curation.png" alt="Curation: coverage of descriptions and creator metadata."><div class="cap">Curation — description &amp; creator coverage.</div></div>
+      <div class="pgal">
+        <div class="pgal-tabs">
+          <button class="pg-seg active" data-k="format">File format</button>
+          <button class="pg-seg" data-k="curation">Curation</button>
+          <button class="pg-seg" data-k="rights">Rights labels</button>
+          <button class="pg-seg" data-k="timing">Upload timing</button>
+        </div>
+        <div class="pgal-panel">
+          <div class="pgc-legend" id="pgLeg"></div>
+          <div class="pg-chart" id="pgChart" style="position:relative"></div>
+          <div class="fig" id="pgFig" style="display:none;margin-top:0"><img id="pgImg" src="" alt=""></div>
+          <div class="cap" id="pgCap" style="font-size:13px;color:var(--muted);font-style:italic;margin-top:10px"></div>
+        </div>
       </div>
       <div class="strats">
         <div class="strat"><h4>British Library</h4><p>Decentralised mass-release — huge volume, ambiguous rights, 52 % templated metadata.</p></div>
         <div class="strat"><h4>Koninklijke Bibliotheek</h4><p>Curator-led — steady, clean public domain, its oldest holdings.</p></div>
-        <div class="strat"><h4>Swiss National Library</h4><p>Centralised uploads; metadata taken straight from the archive database — high-res TIFF masters, multilingual, 95 % attributed.</p></div>
+        <div class="strat"><h4>Swiss National Library</h4><p>Centralised uploads; metadata straight from the archive database — mostly TIFF-format access derivatives (processed and downscaled for the platform, not archival masters), multilingual, 95 % attributed.</p></div>
       </div>
       <div class="plain">The lesson: format, licence and metadata are not paperwork — they decide how much public value each upload actually realises.</div>
     </div>
@@ -279,7 +307,7 @@
       <p class="body" style="font-weight:700;color:var(--navy);margin-top:6px">What drives reuse (image-level analysis)</p>
       <div class="lchart">
         <div class="lrow"><div class="lab"><b>Public domain</b><span>Strongest positive lever — commercial &amp; news reuse</span></div><div class="ltrack"><div class="lfill" style="background:#1E7B45" data-w="94">Strong &#9650;</div></div></div>
-        <div class="lrow"><div class="lab"><b>JPEG access format</b><span>Reused far more than archival TIFF</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="76">&#9650;</div></div></div>
+        <div class="lrow"><div class="lab"><b>JPEG access format</b><span>Reused far more than TIFF files</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="76">&#9650;</div></div></div>
         <div class="lrow"><div class="lab"><b>Years online</b><span>Each year online &#8776; +29% odds of reuse</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="60">+29% / yr</div></div></div>
         <div class="lrow"><div class="lab"><b>Very high resolution</b><span>Less likely to be reused at all&#8230;</span></div><div class="ltrack"><div class="lfill" style="background:#A32D2D" data-w="44">&#9660;</div></div></div>
         <div class="lrow"><div class="lab"><b>&#8230;once adopted</b><span>High-res images are reused more intensively</span></div><div class="ltrack"><div class="lfill" style="background:#9A6B12" data-w="40">&#9670; intensity</div></div></div>
@@ -397,6 +425,70 @@
 })();
 </script>
 
+<script>
+(function(){
+  var chart=document.getElementById('pgChart'), fig=document.getElementById('pgFig'), img=document.getElementById('pgImg'),
+      leg=document.getElementById('pgLeg'), cap=document.getElementById('pgCap'); if(!chart) return;
+  var tip=document.createElement('div'); tip.className='pgc-tip'; chart.appendChild(tip);
+  function showTip(html,ev){ tip.innerHTML=html; var r=chart.getBoundingClientRect(); tip.style.left=(ev.clientX-r.left)+'px'; tip.style.top=(ev.clientY-r.top)+'px'; tip.style.opacity=1; }
+  function hideTip(){ tip.style.opacity=0; }
+  var libNames=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
+  var libCols=['#3B6EA5','#E0894A','#0E1A40'];
+  function legend(items){ leg.style.display='flex'; leg.innerHTML=items.map(function(it){return '<span><i style="background:'+it[1]+'"></i>'+it[0]+'</span>';}).join(''); }
+  function clearChart(){ chart.querySelectorAll('.pgc-plot').forEach(function(e){e.remove();}); }
+  function mkPlot(){ var pl=document.createElement('div'); pl.className='pgc-plot'; chart.appendChild(pl); return pl; }
+  function renderFormat(){
+    fig.style.display='none'; chart.style.display='block';
+    legend([['TIFF','#0E1A40'],['JPEG / other','#93BCE6']]);
+    clearChart(); var pl=mkPlot();
+    var data=[[libNames[0],3,97],[libNames[1],0,100],[libNames[2],90,10]];
+    data.forEach(function(row){
+      var col=document.createElement('div'); col.className='pgc-col';
+      [['JPEG / other',row[2],'#93BCE6'],['TIFF',row[1],'#0E1A40']].forEach(function(sg){
+        var d=document.createElement('div'); d.className='pgc-seg'; d.style.height=sg[1]+'%'; d.style.background=sg[2];
+        if(sg[1]>=8) d.textContent=sg[1]+'%';
+        d.addEventListener('mousemove',function(ev){showTip('<b>'+row[0]+'</b> · '+sg[0]+' '+sg[1]+'%',ev);});
+        d.addEventListener('mouseleave',hideTip);
+        col.appendChild(d);
+      });
+      var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=row[0]; col.appendChild(x);
+      pl.appendChild(col);
+    });
+    cap.textContent='Share of uploads by file format. The Swiss National Library uploads mostly TIFF-format files (processed, downscaled derivatives); the British Library and KB are almost entirely JPEG or other formats.';
+  }
+  function renderCuration(){
+    fig.style.display='none'; chart.style.display='block';
+    legend([[libNames[0],libCols[0]],[libNames[1],libCols[1]],[libNames[2],libCols[2]]]);
+    clearChart(); var pl=mkPlot();
+    var groups=[['Description present',[74,93,100]],['Creator / artist named',[74,62,95]],['Templated description',[52,0,0]]];
+    groups.forEach(function(g){
+      var grp=document.createElement('div'); grp.className='pgc-grp';
+      g[1].forEach(function(v,i){
+        var b=document.createElement('div'); b.className='pgc-bar'; b.style.height=v+'%'; b.style.background=libCols[i];
+        b.addEventListener('mousemove',function(ev){showTip('<b>'+libNames[i]+'</b> · '+g[0]+' '+v+'%',ev);});
+        b.addEventListener('mouseleave',hideTip);
+        grp.appendChild(b);
+      });
+      var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=g[0]; grp.appendChild(x);
+      pl.appendChild(grp);
+    });
+    cap.textContent='Descriptive-metadata richness: share of uploads with a description present, a named creator/artist, and — for the British Library — templated (auto-generated) descriptions.';
+  }
+  function renderImg(src,c){ chart.style.display='none'; leg.style.display='none'; fig.style.display='block'; img.src=src; img.alt=c; cap.textContent=c; }
+  var R={
+    format:renderFormat, curation:renderCuration,
+    rights:function(){renderImg('../figures/wiki_rights.png','Rights / licence labels declared on uploaded files — from explicit public domain to more ambiguous or mixed labels. (Hover values coming once the category data is added.)');},
+    timing:function(){renderImg('../figures/wiki_uploadtiming.png','Annual and cumulative uploads to Wikimedia Commons, 2012–2025 — three very different upload rhythms.');}
+  };
+  document.querySelectorAll('.pg-seg').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.pg-seg').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); R[b.dataset.k]();
+    });
+  });
+  renderFormat();
+})();
+</script>
 <script>window.RMAP={"008":{"name":"Albania","BL":7},"012":{"name":"Algeria","BL":2},"020":{"name":"Andorra","BL":1},"024":{"name":"Angola","BL":2,"KB":1,"SNL":1},"032":{"name":"Argentina","BL":18,"KB":20,"SNL":6},"051":{"name":"Armenia","BL":8,"KB":1},"036":{"name":"Australia","BL":423,"KB":222,"SNL":90},"040":{"name":"Austria","BL":228,"KB":145,"SNL":94},"031":{"name":"Azerbaijan","BL":17,"KB":4,"SNL":1},"048":{"name":"Bahrain","BL":3,"KB":2},"050":{"name":"Bangladesh","BL":1},"112":{"name":"Belarus","BL":50,"KB":5,"SNL":1},"056":{"name":"Belgium","BL":108,"KB":226,"SNL":32},"204":{"name":"Benin","BL":3,"KB":1},"068":{"name":"Bolivia","BL":2},"070":{"name":"Bosnia and Herzegovina","BL":7},"072":{"name":"Botswana","BL":3},"076":{"name":"Brazil","BL":244,"KB":245,"SNL":22},"100":{"name":"Bulgaria","BL":12,"KB":21},"108":{"name":"Burundi","BL":1},"116":{"name":"Cambodia","BL":1,"SNL":1},"124":{"name":"Canada","BL":616,"KB":241,"SNL":64},"152":{"name":"Chile","BL":19,"KB":60,"SNL":1},"156":{"name":"China","BL":83,"KB":48,"SNL":16},"170":{"name":"Colombia","BL":144,"KB":92,"SNL":24},"188":{"name":"Costa Rica","BL":5},"384":{"name":"Cote d'Ivoire","BL":2,"SNL":1},"191":{"name":"Croatia","BL":24,"KB":3,"SNL":1},"192":{"name":"Cuba","BL":11,"KB":12},"196":{"name":"Cyprus","BL":12,"KB":4},"203":{"name":"Czechia","BL":185,"KB":157,"SNL":38},"208":{"name":"Denmark","BL":72,"KB":65,"SNL":36},"214":{"name":"Dominican Republic","BL":8,"KB":8},"218":{"name":"Ecuador","BL":5,"KB":7,"SNL":2},"818":{"name":"Egypt","BL":3,"KB":2,"SNL":3},"222":{"name":"El Salvador","BL":3,"KB":2},"233":{"name":"Estonia","BL":14,"KB":12,"SNL":8},"231":{"name":"Ethiopia","BL":1,"KB":1},"246":{"name":"Finland","BL":57,"KB":36,"SNL":9},"250":{"name":"France","BL":2992,"KB":2696,"SNL":1028},"268":{"name":"Georgia","BL":15,"KB":1,"SNL":1},"276":{"name":"Germany","BL":2041,"KB":2035,"SNL":1830},"288":{"name":"Ghana","BL":2,"KB":3},"300":{"name":"Greece","BL":86,"KB":56,"SNL":3},"320":{"name":"Guatemala","BL":1,"KB":1},"332":{"name":"Haiti","BL":5},"340":{"name":"Honduras","BL":5,"KB":1},"344":{"name":"Hong Kong","BL":88,"KB":14,"SNL":5},"348":{"name":"Hungary","BL":118,"KB":150,"SNL":15},"352":{"name":"Iceland","BL":9,"KB":18},"356":{"name":"India","BL":410,"KB":122,"SNL":47},"360":{"name":"Indonesia","BL":31,"KB":99,"SNL":2},"364":{"name":"Iran","BL":41,"KB":34,"SNL":62},"372":{"name":"Ireland","BL":658,"KB":309,"SNL":82},"376":{"name":"Israel","BL":57,"KB":9,"SNL":4},"380":{"name":"Italy","BL":2189,"KB":2084,"SNL":621},"388":{"name":"Jamaica","BL":4,"SNL":1},"392":{"name":"Japan","BL":458,"KB":301,"SNL":41},"400":{"name":"Jordan","BL":6,"KB":1},"398":{"name":"Kazakhstan","BL":13,"KB":6},"404":{"name":"Kenya","BL":3,"KB":4},"414":{"name":"Kuwait","BL":9,"KB":5},"417":{"name":"Kyrgyzstan","BL":9,"KB":2},"418":{"name":"Laos","BL":1},"428":{"name":"Latvia","BL":16,"KB":4,"SNL":2},"422":{"name":"Lebanon","BL":2,"KB":2},"430":{"name":"Liberia","BL":3,"SNL":1},"434":{"name":"Libya","BL":4,"KB":5,"SNL":2},"438":{"name":"Liechtenstein","BL":2,"KB":1,"SNL":1},"440":{"name":"Lithuania","BL":27,"KB":36,"SNL":7},"442":{"name":"Luxembourg","BL":46,"KB":32,"SNL":6},"458":{"name":"Malaysia","BL":22,"KB":12,"SNL":7},"484":{"name":"Mexico","BL":310,"KB":70,"SNL":19},"583":{"name":"Micronesia","BL":8,"KB":4},"498":{"name":"Moldova","BL":5,"KB":4},"496":{"name":"Mongolia","BL":4,"KB":3},"499":{"name":"Montenegro","BL":19,"KB":21,"SNL":4},"504":{"name":"Morocco","BL":8,"KB":2},"104":{"name":"Myanmar","BL":1},"516":{"name":"Namibia","BL":1,"KB":1},"524":{"name":"Nepal","BL":1,"KB":1},"528":{"name":"Netherlands","BL":244,"KB":1897,"SNL":64},"554":{"name":"New Zealand","BL":90,"KB":26,"SNL":6},"562":{"name":"Niger","BL":1},"566":{"name":"Nigeria","BL":13,"KB":12,"SNL":8},"807":{"name":"North Macedonia","BL":3,"KB":3},"578":{"name":"Norway","BL":92,"KB":95,"SNL":20},"512":{"name":"Oman","BL":5,"KB":1,"SNL":1},"586":{"name":"Pakistan","BL":5,"KB":5},"275":{"name":"Palestine","BL":1,"KB":1},"591":{"name":"Panama","BL":1},"600":{"name":"Paraguay","BL":19,"KB":1,"SNL":2},"604":{"name":"Peru","BL":5,"KB":5,"SNL":1},"608":{"name":"Philippines","BL":9,"KB":14},"616":{"name":"Poland","BL":288,"KB":320,"SNL":74},"620":{"name":"Portugal","BL":130,"KB":116,"SNL":16},"634":{"name":"Qatar","BL":14,"KB":103,"SNL":1},"642":{"name":"Romania","BL":37,"KB":24,"SNL":2},"643":{"name":"Russia","BL":714,"KB":564,"SNL":106},"646":{"name":"Rwanda","BL":1,"KB":1},"882":{"name":"Samoa","BL":24,"KB":56},"682":{"name":"Saudi Arabia","BL":1,"KB":4,"SNL":5},"688":{"name":"Serbia","BL":32,"KB":14,"SNL":3},"702":{"name":"Singapore","BL":36,"KB":41,"SNL":6},"703":{"name":"Slovakia","BL":24,"KB":31,"SNL":6},"705":{"name":"Slovenia","BL":2,"KB":6},"710":{"name":"South Africa","BL":25,"KB":34,"SNL":1},"410":{"name":"South Korea","BL":37,"KB":34,"SNL":6},"724":{"name":"Spain","BL":778,"KB":480,"SNL":126},"144":{"name":"Sri Lanka","BL":6,"KB":18},"752":{"name":"Sweden","BL":146,"KB":152,"SNL":27},"756":{"name":"Switzerland","BL":168,"KB":140,"SNL":2394},"158":{"name":"Taiwan","BL":35,"KB":12,"SNL":2},"762":{"name":"Tajikistan","BL":6},"834":{"name":"Tanzania","BL":1,"KB":1},"764":{"name":"Thailand","BL":30,"KB":23,"SNL":2},"768":{"name":"Togo","BL":1},"776":{"name":"Tonga","BL":1,"KB":2},"792":{"name":"Türkiye","BL":173,"KB":47,"SNL":19},"788":{"name":"Tunisia","BL":2,"KB":5,"SNL":1},"800":{"name":"Uganda","BL":1},"804":{"name":"Ukraine","BL":43,"KB":94,"SNL":8},"784":{"name":"United Arab Emirates","BL":76,"KB":70,"SNL":21},"826":{"name":"United Kingdom","BL":2165,"KB":1203,"SNL":384},"840":{"name":"United States","BL":544,"KB":333,"SNL":64},"858":{"name":"Uruguay","BL":14,"KB":5,"SNL":1},"860":{"name":"Uzbekistan","BL":8,"SNL":1},"704":{"name":"Vietnam","BL":23,"KB":18,"SNL":3},"894":{"name":"Zambia","BL":5,"KB":1},"716":{"name":"Zimbabwe","BL":2,"KB":5},"686":{"name":"Senegal","KB":2,"SNL":3},"862":{"name":"Venezuela","KB":2}};</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
