@@ -190,6 +190,13 @@
   .pgc-xlab{position:absolute;bottom:-38px;left:-12%;right:-12%;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.2}
   .pgc-tip{position:absolute;transform:translate(-50%,-115%);background:var(--navy);color:#fff;font-size:12px;line-height:1.4;padding:7px 10px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:20;box-shadow:0 6px 16px rgba(20,32,58,.22)}
   .pgc-tip b{color:var(--yellow)}
+  .pgt-sub{display:flex;gap:6px;margin:2px 0 10px}
+  .pgt-btn{padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:#fff;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s}
+  .pgt-btn:hover{border-color:#c9d3e6}
+  .pgt-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .pgt-svg text{font-family:inherit;font-size:10.5px;fill:var(--muted)}
+  .pgl-chip{cursor:pointer;user-select:none;transition:opacity .12s}
+  .pgl-chip.off{opacity:.35;text-decoration:line-through}
 </style>
 <noscript><style>.reveal{opacity:1;transform:none}.lfill{width:auto}</style></noscript>
 </head>
@@ -435,7 +442,7 @@
   var libNames=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
   var libCols=['#3B6EA5','#E0894A','#0E1A40'];
   function legend(items){ leg.style.display='flex'; leg.innerHTML=items.map(function(it){return '<span><i style="background:'+it[1]+'"></i>'+it[0]+'</span>';}).join(''); }
-  function clearChart(){ chart.querySelectorAll('.pgc-plot').forEach(function(e){e.remove();}); }
+  function clearChart(){ chart.querySelectorAll('.pgc-plot,.pgt-wrap').forEach(function(e){e.remove();}); }
   function mkPlot(){ var pl=document.createElement('div'); pl.className='pgc-plot'; chart.appendChild(pl); return pl; }
   function renderFormat(){
     fig.style.display='none'; chart.style.display='block';
@@ -474,12 +481,102 @@
     });
     cap.textContent='Descriptive-metadata richness: share of uploads with a description present, a named creator/artist, and — for the British Library — templated (auto-generated) descriptions.';
   }
-  function renderImg(src,c){ chart.style.display='none'; leg.style.display='none'; fig.style.display='block'; img.src=src; img.alt=c; cap.textContent=c; }
-  var R={
-    format:renderFormat, curation:renderCuration,
-    rights:function(){renderImg('../figures/wiki_rights.png','Rights / licence labels declared on uploaded files — from explicit public domain to more ambiguous or mixed labels. (Hover values coming once the category data is added.)');},
-    timing:function(){renderImg('../figures/wiki_uploadtiming.png','Annual and cumulative uploads to Wikimedia Commons, 2012–2025 — three very different upload rhythms.');}
-  };
+  function renderRights(){
+    fig.style.display='none'; chart.style.display='block';
+    var cols={'Public domain':'#0E1A40','CC0':'#5A93D4','No known restrictions':'#93BCE6','Open Gov. Licence':'#E0894A','CC BY / BY-SA':'#C9A227'};
+    legend([['Public domain',cols['Public domain']],['CC0',cols['CC0']],['No known restrictions',cols['No known restrictions']],['Open Gov. Licence',cols['Open Gov. Licence']],['CC BY / BY-SA',cols['CC BY / BY-SA']]]);
+    clearChart(); var pl=mkPlot();
+    // exact shares (%) and file counts per library, from the Wikimedia census
+    var data=[
+      [libNames[0],[['Public domain',39.9,36001],['CC0',9.5,8596],['No known restrictions',48.0,43341],['Open Gov. Licence',2.3,2095],['CC BY / BY-SA',0.3,248]]],
+      [libNames[1],[['Public domain',98.2,30306],['CC0',1.7,523],['CC BY / BY-SA',0.1,20]]],
+      [libNames[2],[['Public domain',99.5,46665],['CC BY / BY-SA',0.5,235]]]
+    ];
+    data.forEach(function(row){
+      var segs=row[1];
+      // display heights: keep tiny non-zero slices visible, take the excess off the largest
+      var h=segs.map(function(s){return Math.max(s[1],1.4);}), sum=h.reduce(function(a,b){return a+b;},0);
+      var mi=0; h.forEach(function(v,i){ if(v>h[mi])mi=i; }); h[mi]-=(sum-100);
+      var col=document.createElement('div'); col.className='pgc-col';
+      for(var i=segs.length-1;i>=0;i--){ (function(s,hh){
+        var d=document.createElement('div'); d.className='pgc-seg'; d.style.height=hh+'%'; d.style.background=cols[s[0]];
+        if(s[1]>=8) d.textContent=Math.round(s[1])+'%';
+        var pstr=(s[1]<1?s[1].toFixed(1):Math.round(s[1]))+'%';
+        d.addEventListener('mousemove',function(ev){showTip('<b>'+row[0]+'</b> · '+s[0]+' '+pstr+' ('+s[2].toLocaleString('en-US')+' files)',ev);});
+        d.addEventListener('mouseleave',hideTip);
+        col.appendChild(d);
+      })(segs[i],h[i]); }
+      var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=row[0]; col.appendChild(x);
+      pl.appendChild(col);
+    });
+    cap.textContent='Rights / licence labels declared on uploads. KB and the Swiss National Library are almost entirely explicit public domain; nearly half the British Library’s uploads carry the more ambiguous “no known restrictions” label. No files are unlabelled. Hover a segment for exact shares and file counts.';
+  }
+  function renderTiming(){
+    fig.style.display='none'; chart.style.display='block'; clearChart();
+    var libs=[['BL','British Library','#3B6EA5'],['KB','Koninklijke Bibliotheek','#E0894A'],['NB','Swiss National Library','#0E1A40']];
+    var years=[]; for(var y=2012;y<=2025;y++) years.push(y);
+    var A={BL:[115,6569,22823,13424,1001,579,39021,1206,459,714,3183,568,316,273],
+           KB:[27,225,1300,3793,935,5821,1104,1381,10694,1812,2002,1085,280,27],
+           NB:[1,0,619,2597,1782,5154,3029,2,394,1186,21,7205,14458,10452]};
+    var C={BL:[115,6684,29507,42931,43932,44511,83532,84738,85197,85911,89094,89662,89978,90251],
+           KB:[27,252,1552,5345,6280,12101,13205,14586,25280,27092,29094,30179,30459,30486],
+           NB:[1,1,620,3217,4999,10153,13182,13184,13578,14764,14785,21990,36448,46900]};
+    var mode='annual', on={BL:true,KB:true,NB:true};
+    leg.style.display='flex';
+    leg.innerHTML=libs.map(function(l){return '<span class="pgl-chip" data-k="'+l[0]+'"><i style="background:'+l[2]+'"></i>'+l[1]+'</span>';}).join('');
+    var wrap=document.createElement('div'); wrap.className='pgt-wrap'; chart.appendChild(wrap);
+    var sub=document.createElement('div'); sub.className='pgt-sub';
+    sub.innerHTML='<button class="pgt-btn active" data-m="annual">Annual uploads</button><button class="pgt-btn" data-m="cumulative">Cumulative total</button>';
+    wrap.appendChild(sub);
+    var host=document.createElement('div'); wrap.appendChild(host);
+    var NS='http://www.w3.org/2000/svg';
+    function el(n,at){ var e=document.createElementNS(NS,n); for(var k in at) e.setAttribute(k,at[k]); return e; }
+    function fmt(v){ return v.toLocaleString('en-US'); }
+    function draw(){
+      host.innerHTML='';
+      var D=(mode==='annual')?A:C, W=680,H=270,ml=52,mr=14,mt=12,mb=30;
+      var max=1; libs.forEach(function(l){ if(on[l[0]]) D[l[0]].forEach(function(v){ if(v>max)max=v; }); });
+      var step=max>60000?25000:max>25000?10000:max>12000?5000:max>5000?2000:1000;
+      var top=Math.ceil(max/step)*step;
+      function X(i){ return ml+i*(W-ml-mr)/(years.length-1); }
+      function Y(v){ return H-mb-(v/top)*(H-mt-mb); }
+      var svg=el('svg',{viewBox:'0 0 '+W+' '+H,'class':'pgt-svg'}); svg.style.width='100%';
+      for(var v=0;v<=top;v+=step){
+        svg.appendChild(el('line',{x1:ml,x2:W-mr,y1:Y(v),y2:Y(v),stroke:v===0?'#c9d3e6':'#e8edf6','stroke-width':1}));
+        var t=el('text',{x:ml-7,y:Y(v)+3.5,'text-anchor':'end'}); t.textContent=v>=1000?(v/1000)+'k':v; svg.appendChild(t);
+      }
+      years.forEach(function(yr,i){ if(i%2===0||i===years.length-1){ var t=el('text',{x:X(i),y:H-mb+16,'text-anchor':'middle'}); t.textContent=yr; svg.appendChild(t); }});
+      var guide=el('line',{y1:mt,y2:H-mb,stroke:'#0E1A40','stroke-width':1,'stroke-dasharray':'3 3',opacity:0}); svg.appendChild(guide);
+      libs.forEach(function(l){ if(!on[l[0]]) return;
+        var pts=D[l[0]].map(function(v,i){ return X(i)+','+Y(v); }).join(' ');
+        svg.appendChild(el('polyline',{points:pts,fill:'none',stroke:l[2],'stroke-width':2.2,'stroke-linejoin':'round'}));
+        D[l[0]].forEach(function(v,i){ svg.appendChild(el('circle',{cx:X(i),cy:Y(v),r:2.6,fill:l[2]})); });
+      });
+      var band=(W-ml-mr)/(years.length-1);
+      years.forEach(function(yr,i){
+        var r=el('rect',{x:X(i)-band/2,y:mt,width:band,height:H-mt-mb,fill:'transparent'}); r.style.cursor='crosshair';
+        r.addEventListener('mousemove',function(ev){
+          guide.setAttribute('x1',X(i)); guide.setAttribute('x2',X(i)); guide.setAttribute('opacity',.5);
+          var rows=libs.filter(function(l){return on[l[0]];}).map(function(l){
+            return '<span style="color:'+(l[0]==='NB'?'#93BCE6':l[2])+'">●</span> '+l[1]+': '+fmt(D[l[0]][i]);
+          }).join('<br>');
+          showTip('<b>'+yr+(mode==='cumulative'?' · total':'')+'</b><br>'+rows,ev);
+        });
+        r.addEventListener('mouseleave',function(){ guide.setAttribute('opacity',0); hideTip(); });
+        svg.appendChild(r);
+      });
+      host.appendChild(svg);
+    }
+    leg.querySelectorAll('.pgl-chip').forEach(function(ch){
+      ch.addEventListener('click',function(){ var k=ch.dataset.k; on[k]=!on[k]; ch.classList.toggle('off',!on[k]); draw(); });
+    });
+    sub.querySelectorAll('.pgt-btn').forEach(function(b){
+      b.addEventListener('click',function(){ sub.querySelectorAll('.pgt-btn').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mode=b.dataset.m; draw(); });
+    });
+    draw();
+    cap.textContent='Uploads to Wikimedia Commons, 2012–2025 — three very different rhythms: the British Library’s big-bang releases (2014, 2018), KB’s steady drip, and the Swiss National Library’s recent acceleration. Hover a year for exact counts, switch to cumulative totals, or click a library in the legend to hide it.';
+  }
+  var R={ format:renderFormat, curation:renderCuration, rights:renderRights, timing:renderTiming };
   document.querySelectorAll('.pg-seg').forEach(function(b){
     b.addEventListener('click',function(){
       document.querySelectorAll('.pg-seg').forEach(function(x){x.classList.remove('active');});
