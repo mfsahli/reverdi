@@ -70,6 +70,19 @@
   footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
   footer a{color:var(--lblue)}
   .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  /* --- National Library Explorer: gamified nav button --- */
+  .explorer-link{position:relative;display:inline-flex;align-items:center;gap:6px;
+    font-family:'Chalkboard SE','Comic Sans MS','Segoe Print',cursive;
+    font-size:13px;font-weight:700;color:var(--navy);
+    background:linear-gradient(105deg,#E8B83A,#F6D98B);
+    border-radius:999px;padding:6px 14px;margin-left:4px;
+    box-shadow:0 3px 10px rgba(232,184,58,.45);
+    transform:rotate(-2deg);transition:transform .2s, box-shadow .2s}
+  .explorer-link:hover{transform:rotate(2deg) scale(1.07);box-shadow:0 5px 16px rgba(232,184,58,.6);color:var(--navy)}
+  .explorer-link .xdot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+    background:#D64545;border:2px solid #fff;animation:xping 1.8s ease-in-out infinite}
+  @keyframes xping{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+  @media(max-width:860px){.nav-links .explorer-link{padding:6px 14px;margin:10px 24px;align-self:flex-start}}
 </style>
 </head>
 <body>
@@ -84,6 +97,7 @@
       <a href="lcsa-results.html">Results</a>
       <a href="open-heritage.html">Wikimedia</a>
       <a href="outputs.html">Outputs</a>
+      <a class="explorer-link" href="national-library-explorer.html">📚💾 Library Game<span class="xdot"></span></a>
       <a href="../index.html#team">Team</a>
       <a href="../index.html#news">News</a>
       <a href="../index.html#contact">Contact</a>

@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The National Library Game · ReVerDi</title>
+<style>
+/* ============================================================
+   THE NATIONAL LIBRARY EXPLORER — ReVerDi prototype v2
+   Single-file page: HTML + CSS + vanilla JavaScript.
+   Night & day themes via CSS variables on body[data-mode].
+   ============================================================ */
+:root{
+  /* ---- page (night) ---- */
+  --bg0:#0b1020; --bg1:#111831; --ink:#f2f5ff; --ink2:#aab3cf; --muted:#6d7692;
+  --hair:rgba(255,255,255,.09); --grid:rgba(255,255,255,.06);
+  --panelbg:rgba(13,18,38,.94);
+  /* ---- scene (night) ---- */
+  --scenebg:#0a0f22;
+  --sil:#0a1024; --sil2:#0d1530;
+  --ground:#0c1228; --groundline:#232d52; --under:#070c1a; --underline:#141d3d;
+  --bside:#0f162e; --broof:#1b2450; --broofstroke:#2b3663; --parapet:#28325c;
+  --bfront:#151d3a; --bstroke:rgba(255,255,255,.16);
+  --room1:#1f2949; --room2:#1c2545; --room3:#212b4e;
+  --sep:#0e1430;
+  --vault:#0f172f; --vaultstroke:rgba(255,255,255,.13);
+  --rack:#212c55; --label:#8f97b8;
+  --furn:#3a466f; --furn2:#2b3663; --unit:#26315a; --unitstroke:#46538a;
+  --hsstroke:#0b1020;
+  /* ---- library identity (validated categorical palette) ---- */
+  --bl:#3987e5; --kb:#c98500; --snl:#d55181;
+  --accent:var(--bl); --accent-soft:rgba(57,135,229,.16);
+  --radius:20px;
+}
+body[data-mode="day"]{
+  --bg0:#e9eef6; --bg1:#ffffff; --ink:#131a2e; --ink2:#45516e; --muted:#77809a;
+  --hair:rgba(15,25,60,.13); --grid:rgba(15,25,60,.07);
+  --panelbg:rgba(255,255,255,.96);
+  --scenebg:#a9cdf0;
+  --sil:#90a8ca; --sil2:#b6c8e0;
+  --ground:#a9bcd4; --groundline:#8ba0bf; --under:#77839c; --underline:#93a2bd;
+  --bside:#b0bdd9; --broof:#ccd6ea; --broofstroke:#a9b6d2; --parapet:#b9c5de;
+  --bfront:#e6ebf5; --bstroke:rgba(20,35,80,.28);
+  --room1:#f2f5fb; --room2:#ebf0f9; --room3:#f5f7fc;
+  --sep:#a9b4cd;
+  --vault:#d4dcec; --vaultstroke:rgba(20,35,80,.28);
+  --rack:#7787b3; --label:#5b6784;
+  --furn:#3a466f; --furn2:#55628c; --unit:#33406e; --unitstroke:#5b6a9d;
+  --hsstroke:#ffffff;
+}
+body[data-lib="kb"]  { --accent:var(--kb);  --accent-soft:rgba(201,133,0,.16); }
+body[data-lib="snl"] { --accent:var(--snl); --accent-soft:rgba(213,81,129,.16); }
+
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg0); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.55; overflow-x:hidden;
+  transition:background .5s, color .5s;
+}
+.wrap{max-width:1240px; margin:0 auto; padding:0 24px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:60;
+  backdrop-filter:blur(14px);
+  background:color-mix(in srgb, var(--bg0) 78%, transparent);
+  border-bottom:1px solid var(--hair);
+}
+.topbar .wrap{display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding-top:10px; padding-bottom:10px}
+.brand{font-weight:800; letter-spacing:-.3px; font-size:15px; white-space:nowrap}
+.brand small{display:block; font-weight:600; font-size:10px; letter-spacing:.16em; color:var(--muted); text-transform:uppercase}
+.switcher{display:flex; gap:8px; flex-wrap:wrap}
+.libbtn{
+  display:flex; align-items:center; gap:8px;
+  font:inherit; font-size:13px; font-weight:600; color:var(--ink2);
+  background:transparent; border:1px solid var(--hair); border-radius:999px;
+  padding:7px 14px; cursor:pointer; transition:all .25s;
+}
+.libbtn .dot{width:10px; height:10px; border-radius:50%; background:var(--c); box-shadow:0 0 8px var(--c)}
+.libbtn:hover{border-color:var(--c); color:var(--ink); transform:translateY(-1px)}
+.libbtn[aria-pressed="true"]{border-color:var(--c); color:var(--ink); background:color-mix(in srgb, var(--c) 16%, transparent)}
+.modebtn{
+  font:inherit; font-size:13px; font-weight:600; color:var(--ink2);
+  background:transparent; border:1px solid var(--hair); border-radius:999px;
+  padding:7px 14px; cursor:pointer; transition:all .25s; white-space:nowrap;
+}
+.modebtn:hover{color:var(--ink); border-color:var(--ink2)}
+/* two worlds: physical dots by day, digital dots by night */
+body[data-mode="day"] .hs.r-dig{display:none}
+body[data-mode="night"] .hs.r-phy{display:none}
+.satellite{opacity:0; transition:opacity .9s ease}
+.satellite.on{opacity:1}
+#cloud{transform-origin:1085px 150px; transition:transform .8s}
+body[data-mode="night"] #cloud{transform:scale(1.35)}
+body[data-mode="night"] #uplink{opacity:.85}
+#uplink2{stroke-dasharray:7 7; animation:dashflow 1.2s linear infinite}
+body[data-mode="day"] #uplink2{display:none}
+
+/* ---------- exit link back to the main site ---------- */
+.exitbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  color:var(--ink2);border:1px solid var(--hair);border-radius:999px;padding:7px 12px;
+  text-decoration:none;transition:all .2s;white-space:nowrap}
+.exitbtn:hover{color:var(--ink);border-color:var(--ink2);transform:translateX(-2px)}
+.gate .backlink, footer .backlink{color:var(--ink2);font-weight:600;text-decoration:none;border-bottom:1px dotted var(--muted)}
+.gate .backlink:hover, footer .backlink:hover{color:var(--ink)}
+
+/* ---------- score HUD ---------- */
+.hud{margin-left:auto; min-width:210px}
+.hud-top{display:flex; align-items:baseline; gap:8px}
+.hud-top .star{color:#f6c945; font-size:15px}
+.hud-top strong{font-size:17px; font-variant-numeric:tabular-nums; letter-spacing:-.3px}
+.hud-top .rank{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink2)}
+.libbars{display:flex; gap:6px; margin-top:5px}
+.lb{flex:1; display:flex; align-items:center; gap:5px}
+.lb i{width:7px; height:7px; border-radius:50%; background:var(--c); flex:none}
+.lb-track{flex:1; height:4px; border-radius:99px; background:var(--grid); overflow:hidden}
+.lb-fill{height:100%; width:0%; border-radius:99px; background:var(--c); transition:width .5s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- the scene ---------- */
+#hero{padding:22px 0 0}
+.scene-wrap{position:relative; border-radius:var(--radius); box-shadow:0 30px 80px rgba(0,0,0,.35)}
+#scene{display:block; width:100%; height:auto; border-radius:var(--radius); background:var(--scenebg); transition:background .8s, filter 1.2s}
+.scene-hint{display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:12.5px; padding:12px 6px 0}
+.disclaimer{
+  color:var(--muted); font-size:12px; max-width:100ch;
+  border-top:1px solid var(--hair); margin-top:18px; padding:14px 6px 0;
+}
+footer{border-top:1px solid var(--hair); margin-top:40px; padding:22px 0 40px; font-size:12px; color:var(--muted)}
+footer .wrap{display:flex; flex-direction:column; gap:6px}
+
+/* svg text */
+#scene text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.roomlabel{font-size:10.5px; font-weight:700; letter-spacing:.22em; fill:var(--label); opacity:.9}
+.plate-text{font-size:15px; font-weight:800; letter-spacing:.24em; fill:#f6e7c6}
+.vault-label{font-size:12px; font-weight:600; fill:var(--label); font-variant-numeric:tabular-nums}
+.cloud-label{font-size:12px; font-weight:700; fill:var(--label); font-variant-numeric:tabular-nums}
+
+/* sky crossfade + celestial bodies */
+#skyN{opacity:1; transition:opacity .8s}
+#skyD{opacity:0; transition:opacity .8s}
+body[data-mode="day"] #skyN{opacity:0}
+body[data-mode="day"] #skyD{opacity:1}
+#moonG{opacity:1; transition:opacity .8s}
+#sunG{opacity:0; transition:opacity .8s}
+body[data-mode="day"] #moonG{opacity:0}
+body[data-mode="day"] #sunG{opacity:1}
+.star{animation:twinkle 3.4s ease-in-out infinite; transition:opacity .8s}
+body[data-mode="day"] .star{opacity:0 !important; animation:none}
+@keyframes twinkle{0%,100%{opacity:.25} 50%{opacity:1}}
+.skyline{opacity:0; transition:opacity .9s ease}
+.skyline.on{opacity:1}
+.cloudpuff{animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-260px)} to{transform:translateX(1480px)}}
+
+/* flag */
+#flag{transform-origin:404px 132px; animation:wave 2.6s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:skewY(-4deg)} 50%{transform:skewY(4deg)}}
+/* scanner beam */
+#beam{animation:sweep 2.4s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:translateX(0)} to{transform:translateX(74px)}}
+/* pages flying up to the digital archive */
+.fly{opacity:0; animation:flyup 4.2s linear infinite}
+@keyframes flyup{
+  0%{transform:translate(0,0) rotate(0deg); opacity:0}
+  7%{opacity:1}
+  60%{transform:translate(300px,-120px) rotate(14deg); opacity:1}
+  93%{opacity:.9}
+  100%{transform:translate(500px,-196px) rotate(22deg); opacity:0}
+}
+/* uplink beam */
+#uplink{stroke-dasharray:7 7; animation:dashflow 1.2s linear infinite}
+@keyframes dashflow{to{stroke-dashoffset:-14}}
+/* server LEDs + cloud pulse */
+.led{animation:blink 1.6s steps(2,end) infinite}
+@keyframes blink{50%{opacity:.15}}
+#cloudCore{transform-origin:1085px 150px; transition:transform .6s}
+.cloudglow{animation:cloudpulse 3.6s ease-in-out infinite}
+@keyframes cloudpulse{0%,100%{opacity:.10} 50%{opacity:.22}}
+/* archive crane / trolley / walkers */
+#crane{animation:craneMove 9s ease-in-out infinite alternate}
+@keyframes craneMove{from{transform:translateX(0)} to{transform:translateX(520px)}}
+#trolley{animation:trolleyMove 11s ease-in-out infinite alternate}
+@keyframes trolleyMove{from{transform:translateX(0)} to{transform:translateX(430px)}}
+.walker{animation:walk 13s ease-in-out infinite alternate}
+.walker.w2{animation-duration:17s; animation-delay:-6s}
+@keyframes walk{from{transform:translateX(0)} to{transform:translateX(210px)}}
+.morph{transition:opacity .45s ease}
+.morph.fade{opacity:0}
+
+/* ---------- hotspots (bigger) ---------- */
+.hs{cursor:pointer; outline:none}
+.hs .halo{fill:var(--accent); opacity:.25; transform-box:fill-box; transform-origin:center; animation:pulse 2.4s ease-out infinite}
+.hs .core{fill:var(--accent); stroke:var(--hsstroke); stroke-width:2.5}
+.hs .sym{fill:var(--hsstroke); font-size:17px; font-weight:800; text-anchor:middle; pointer-events:none}
+.hs:hover .core, .hs:focus-visible .core{filter:brightness(1.25)}
+.hs:focus-visible .halo{opacity:.5}
+.hs.done .halo{animation:none; opacity:.12}
+.hs.done .core{fill:#2ea36a}
+@keyframes pulse{0%{transform:scale(.6); opacity:.45} 70%{transform:scale(1.65); opacity:0} 100%{opacity:0}}
+
+/* floating points */
+.fx{
+  position:absolute; z-index:30; pointer-events:none;
+  font-weight:800; font-size:17px; color:var(--accent);
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+  animation:fxup 1.1s ease-out forwards;
+}
+@keyframes fxup{from{opacity:1; transform:translate(-50%,0)} to{opacity:0; transform:translate(-50%,-52px)}}
+
+/* ---------- fact panel ---------- */
+.panel{
+  position:absolute; top:14px; right:14px; z-index:8;
+  width:min(370px, calc(100% - 28px));
+  background:var(--panelbg); backdrop-filter:blur(12px);
+  border:1px solid var(--hair); border-radius:16px;
+  padding:18px 20px 16px;
+  opacity:0; transform:translateY(10px); pointer-events:none;
+  transition:opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+.panel.open{opacity:1; transform:none; pointer-events:auto}
+.panel.left{right:auto; left:14px}
+.panel.lowleft{top:auto; bottom:14px; right:auto; left:14px}
+.panel .p-top{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+.panel .p-icon{font-size:20px}
+.panel .p-lib{font-size:10.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--accent)}
+.panel h3{font-size:16px; letter-spacing:-.2px}
+.panel .p-close{margin-left:auto; background:none; border:0; color:var(--muted); font-size:18px; cursor:pointer; line-height:1}
+.panel .p-close:hover{color:var(--ink)}
+.panel .stat{font-size:clamp(30px,4vw,40px); font-weight:800; letter-spacing:-1px; line-height:1.05; margin:4px 0 2px; color:var(--ink)}
+.panel .stat.is-quote{font-size:17px; font-weight:600; letter-spacing:0; line-height:1.4; font-style:italic}
+.panel .p-sub{font-size:12px; color:var(--accent); font-weight:700; margin-bottom:8px}
+.panel .p-body{font-size:13.5px; color:var(--ink2); margin-bottom:10px}
+.panel .p-fun{
+  display:flex; gap:8px; font-size:12.5px; color:var(--ink);
+  background:var(--accent-soft); border-left:3px solid var(--accent);
+  padding:8px 10px; border-radius:0 8px 8px 0; margin-bottom:10px;
+}
+.panel .p-holders{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px}
+.panel .chip{
+  font-size:11px; color:var(--muted); border:1px dashed color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius:999px; padding:3px 10px;
+}
+.panel .p-src{font-size:10.5px; color:var(--muted)}
+.panel .p-found{font-size:11px; font-weight:700; color:#2ea36a; margin-top:6px}
+
+/* ---------- intro overlay ---------- */
+.intro{
+  position:absolute; inset:0; z-index:20; border-radius:var(--radius);
+  display:grid; place-items:center; text-align:center; padding:24px;
+  background:color-mix(in srgb, var(--bg0) 88%, transparent);
+  backdrop-filter:blur(6px);
+  transition:opacity .7s ease, visibility .7s;
+}
+.intro.hide{opacity:0; visibility:hidden; pointer-events:none}
+.intro .eyebrow{font-size:12px; font-weight:800; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+.intro h1{font-size:clamp(30px,5vw,52px); letter-spacing:-1.2px; line-height:1.06; max-width:20ch; margin:0 auto 16px; color:var(--ink)}
+.intro p{color:var(--ink2); max-width:62ch; margin:0 auto 12px; font-size:14.5px; text-align:left}
+.intro p b{color:var(--ink)}
+.startbtn{
+  font:inherit; font-size:15px; font-weight:700; color:#fff;
+  background:var(--accent); border:0; border-radius:999px;
+  padding:13px 30px; cursor:pointer; margin-top:10px;
+  box-shadow:0 10px 30px color-mix(in srgb, var(--accent) 40%, transparent);
+  transition:transform .2s, box-shadow .2s;
+}
+.startbtn:hover{transform:translateY(-2px) scale(1.02)}
+.intro .tiny{font-size:11px; color:var(--muted); margin-top:14px}
+
+/* ---------- password gate ---------- */
+.gate{position:fixed; inset:0; z-index:200; display:grid; place-items:center; text-align:center;
+  background:var(--bg0); transition:opacity .6s, visibility .6s}
+.gate.hide{opacity:0; visibility:hidden; pointer-events:none}
+.gate .g-box{position:relative; z-index:2; max-width:680px; padding:24px}
+.gate .eyebrow{font-size:12px; font-weight:800; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); margin-bottom:12px}
+.gate .g-lede{color:var(--ink2); font-size:14.5px; text-align:left; margin:0 auto 12px; max-width:62ch}
+.gate .g-lede b{color:var(--ink)}
+.gate .tiny{font-size:11px; color:var(--muted); margin-top:14px}
+.gate .g-lock{font-size:44px; margin-bottom:12px}
+.gate h2{font-size:clamp(28px,4.5vw,42px); letter-spacing:-1px; line-height:1.1; margin-bottom:16px}
+.gate p{color:var(--ink2); font-size:13.5px; margin-bottom:18px}
+.gate form{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+.gate input{font:inherit; font-size:15px; padding:11px 16px; border-radius:999px;
+  border:1px solid var(--hair); background:var(--bg1); color:var(--ink);
+  width:220px; outline:none; text-align:center; letter-spacing:.06em}
+.gate input:focus{border-color:var(--accent)}
+.gate button{font:inherit; font-weight:700; font-size:15px; color:#fff; background:var(--accent);
+  border:0; border-radius:999px; padding:11px 20px; cursor:pointer}
+.gate button:hover{filter:brightness(1.1)}
+.gate .g-err{height:18px; font-size:12px; color:#e34948; margin-top:10px; font-weight:600}
+.gate.shake .g-box{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)} 40%{transform:translateX(10px)} 60%{transform:translateX(-7px)} 80%{transform:translateX(7px)}}
+
+/* floating collectibles (what national libraries collect) */
+.floaties{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1}
+.floaty{position:absolute; display:block; opacity:.75;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.25));
+  animation:floaty ease-in-out infinite alternate}
+@keyframes floaty{from{transform:translateY(4px) rotate(var(--r0))} to{transform:translateY(-18px) rotate(var(--r1))}}
+
+/* playful title */
+.fancy{transform:rotate(-1deg)}
+.fancy .w{display:inline-block; animation:bob 3.2s ease-in-out infinite alternate}
+.fancy .w:nth-child(1){animation-delay:0s}
+.fancy .w:nth-child(2){animation-delay:-.4s}
+.fancy .w:nth-child(3){animation-delay:-.8s}
+.fancy .w:nth-child(4){animation-delay:-1.2s}
+.fancy .w:nth-child(5){animation-delay:-1.6s}
+.fancy em{font-style:normal; color:var(--accent);
+  text-decoration:underline wavy var(--accent);
+  text-decoration-thickness:3px; text-underline-offset:10px}
+@keyframes bob{from{transform:translateY(2px)} to{transform:translateY(-5px)}}
+.intro > div:not(.floaties){position:relative; z-index:2}
+
+/* ---------- golden doors & treasures ---------- */
+.gdoor{display:none; cursor:pointer; outline:none}
+.gdoor.show{display:block}
+.gdoor .glow{animation:goldpulse 1.6s ease-in-out infinite}
+.gdoor:hover rect, .gdoor:focus-visible rect{filter:brightness(1.15)}
+@keyframes goldpulse{0%,100%{opacity:.25} 50%{opacity:.75}}
+.panel.gold{border:2px solid #d4a12f}
+.panel.gold .p-lib{color:#e8b53a}
+.panel.gold .stat{color:#f6c945}
+.panel.gold .p-sub{color:#e8b53a}
+.panel.gold .p-fun{background:rgba(246,201,69,.12); border-color:#e8b53a}
+.relics{display:flex; gap:3px; margin-left:6px}
+.relics i{font-style:normal; font-size:13px; opacity:.22; filter:grayscale(1); transition:all .4s; cursor:default}
+.relics i.lit{opacity:1; filter:none; text-shadow:0 0 10px rgba(246,201,69,.8)}
+body.golden #scene{filter:sepia(.45) saturate(1.35) hue-rotate(-12deg) brightness(1.08)}
+
+/* ---------- passport (all treasures found) ---------- */
+.passport{position:fixed; inset:0; z-index:180; display:grid; place-items:center;
+  background:rgba(8,10,20,.6); backdrop-filter:blur(6px);
+  opacity:0; visibility:hidden; transition:opacity .5s, visibility .5s}
+.passport.show{opacity:1; visibility:visible}
+.pp-card{background:var(--bg1); border:2px solid #d4a12f; border-radius:18px;
+  padding:28px 30px; text-align:center; max-width:440px; margin:0 16px;
+  box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.pp-title{font-size:20px; font-weight:800; margin-bottom:8px}
+.pp-card p{font-size:13px; color:var(--ink2); margin-bottom:14px}
+.pp-stamps{display:flex; gap:10px; justify-content:center; margin-bottom:14px}
+.pp-stamp{border:1.5px dashed var(--c); border-radius:12px; padding:10px 12px;
+  font-size:22px; display:flex; flex-direction:column; gap:4px; align-items:center}
+.pp-stamp span{font-size:10px; font-weight:700; color:var(--ink2)}
+.pp-pts{font-size:18px; font-weight:800; color:#e8b53a; margin-bottom:10px}
+
+/* ---------- 3-step tour ---------- */
+.tourcard{position:absolute; z-index:150; width:300px; background:var(--bg1);
+  border:2px solid var(--accent); border-radius:14px; padding:14px 16px;
+  box-shadow:0 18px 50px rgba(0,0,0,.45); display:none}
+.tourcard.show{display:block}
+.t-step{font-size:11px; font-weight:800; letter-spacing:.12em; color:var(--accent); margin-bottom:6px}
+.tourcard p{font-size:13px; color:var(--ink2); margin-bottom:12px}
+.t-row{display:flex; justify-content:space-between; align-items:center}
+.t-skip{background:none; border:0; color:var(--muted); font:inherit; font-size:12px; cursor:pointer}
+.t-skip:hover{color:var(--ink)}
+.t-next{font:inherit; font-weight:700; font-size:13px; color:#fff; background:var(--accent);
+  border:0; border-radius:999px; padding:8px 18px; cursor:pointer}
+.tour-ring{box-shadow:0 0 0 3px var(--accent), 0 0 24px var(--accent); border-radius:999px}
+.hs.tour-big .core{filter:drop-shadow(0 0 10px var(--accent)) brightness(1.3)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed; left:50%; bottom:26px; z-index:80;
+  transform:translate(-50%, 90px);
+  background:var(--bg1); border:1px solid var(--hair); border-radius:14px;
+  padding:12px 20px; display:flex; gap:12px; align-items:center;
+  box-shadow:0 16px 44px rgba(0,0,0,.4);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1);
+}
+.toast.show{transform:translate(-50%,0)}
+.toast .t-emoji{font-size:24px}
+.toast .t-title{font-weight:800; font-size:14px}
+.toast .t-sub{font-size:12px; color:var(--ink2)}
+
+/* ---------- responsive & motion ---------- */
+@media (max-width:760px){
+  .hud{min-width:150px}
+  .panel, .panel.left, .panel.lowleft{
+    position:fixed; left:12px; right:12px; bottom:12px; top:auto; width:auto;
+    transform:translateY(24px);
+  }
+  .panel.open{transform:none}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+}
+</style>
+</head>
+<body data-lib="bl" data-mode="day">
+
+<!-- ================= PASSWORD GATE (client-side preview lock) ================= -->
+<div class="gate" id="gate">
+  <div class="floaties" id="gateFloat"></div>
+  <div class="g-box">
+    <div class="g-lock">🔐</div>
+    <div class="eyebrow">A ReVerDi Interactive</div>
+    <h2 class="fancy"><span class="w">The</span> <span class="w">National</span> <span class="w">Library</span> <em class="w">Game</em> <span class="w">📚💾</span></h2>
+    <p class="g-lede"><b>What does a national library actually do — and what does it take to keep a country's memory alive?</b></p>
+    <p class="g-lede">We rebuilt three national libraries as one explorable world: the <b>British Library</b>, the Dutch <b>KB</b> and the <b>Swiss National Library</b> — in two layers. By <b>☀️ day</b> you walk the physical world: the reading rooms, the vaults deep underground, the satellite sites from Boston Spa to Lugano. Switch to <b>🌌 night</b> and the same place becomes the digital world: the data archive glowing in the sky, virtual visitors, platforms and catalogues.</p>
+    <p class="g-lede">Switch countries and watch everything transform with the real numbers. Click the glowing dots — every discovery earns points, completing a whole library earns a bonus.</p>
+    <form id="gateForm">
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="off" autofocus>
+      <button type="submit">Enter the library →</button>
+    </form>
+    <div class="g-err" id="gateErr"></div>
+    <div class="tiny">Closed preview · an unofficial research prototype · figures simplified from public reports</div>
+    <div class="tiny"><a class="backlink" href="../index.html">← Back to the ReVerDi website</a></div>
+  </div>
+</div>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="exitbtn" href="../index.html" title="Leave the game and return to the ReVerDi website">← ReVerDi</a>
+    <div class="brand">The National Library Game<small>A ReVerDi interactive</small></div>
+    <nav class="switcher" aria-label="Choose a library">
+      <button class="libbtn" data-lib="bl"  style="--c:var(--bl)"  aria-pressed="true"><span class="dot"></span>British Library</button>
+      <button class="libbtn" data-lib="kb"  style="--c:var(--kb)"  aria-pressed="false"><span class="dot"></span>KB Netherlands</button>
+      <button class="libbtn" data-lib="snl" style="--c:var(--snl)" aria-pressed="false"><span class="dot"></span>Swiss National Library</button>
+    </nav>
+    <button class="modebtn" id="modeBtn" aria-label="Switch to the digital world">🌌 Digital world</button>
+    <div class="hud" title="Explorer score — every discovery earns points; complete a whole library for a bonus">
+      <div class="hud-top"><span class="star">★</span><strong id="hudPts">0</strong><span class="rank" id="hudRank">Newcomer</span><span class="relics"><i id="relic-bl" title="Secret treasure of the British Library">📜</i><i id="relic-kb" title="Secret treasure of the KB">📖</i><i id="relic-snl" title="Secret treasure of the Swiss National Library">🎨</i></span></div>
+      <div class="libbars">
+        <div class="lb" style="--c:var(--bl)"  title="British Library progress"><i></i><div class="lb-track"><div class="lb-fill" id="lb-bl"></div></div></div>
+        <div class="lb" style="--c:var(--kb)"  title="KB progress"><i></i><div class="lb-track"><div class="lb-fill" id="lb-kb"></div></div></div>
+        <div class="lb" style="--c:var(--snl)" title="Swiss National Library progress"><i></i><div class="lb-track"><div class="lb-fill" id="lb-snl"></div></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= SCENE ================= -->
+<section id="hero">
+  <div class="wrap">
+    <div class="scene-wrap">
+      <svg id="scene" viewBox="0 0 1280 820" role="img" aria-label="Cutaway illustration of a national library: digital archive in the sky, visitor floors above ground, physical archive vault underground">
+        <defs>
+          <linearGradient id="skyGradN" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#070b1a"/>
+            <stop offset="0.7" stop-color="#0e1734"/>
+            <stop offset="1" stop-color="#182552"/>
+          </linearGradient>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffe9a3"/>
+            <stop offset="1" stop-color="#d4a12f"/>
+          </linearGradient>
+          <linearGradient id="skyGradD" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7ab6ea"/>
+            <stop offset="0.7" stop-color="#b4d8f5"/>
+            <stop offset="1" stop-color="#dfeffb"/>
+          </linearGradient>
+        </defs>
+
+        <!-- sky (night/day crossfade) -->
+        <rect id="skyN" x="0" y="0" width="1280" height="560" fill="url(#skyGradN)"/>
+        <rect id="skyD" x="0" y="0" width="1280" height="560" fill="url(#skyGradD)"/>
+        <g id="moonG">
+          <circle cx="180" cy="95" r="48" fill="#e8ecff" opacity="0.07"/>
+          <circle cx="180" cy="95" r="30" fill="#e8ecff" opacity="0.9"/>
+          <circle cx="171" cy="88" r="6" fill="#c9d2ef" opacity="0.5"/>
+          <circle cx="190" cy="104" r="4" fill="#c9d2ef" opacity="0.5"/>
+        </g>
+        <g id="sunG">
+          <circle cx="180" cy="95" r="52" fill="#ffd977" opacity="0.25"/>
+          <circle cx="180" cy="95" r="30" fill="#ffd977" opacity="0.95"/>
+        </g>
+        <g id="stars"></g>
+        <g class="cloudpuff" style="animation-duration:95s; animation-delay:-30s" opacity="0.5">
+          <ellipse cx="60" cy="120" rx="70" ry="16" fill="var(--parapet)"/>
+          <ellipse cx="120" cy="110" rx="50" ry="13" fill="var(--parapet)"/>
+        </g>
+        <g class="cloudpuff" style="animation-duration:140s; animation-delay:-90s" opacity="0.4">
+          <ellipse cx="0" cy="250" rx="90" ry="18" fill="var(--parapet)"/>
+          <ellipse cx="70" cy="240" rx="55" ry="13" fill="var(--parapet)"/>
+        </g>
+
+        <!-- THE DIGITAL ARCHIVE (in the sky) -->
+        <line id="uplink" x1="905" y1="372" x2="1030" y2="196" stroke="var(--accent)" stroke-width="2" opacity="0.55"/>
+        <line id="uplink2" x1="1105" y1="438" x2="1095" y2="235" stroke="var(--accent)" stroke-width="2" opacity="0.6"/>
+        <g id="cloud">
+          <ellipse class="cloudglow" cx="1085" cy="150" rx="140" ry="58" fill="var(--accent)"/>
+          <ellipse cx="1085" cy="150" rx="105" ry="42" fill="var(--accent)" opacity="0.10"/>
+          <g id="cloudCore">
+            <circle cx="1040" cy="160" r="24" fill="var(--unit)" stroke="var(--unitstroke)" stroke-width="2"/>
+            <circle cx="1085" cy="140" r="32" fill="var(--unit)" stroke="var(--unitstroke)" stroke-width="2"/>
+            <circle cx="1130" cy="160" r="22" fill="var(--unit)" stroke="var(--unitstroke)" stroke-width="2"/>
+            <circle cx="1040" cy="160" r="3.5" fill="#4be38a" class="led"/>
+            <circle cx="1085" cy="140" r="4" fill="#4be38a" class="led" style="animation-delay:-0.5s"/>
+            <circle cx="1130" cy="160" r="3.5" fill="#4be38a" class="led" style="animation-delay:-1s"/>
+            <circle cx="995" cy="126" r="3" fill="var(--accent)" class="led" style="animation-delay:-0.3s"/>
+            <circle cx="1176" cy="176" r="3" fill="var(--accent)" class="led" style="animation-delay:-0.8s"/>
+            <circle cx="1160" cy="118" r="2.5" fill="var(--accent)" class="led" style="animation-delay:-1.2s"/>
+          </g>
+        </g>
+        <g id="cloudText">
+          <text class="roomlabel" x="1085" y="248" text-anchor="middle">THE DIGITAL ARCHIVE</text>
+          <text id="cloudLabel" class="cloud-label" x="1085" y="265" text-anchor="middle">2.95 PB of digital collections</text>
+        </g>
+
+        <!-- skylines -->
+        <g id="sky-bl" class="skyline on">
+          <polygon points="118,520 118,330 131,300 144,330 144,520" fill="var(--sil)"/>
+          <circle cx="131" cy="356" r="8" fill="#f6d98b" opacity="0.85"/>
+          <rect x="144" y="418" width="130" height="102" fill="var(--sil)"/>
+          <polygon points="286,520 308,318 330,520" fill="var(--sil)"/>
+          <path d="M1030,520 L1030,472 Q1030,432 1077,432 Q1124,432 1124,472 L1124,520 Z" fill="var(--sil)"/>
+          <rect x="1073" y="410" width="8" height="26" fill="var(--sil)"/>
+          <ellipse cx="1200" cy="462" rx="21" ry="58" fill="var(--sil)"/>
+          <rect x="1240" y="430" width="34" height="90" fill="var(--sil)"/>
+        </g>
+        <g id="sky-kb" class="skyline">
+          <rect x="112" y="408" width="24" height="112" fill="var(--sil)"/>
+          <polygon points="108,410 124,368 140,410" fill="var(--sil)"/>
+          <rect x="160" y="408" width="24" height="112" fill="var(--sil)"/>
+          <polygon points="156,410 172,368 188,410" fill="var(--sil)"/>
+          <rect x="136" y="448" width="24" height="72" fill="var(--sil)"/>
+          <polygon points="250,520 250,352 288,320 288,520" fill="var(--sil)"/>
+          <rect x="1046" y="382" width="30" height="138" fill="var(--sil)"/>
+          <polygon points="1040,384 1061,344 1082,384" fill="var(--sil)"/>
+          <circle cx="1061" cy="402" r="6" fill="#f6d98b" opacity="0.8"/>
+          <rect x="1082" y="442" width="104" height="78" fill="var(--sil)"/>
+          <rect x="1210" y="420" width="52" height="100" fill="var(--sil)"/>
+        </g>
+        <g id="sky-snl" class="skyline">
+          <polygon points="0,520 60,448 130,498 210,430 300,500 360,470 420,520 700,520 760,468 850,510 980,440 1080,505 1160,460 1280,520" fill="var(--sil2)" opacity="0.8"/>
+          <polygon points="140,520 140,382 153,382 166,300 179,382 192,382 192,520" fill="var(--sil)"/>
+          <rect x="212" y="440" width="70" height="80" fill="var(--sil)"/>
+          <polygon points="212,442 247,414 282,442" fill="var(--sil)"/>
+          <rect x="1070" y="402" width="32" height="118" fill="var(--sil)"/>
+          <polygon points="1063,404 1086,352 1109,404" fill="var(--sil)"/>
+          <circle cx="1086" cy="424" r="7" fill="#f6d98b" opacity="0.8"/>
+          <rect x="1130" y="452" width="56" height="68" fill="var(--sil)"/>
+          <polygon points="1130,454 1158,428 1186,454" fill="var(--sil)"/>
+        </g>
+
+        <!-- ground & underground -->
+        <rect x="0" y="520" width="1280" height="300" fill="var(--ground)"/>
+        <rect x="0" y="518" width="1280" height="3" fill="var(--groundline)"/>
+        <rect x="0" y="560" width="1280" height="260" fill="var(--under)"/>
+        <rect x="0" y="558" width="1280" height="3" fill="var(--underline)"/>
+
+        <!-- satellite sites (right of the main building) -->
+        <g id="sat-bl" class="satellite on">
+          <rect x="1030" y="446" width="160" height="74" rx="4" fill="var(--bfront)" stroke="var(--bstroke)" stroke-width="1.5"/>
+          <rect x="1030" y="446" width="160" height="10" rx="4" fill="var(--parapet)"/>
+          <rect x="1044" y="466" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1078" y="466" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1112" y="466" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1146" y="466" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1044" y="478" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1078" y="478" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1146" y="478" width="26" height="6" rx="2" fill="var(--unit)"/>
+          <rect x="1098" y="492" width="30" height="28" fill="var(--furn)"/>
+          <circle cx="1123" cy="506" r="2" fill="#f6d98b"/>
+          <text class="roomlabel" x="1110" y="542" text-anchor="middle" style="font-size:9.5px">BOSTON SPA · YORKSHIRE</text>
+        </g>
+        <g id="sat-kb" class="satellite">
+          <rect x="1150" y="372" width="8" height="148" fill="var(--furn)"/>
+          <line x1="1154" y1="380" x2="1044" y2="380" stroke="var(--furn)" stroke-width="4"/>
+          <line x1="1154" y1="380" x2="1196" y2="380" stroke="var(--furn)" stroke-width="4"/>
+          <line x1="1154" y1="372" x2="1064" y2="380" stroke="var(--furn)" stroke-width="1.5"/>
+          <line x1="1064" y1="380" x2="1064" y2="412" stroke="var(--furn)" stroke-width="1.5"/>
+          <rect x="1058" y="412" width="12" height="8" fill="var(--accent)"/>
+          <circle cx="1154" cy="372" r="3" fill="#e34948" class="led"/>
+          <rect x="1040" y="490" width="100" height="30" fill="var(--bfront)" stroke="var(--bstroke)"/>
+          <rect x="1040" y="472" width="60" height="18" fill="var(--bfront)" stroke="var(--bstroke)"/>
+          <line x1="1040" y1="520" x2="1140" y2="520" stroke="var(--furn2)" stroke-width="2"/>
+          <text class="roomlabel" x="1116" y="542" text-anchor="middle" style="font-size:9.5px">NEW VAULT · UNDER CONSTRUCTION</text>
+        </g>
+        <g id="sat-snl" class="satellite">
+          <rect x="1030" y="456" width="74" height="64" rx="3" fill="var(--bfront)" stroke="var(--bstroke)" stroke-width="1.5"/>
+          <rect x="1030" y="456" width="74" height="8" rx="3" fill="var(--parapet)"/>
+          <rect x="1056" y="494" width="20" height="26" rx="9" fill="var(--furn)"/>
+          <path d="M1042,478 q6,-8 12,0" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <path d="M1040,482 q8,-12 16,0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6"/>
+          <rect x="1084" y="470" width="12" height="10" rx="2" fill="var(--unit)"/>
+          <polygon points="1120,466 1184,450 1184,466" fill="var(--parapet)"/>
+          <rect x="1120" y="466" width="64" height="54" rx="2" fill="var(--bfront)" stroke="var(--bstroke)" stroke-width="1.5"/>
+          <rect x="1130" y="478" width="14" height="12" rx="2" fill="var(--unit)"/>
+          <rect x="1152" y="478" width="14" height="12" rx="2" fill="var(--unit)"/>
+          <rect x="1138" y="498" width="16" height="22" rx="2" fill="var(--furn)"/>
+          <text class="roomlabel" x="1108" y="542" text-anchor="middle" style="font-size:9.5px">LUGANO · FONOTECA&#160;&#160;+&#160;&#160;NEUCHÂTEL · CDN</text>
+        </g>
+
+        <!-- building: side + roof faces -->
+        <polygon points="920,180 986,152 986,466 920,520" fill="var(--bside)"/>
+        <polygon points="360,180 920,180 986,152 426,152" fill="var(--broof)" stroke="var(--broofstroke)" stroke-width="1.5"/>
+        <rect x="352" y="174" width="576" height="10" rx="3" fill="var(--parapet)"/>
+
+        <!-- flag -->
+        <line x1="404" y1="174" x2="404" y2="118" stroke="var(--muted)" stroke-width="2.5"/>
+        <rect id="flag" x="404" y="120" width="46" height="26" fill="var(--accent)" rx="2"/>
+
+        <!-- building front (cutaway) -->
+        <rect x="360" y="180" width="560" height="340" fill="var(--bfront)" stroke="var(--bstroke)" stroke-width="2"/>
+
+        <!-- nameplate -->
+        <rect x="470" y="196" width="340" height="34" rx="8" fill="#0e1430" stroke="rgba(246,231,198,0.45)"/>
+        <text id="plateName" class="plate-text" x="640" y="219" text-anchor="middle" textLength="320" lengthAdjust="spacingAndGlyphs">BRITISH LIBRARY</text>
+
+        <!-- FLOOR 2 · visitor area / reading room -->
+        <rect x="368" y="236" width="544" height="94" fill="var(--room1)"/>
+        <text class="roomlabel" x="382" y="254">READING ROOM · EXHIBITIONS</text>
+        <g id="shelfstrip">
+          <rect x="382" y="262" width="150" height="8" rx="2" fill="var(--furn2)"/>
+          <rect x="386" y="264" width="10" height="4" fill="#3987e5" opacity="0.7"/>
+          <rect x="400" y="264" width="8" height="4" fill="#c98500" opacity="0.7"/>
+          <rect x="412" y="264" width="12" height="4" fill="#d55181" opacity="0.7"/>
+          <rect x="430" y="264" width="9" height="4" fill="#8fa0c8" opacity="0.7"/>
+          <rect x="444" y="264" width="11" height="4" fill="#2ea36a" opacity="0.7"/>
+          <rect x="460" y="264" width="8" height="4" fill="#e8ecff" opacity="0.5"/>
+          <rect x="472" y="264" width="12" height="4" fill="#c98500" opacity="0.5"/>
+          <rect x="490" y="264" width="9" height="4" fill="#3987e5" opacity="0.5"/>
+          <rect x="504" y="264" width="10" height="4" fill="#d55181" opacity="0.5"/>
+        </g>
+        <g>
+          <rect x="395" y="302" width="68" height="6" rx="2" fill="var(--furn)"/>
+          <rect x="398" y="308" width="4" height="18" fill="var(--furn2)"/>
+          <rect x="456" y="308" width="4" height="18" fill="var(--furn2)"/>
+          <circle cx="409" cy="294" r="4" fill="#f6d98b"/>
+          <circle cx="409" cy="294" r="9" fill="#f6d98b" opacity="0.12"/>
+          <rect x="492" y="302" width="68" height="6" rx="2" fill="var(--furn)"/>
+          <rect x="495" y="308" width="4" height="18" fill="var(--furn2)"/>
+          <rect x="553" y="308" width="4" height="18" fill="var(--furn2)"/>
+          <circle cx="506" cy="294" r="4" fill="#f6d98b"/>
+          <circle cx="506" cy="294" r="9" fill="#f6d98b" opacity="0.12"/>
+        </g>
+        <g id="people" class="morph"></g>
+        <g>
+          <rect x="640" y="262" width="26" height="32" rx="2" fill="var(--unit)" stroke="var(--unitstroke)"/>
+          <rect x="646" y="270" width="14" height="16" fill="var(--accent)" opacity="0.65"/>
+          <rect x="680" y="262" width="26" height="32" rx="2" fill="var(--unit)" stroke="var(--unitstroke)"/>
+          <rect x="686" y="270" width="14" height="16" fill="#8fa0c8" opacity="0.6"/>
+          <rect x="720" y="262" width="26" height="32" rx="2" fill="var(--unit)" stroke="var(--unitstroke)"/>
+          <rect x="726" y="270" width="14" height="16" fill="#f6d98b" opacity="0.55"/>
+          <text class="roomlabel" x="640" y="312" style="letter-spacing:.12em; font-size:9px">EXHIBITION</text>
+        </g>
+        <g>
+          <rect x="830" y="286" width="44" height="44" rx="4" fill="var(--unit)" stroke="var(--unitstroke)"/>
+          <rect x="836" y="292" width="32" height="24" rx="3" fill="var(--accent)" opacity="0.85"/>
+          <rect x="843" y="298" width="18" height="3" fill="#0b1020" opacity="0.6"/>
+          <rect x="843" y="304" width="12" height="3" fill="#0b1020" opacity="0.6"/>
+        </g>
+        <rect x="360" y="330" width="560" height="4" fill="var(--sep)"/>
+
+        <!-- FLOOR 1 · digitisation lab -->
+        <rect x="368" y="334" width="544" height="94" fill="var(--room2)"/>
+        <text class="roomlabel" x="382" y="352">DIGITISATION LAB</text>
+        <g>
+          <rect x="400" y="390" width="110" height="26" rx="4" fill="var(--furn)"/>
+          <rect x="408" y="368" width="94" height="22" rx="3" fill="#101830" stroke="var(--unitstroke)"/>
+          <rect id="beam" x="412" y="370" width="8" height="18" fill="var(--accent)" opacity="0.85"/>
+          <circle cx="418" cy="404" r="2.5" fill="#4be38a" class="led"/>
+          <circle cx="428" cy="404" r="2.5" fill="#f6d98b" class="led" style="animation-delay:-0.7s"/>
+        </g>
+        <g transform="translate(515,376)">
+          <rect class="fly" x="0" y="0" width="10" height="13" rx="1" fill="#e8ecff"/>
+          <rect class="fly" x="0" y="0" width="10" height="13" rx="1" fill="#c9d2ef" style="animation-delay:-1.4s"/>
+          <rect class="fly" x="0" y="0" width="10" height="13" rx="1" fill="#e8ecff" style="animation-delay:-2.8s"/>
+        </g>
+        <line x1="510" y1="416" x2="800" y2="416" stroke="var(--furn2)" stroke-width="2" stroke-dasharray="6 5"/>
+        <g id="servers" class="morph"></g>
+        <rect x="360" y="428" width="560" height="4" fill="var(--sep)"/>
+
+        <!-- GROUND FLOOR · entrance hall -->
+        <rect x="368" y="432" width="544" height="86" fill="var(--room3)"/>
+        <text class="roomlabel" x="382" y="450">ENTRANCE HALL · WELCOME DESK</text>
+        <g>
+          <rect x="612" y="446" width="56" height="72" rx="24" fill="#f2dfae" opacity="0.95"/>
+          <rect x="612" y="490" width="56" height="28" fill="#f2dfae" opacity="0.95"/>
+          <line x1="640" y1="452" x2="640" y2="518" stroke="#b89b5e" stroke-width="2"/>
+          <circle cx="633" cy="490" r="2.5" fill="#b89b5e"/>
+          <circle cx="647" cy="490" r="2.5" fill="#b89b5e"/>
+        </g>
+        <g>
+          <rect x="426" y="474" width="88" height="6" rx="2" fill="var(--unitstroke)"/>
+          <rect x="430" y="480" width="80" height="26" rx="4" fill="var(--furn)"/>
+          <circle cx="470" cy="458" r="5.5" fill="#8fa0c8"/>
+          <rect x="461" y="465" width="18" height="12" rx="4" fill="#8fa0c8"/>
+        </g>
+        <g>
+          <rect x="740" y="456" width="64" height="44" rx="4" fill="var(--unit)" stroke="var(--unitstroke)"/>
+          <rect x="748" y="464" width="48" height="6" rx="2" fill="var(--accent)" opacity="0.8"/>
+          <rect x="748" y="476" width="36" height="4" rx="2" fill="#8fa0c8" opacity="0.6"/>
+          <rect x="748" y="484" width="42" height="4" rx="2" fill="#8fa0c8" opacity="0.4"/>
+        </g>
+        <g class="walker">
+          <g transform="translate(524,494)">
+            <circle cx="0" cy="0" r="5" fill="#8fa0c8"/>
+            <rect x="-6" y="6" width="12" height="16" rx="4" fill="#8fa0c8"/>
+          </g>
+        </g>
+        <g class="walker w2">
+          <g transform="translate(560,498)">
+            <circle cx="0" cy="0" r="4.5" fill="#6d7692"/>
+            <rect x="-5" y="5" width="10" height="14" rx="4" fill="#6d7692"/>
+          </g>
+        </g>
+        <rect x="876" y="468" width="30" height="50" fill="var(--bside)" stroke="var(--unitstroke)"/>
+        <rect x="876" y="518" width="30" height="52" fill="var(--bside)" opacity="0.75"/>
+        <line x1="891" y1="468" x2="891" y2="570" stroke="var(--unitstroke)" stroke-width="1.5" stroke-dasharray="3 4"/>
+
+        <!-- BASEMENT · physical archive -->
+        <rect x="300" y="566" width="680" height="224" rx="10" fill="var(--vault)" stroke="var(--vaultstroke)" stroke-width="2"/>
+        <text class="roomlabel" x="320" y="592">THE PHYSICAL ARCHIVE · CLIMATE-CONTROLLED VAULT</text>
+        <line x1="330" y1="604" x2="950" y2="604" stroke="var(--unitstroke)" stroke-width="3"/>
+        <g id="crane" class="morph">
+          <rect x="330" y="598" width="30" height="12" rx="2" fill="#8fa0c8"/>
+          <line x1="345" y1="610" x2="345" y2="634" stroke="#8fa0c8" stroke-width="2"/>
+          <rect x="337" y="634" width="16" height="11" rx="2" fill="var(--accent)"/>
+        </g>
+        <g id="trolley" class="morph" style="display:none">
+          <g transform="translate(350,738)">
+            <circle cx="-14" cy="-16" r="5" fill="#8fa0c8"/>
+            <rect x="-20" y="-10" width="12" height="16" rx="4" fill="#8fa0c8"/>
+            <rect x="0" y="-14" width="30" height="16" rx="2" fill="var(--furn)" stroke="var(--unitstroke)"/>
+            <rect x="3" y="-22" width="7" height="8" fill="#c98500" opacity="0.8"/>
+            <rect x="12" y="-20" width="7" height="6" fill="#8fa0c8" opacity="0.8"/>
+            <circle cx="6" cy="5" r="4" fill="#6d7692"/>
+            <circle cx="24" cy="5" r="4" fill="#6d7692"/>
+          </g>
+        </g>
+        <g id="racks" class="morph"></g>
+        <text id="vaultLabel" class="vault-label" x="640" y="782" text-anchor="middle">≈ 170,000,000 physical items</text>
+
+        <!-- HOTSPOTS: physical (day) + digital (night) -->
+        <g id="hotspots">
+          <g class="hs r-phy" data-spot="mission" tabindex="0" role="button" aria-label="Mission and identity">
+            <circle class="halo" cx="640" cy="164" r="20"/><circle class="core" cx="640" cy="164" r="15"/><text class="sym" x="640" y="170">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="house" tabindex="0" role="button" aria-label="Budget and staff">
+            <circle class="halo" cx="843" cy="213" r="20"/><circle class="core" cx="843" cy="213" r="15"/><text class="sym" x="843" y="219">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="reading" tabindex="0" role="button" aria-label="Reading room usage">
+            <circle class="halo" cx="592" cy="288" r="20"/><circle class="core" cx="592" cy="288" r="15"/><text class="sym" x="592" y="294">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="visitors" tabindex="0" role="button" aria-label="Physical visitors">
+            <circle class="halo" cx="550" cy="482" r="20"/><circle class="core" cx="550" cy="482" r="15"/><text class="sym" x="550" y="488">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="collection" tabindex="0" role="button" aria-label="Physical collection">
+            <circle class="halo" cx="640" cy="668" r="20"/><circle class="core" cx="640" cy="668" r="15"/><text class="sym" x="640" y="674">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="storage" tabindex="0" role="button" aria-label="Storage">
+            <circle class="halo" cx="912" cy="622" r="20"/><circle class="core" cx="912" cy="622" r="15"/><text class="sym" x="912" y="628">+</text>
+          </g>
+          <g class="hs r-phy" data-spot="sites" tabindex="0" role="button" aria-label="Satellite sites">
+            <circle class="halo" cx="1110" cy="420" r="20"/><circle class="core" cx="1110" cy="420" r="15"/><text class="sym" x="1110" y="426">+</text>
+          </g>
+          <g class="hs r-dig" data-spot="digitised" tabindex="0" role="button" aria-label="Digitisation">
+            <circle class="halo" cx="455" cy="403" r="20"/><circle class="core" cx="455" cy="403" r="15"/><text class="sym" x="455" y="409">+</text>
+          </g>
+          <g class="hs r-dig" data-spot="digital" tabindex="0" role="button" aria-label="Digital collection">
+            <circle class="halo" cx="985" cy="188" r="20"/><circle class="core" cx="985" cy="188" r="15"/><text class="sym" x="985" y="194">+</text>
+          </g>
+          <g class="hs r-dig" data-spot="virtual" tabindex="0" role="button" aria-label="Virtual visitors">
+            <circle class="halo" cx="1178" cy="100" r="20"/><circle class="core" cx="1178" cy="100" r="15"/><text class="sym" x="1178" y="106">+</text>
+          </g>
+          <g class="hs r-dig" data-spot="platforms" tabindex="0" role="button" aria-label="Platforms and catalogues">
+            <circle class="halo" cx="1185" cy="192" r="20"/><circle class="core" cx="1185" cy="192" r="15"/><text class="sym" x="1185" y="198">+</text>
+          </g>
+        </g>
+
+        <!-- GOLDEN DOORS (appear when a library is fully explored) -->
+        <g id="door-bl" class="gdoor" data-door="bl" role="button" tabindex="0" aria-label="A golden door has appeared">
+          <circle class="glow" cx="799" cy="308" r="34" fill="#f6c945"/>
+          <rect x="784" y="286" width="30" height="44" rx="14" fill="url(#goldGrad)" stroke="#8a6d1f" stroke-width="2"/>
+          <circle cx="799" cy="310" r="3" fill="#5c470f"/>
+          <rect x="797.5" y="310" width="3" height="7" fill="#5c470f"/>
+          <text x="799" y="280" text-anchor="middle" font-size="14">✨</text>
+        </g>
+        <g id="door-kb" class="gdoor" data-door="kb" role="button" tabindex="0" aria-label="A golden door has appeared">
+          <circle class="glow" cx="1110" cy="497" r="34" fill="#f6c945"/>
+          <rect x="1095" y="474" width="30" height="46" rx="14" fill="url(#goldGrad)" stroke="#8a6d1f" stroke-width="2"/>
+          <circle cx="1110" cy="500" r="3" fill="#5c470f"/>
+          <rect x="1108.5" y="500" width="3" height="7" fill="#5c470f"/>
+          <text x="1110" y="468" text-anchor="middle" font-size="14">✨</text>
+        </g>
+        <g id="door-snl" class="gdoor" data-door="snl" role="button" tabindex="0" aria-label="A golden door has appeared">
+          <circle class="glow" cx="951" cy="724" r="34" fill="#f6c945"/>
+          <rect x="936" y="700" width="30" height="48" rx="14" fill="url(#goldGrad)" stroke="#8a6d1f" stroke-width="2"/>
+          <circle cx="951" cy="726" r="3" fill="#5c470f"/>
+          <rect x="949.5" y="726" width="3" height="7" fill="#5c470f"/>
+          <text x="951" y="694" text-anchor="middle" font-size="14">✨</text>
+        </g>
+      </svg>
+
+      <!-- fact panel -->
+      <aside class="panel" id="panel" aria-live="polite">
+        <div class="p-top">
+          <span class="p-icon" id="pIcon">📖</span>
+          <div>
+            <div class="p-lib" id="pLib">British Library</div>
+            <h3 id="pTitle">Title</h3>
+          </div>
+          <button class="p-close" id="pClose" aria-label="Close">✕</button>
+        </div>
+        <div class="stat" id="pStat">0</div>
+        <div class="p-sub" id="pSub"></div>
+        <p class="p-body" id="pBody"></p>
+        <div class="p-fun" id="pFun"><span>💡</span><span id="pFunText"></span></div>
+        <div class="p-holders" id="pHolders"></div>
+        <div class="p-src" id="pSrc"></div>
+        <div class="p-found" id="pFound"></div>
+      </aside>
+
+    </div>
+
+    <div class="scene-hint">
+      <span>💡 7 physical dots by ☀️ day · 4 digital dots by 🌌 night · 3 libraries · 33 discoveries. Don't miss the basement — or the sky.</span>
+      <span id="hintProgress">33 discoveries to go</span>
+    </div>
+
+    <p class="disclaimer">
+      <b>Please note:</b> The National Library Game is the ReVerDi team's own interpretation — a playful, unofficial visualisation for research communication. It is not an official website or publication of the British Library, the KB or the Swiss National Library, and it is not an official statistics product. Figures are compiled and simplified from public annual reports and our comparative study; currencies converted to euros; all errors are ours alone.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><strong>The National Library Game</strong> — a ReVerDi project prototype.</span>
+    <span>Data: ReVerDi comparative study (Table 3) · British Library Annual Report 2023 · KB Strategy 2023 · Swiss National Library key figures 2023/2024 &amp; Annual Report 2024.</span>
+    <span>Built as a single HTML file — no frameworks, no plugins, no Java. Just open it in a browser.</span>
+    <span><a class="backlink" href="../index.html">← Back to the ReVerDi website</a></span>
+  </div>
+</footer>
+
+<div class="passport" id="passport">
+  <div class="pp-card">
+    <div class="pp-title">🛂 European Library Passport</div>
+    <p>All three national libraries fully explored — physical world, digital world, and their secret treasures.</p>
+    <div class="pp-stamps">
+      <div class="pp-stamp" style="--c:var(--bl)">📜<span>British Library</span></div>
+      <div class="pp-stamp" style="--c:var(--kb)">📖<span>KB Netherlands</span></div>
+      <div class="pp-stamp" style="--c:var(--snl)">🎨<span>Swiss National Library</span></div>
+    </div>
+    <div class="pp-pts" id="ppPts">★ 0 points</div>
+    <p>🌇 <b>Golden Hour unlocked</b> — the library world now basks in gold.</p>
+    <button class="startbtn" id="ppClose">Keep exploring →</button>
+  </div>
+</div>
+
+<div class="tourcard" id="tourcard">
+  <div class="t-step" id="tStep">1 / 3</div>
+  <p id="tText"></p>
+  <div class="t-row">
+    <button class="t-skip" id="tSkip">Skip tour</button>
+    <button class="t-next" id="tNext">Next</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status">
+  <span class="t-emoji" id="tEmoji">🏅</span>
+  <div><div class="t-title" id="tTitle"></div><div class="t-sub" id="tSub"></div></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $ = function(s){ return document.querySelector(s); };
+var SVGNS = "http://www.w3.org/2000/svg";
+function fmt(n){ return n.toLocaleString('en-GB'); }
+
+/* ============ DATA ============ */
+var LIBS = {
+  bl: {
+    name:'British Library', plate:'BRITISH LIBRARY',
+    racks:26, servers:6, readers:7, crane:true, cloudScale:1,
+    cloudLabel:'2.95 PB of digital collections',
+    vault:'≈ 170,000,000 physical items stored down here',
+    spots:{
+      mission:{icon:'🏛️', title:'Mission & identity',
+        quote:'“Make our intellectual heritage accessible to everyone, for research, inspiration and enjoyment.”',
+        sub:'Founded 1973 · St Pancras, London + Boston Spa, Yorkshire',
+        body:'The UK’s legal-deposit library — from illuminated manuscripts to the UK Sound Archive. In October 2023 it suffered a devastating cyber-attack: the collection stayed safe, but many systems had to be rebuilt from scratch.',
+        fun:'The public face is in central London — but most of the collection lives with robots in rural Yorkshire.',
+        src:'British Library (2023, 2024, 2025)',
+        holders:['⏳ Founding collections']},
+      house:{icon:'🔑', title:'Running the house',
+        stat:{value:178929580, prefix:'€ '}, sub:'annual expenditure (£ 151.8 M)',
+        body:'That is just €1.05 per archived item per year — scale makes the giant surprisingly cheap. Per visitor served (physical + virtual): €6.83.',
+        fun:'The BL spends about €5.70 every second, day and night.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Staff (FTE)','⏳ Funding sources']},
+      visitors:{icon:'🚶', title:'Through the doors',
+        stat:{value:1361002}, sub:'physical visitors a year, incl. events & exhibitions',
+        body:'From tourists in the Treasures Gallery to researchers with reader passes — St Pancras is a destination in itself.',
+        fun:'Enough people to fill Wembley Stadium 15 times over.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Reader passes','⏳ Reading-room seats']},
+      reading:{icon:'📖', title:'At the desks',
+        stat:{value:488193}, sub:'collection items physically accessed a year',
+        body:'Ordered to reading-room desks — many fetched by robots from Boston Spa within 48 hours of the request.',
+        fun:'Each physical retrieval costs the library about €367 — the cheapest of our three libraries.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Events & exhibitions count']},
+      digitised:{icon:'📠', title:'The scanners',
+        stat:{value:147000000}, sub:'pages of physical collections digitised so far',
+        body:'Beyond its born-digital holdings, the BL has scanned over 147 million pages to open the physical collection to the world.',
+        fun:'Printed and stacked, those pages would reach ~15 km high — nearly twice Mount Everest.',
+        src:'British Library (2023)',
+        holders:['⏳ Pages digitised per year']},
+      collection:{icon:'📚', title:'The physical collection',
+        stat:{value:170000000}, sub:'items — one of the largest collections on Earth',
+        body:'Monographs, serials, maps, stamps, newspapers and sound — grown through legal deposit, voluntary deposit and acquisitions.',
+        fun:'Looking at one item per second, day and night, you’d need over 5 years just to glance at everything once.',
+        src:'British Library (2023)',
+        holders:['⏳ Items added per year']},
+      storage:{icon:'🤖', title:'Robotic storage',
+        stat:{value:48, suffix:' h'}, sub:'maximum retrieval time from the automated vaults',
+        body:'Most items live at Boston Spa in high-density, low-oxygen automated vaults — robots fetch requests within 48 hours. More robotic storage is under construction.',
+        fun:'The oxygen level is kept so low that a fire simply cannot start.',
+        src:'British Library (2025)',
+        holders:['⏳ Vault capacity in shelf-km']},
+      digital:{icon:'💾', title:'The digital archive',
+        stat:{value:2.95, decimals:2, suffix:' PB'}, sub:'of digital collections (1 petabyte = 1 million GB)',
+        body:'Much of it born-digital: e-journals, web archives, sound recordings — growing daily under digital legal deposit.',
+        fun:'Roughly 400,000 HD films — about 90 years of non-stop cinema.',
+        src:'British Library (2023)',
+        holders:['⏳ Web-archive size']},
+      virtual:{icon:'🌐', title:'Visitors in the sky',
+        stat:{value:24819000}, sub:'virtual visits a year, incl. associated websites',
+        body:'For every person who walks in, roughly 18 visit online. Each virtual visit costs about €7.21.',
+        fun:'Nearly 3× the population of Greater London — every single year.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Most-viewed digital items']}
+    }
+  },
+  kb: {
+    name:'KB National Library of the Netherlands', plate:'KB · NATIONALE BIBLIOTHEEK',
+    racks:4, servers:4, readers:3, crane:true, cloudScale:0.85,
+    cloudLabel:'≈ 2 PB of digital collections',
+    vault:'≈ 4,449,471 physical items — storage nearing capacity',
+    spots:{
+      mission:{icon:'🏛️', title:'Mission & identity',
+        quote:'“Connecting people and words — for a smarter, more skilled and more creative Netherlands.”',
+        sub:'Founded 1798 · one building in the centre of The Hague',
+        body:'Collections, offices and reading rooms under a single roof. Since 2015 the KB has been “digital first”, while also powering the Dutch public-library network.',
+        fun:'The KB runs BookStart — a library programme that begins before children can even read.',
+        src:'KB (2023)',
+        holders:['⏳ Network programmes in detail']},
+      house:{icon:'🔑', title:'Running the house',
+        stat:{value:63796000, prefix:'€ '}, sub:'annual expenditure',
+        body:'Per archived item: €14.34 — the “most expensive” collection per item of the three, because it is compact and heavily curated. Per visitor served: €6.18.',
+        fun:'About €2 every second — roughly a stroopwafel per heartbeat.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Staff (FTE)','⏳ Funding sources']},
+      visitors:{icon:'🚶', title:'Through the doors',
+        stat:{value:47746}, sub:'physical visitors a year',
+        body:'The KB is a quiet engine room: modest footfall, national impact through services, platforms and the public-library network.',
+        fun:'About one sold-out night at the Johan Cruijff ArenA.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Reading-room seats']},
+      reading:{icon:'📖', title:'At the desks',
+        stat:{value:42195}, sub:'collection items physically accessed a year',
+        body:'Each physical retrieval costs about €1,512 — rare access to a compact, precious collection.',
+        fun:'Far more Dutch reading happens on Delpher than in the building itself.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Events & courses']},
+      digitised:{icon:'📠', title:'The scanners',
+        stat:{value:null}, sub:'digitised pages — exact figure being compiled',
+        body:'The KB runs Delpher, the much-loved national platform of digitised newspapers, books and magazines spanning centuries.',
+        fun:'Delpher lets anyone read 17th-century Dutch newspapers from their sofa.',
+        src:'placeholder — to be added',
+        holders:['⏳ Delpher page count','⏳ Pages per year']},
+      collection:{icon:'📚', title:'The physical collection',
+        stat:{value:4449471}, sub:'items — everything published in & about the Netherlands',
+        body:'The physical store in The Hague is nearing capacity — which is why a brand-new vault is being built.',
+        fun:'Roughly 130 km of shelving — The Hague to Amsterdam and back.',
+        src:'KB (2023)',
+        holders:['⏳ Items added per year']},
+      storage:{icon:'🏗️', title:'The new vault',
+        quote:'Under construction: a purpose-built, passive-climate automated storage facility near The Hague.',
+        sub:'will house the full physical collection, with room to grow',
+        body:'Passive climate means stable temperature and humidity with minimal energy — preservation and sustainability in one design.',
+        fun:'The whole national collection will fit in one automated building.',
+        src:'KB (2023)',
+        holders:['⏳ Capacity','⏳ Opening date']},
+      digital:{icon:'💾', title:'The digital archive',
+        stat:{value:2, decimals:0, suffix:' PB'}, sub:'of digital collections (1 petabyte = 1 million GB)',
+        body:'E-books, e-journals, web archives and digitised heritage — the fastest-growing part of the KB.',
+        fun:'Roughly 270,000 HD films — 60+ years of continuous cinema.',
+        src:'KB (2023)',
+        holders:['⏳ Growth per year']},
+      virtual:{icon:'🌐', title:'Visitors in the sky',
+        stat:{value:10283130}, sub:'virtual visits a year, incl. associated websites',
+        body:'Online, the KB is over 200× busier than at the door — “digital first” in action. Each virtual visit costs about €6.20.',
+        fun:'More than half the population of the Netherlands, every year.',
+        src:'ReVerDi study, Table 3',
+        holders:['⏳ Delpher usage stats']}
+    }
+  },
+  snl: {
+    name:'Swiss National Library', plate:'SCHWEIZERISCHE NATIONALBIBLIOTHEK',
+    racks:5, servers:2, readers:3, crane:false, cloudScale:0.7,
+    cloudLabel:'678,114 digital archive packets',
+    vault:'≈ 7,211,422 objects · measured shelf-metre by shelf-metre (CatCount)',
+    spots:{
+      mission:{icon:'🏛️', title:'Mission & identity',
+        quote:'“An institution for everyone — Switzerland’s memory in four languages.”',
+        sub:'Founded 1895 · Bern, Lugano & Neuchâtel',
+        body:'The SNL collects, preserves and opens Switzerland’s printed, audiovisual and born-digital heritage — including the Swiss Literary Archives, the National Phonotheque and the Centre Dürrenmatt in Neuchâtel.',
+        fun:'Its image collections on Wikimedia Commons make it a radically open cultural infrastructure.',
+        src:'Swiss National Library (2024)',
+        holders:[]},
+      house:{icon:'🔑', title:'Running the house',
+        stat:{value:148.6, decimals:1, suffix:' FTE'}, sub:'staff — full-time equivalents, 2024 average (2023: 151.1)',
+        body:'Expenditure 2024: CHF 39.96 M (≈ €38.8 M), up from CHF 37.8 M in 2023 after releasing unused reserves. Own income: CHF 0.72 M. Per visitor served: €4.27 — the leanest of the three.',
+        fun:'About €1.20 of public money every second keeps Switzerland’s memory alive.',
+        src:'SNL key figures 2023/24 · ReVerDi Table 3',
+        holders:[]},
+      visitors:{icon:'🚶', title:'Through the doors',
+        stat:{value:41328}, sub:'physical visitors a year, incl. events',
+        body:'Behind them: 2,929 active registered users (2023: 3,255) and 14,169 answered inquiries and research requests.',
+        fun:'Enough to fill Bern’s Wankdorf stadium — with a queue left outside.',
+        src:'SNL key figures 2023/24 · ReVerDi Table 3',
+        holders:[]},
+      reading:{icon:'📖', title:'At the desks',
+        stat:{value:50881}, sub:'direct loans in 2024',
+        body:'More items were loaned than people visited — a true researchers’ library. And 27,159 people joined exhibitions, events, guided tours and trainings (2023: 25,559).',
+        fun:'Each physically accessed item costs about €763.',
+        src:'SNL key figures 2023/24',
+        holders:[]},
+      digitised:{icon:'📠', title:'The scanners',
+        stat:{value:776806}, sub:'Helvetica pages digitised in 2024 (2023: 801,570)',
+        body:'Plus 50,427 sound files digitised at the National Phonotheque and 205 documents from the Literary Archives & Graphic Collection — digitisation runs steadily, year after year.',
+        fun:'≈ 2,100 pages every single day, Sundays included.',
+        src:'SNL key figures 2023/24',
+        holders:['⏳ Cumulative total']},
+      collection:{icon:'📚', title:'The physical collection',
+        stat:{value:7211422}, sub:'objects across the collections (2024)',
+        body:'3.11 M General Collection + 1.84 M Graphic Collection (incl. the Federal Archive of Monument Preservation) + 1.66 M Literary Archives + 594,896 sound carriers + 2,526 works at the Centre Dürrenmatt.',
+        fun:'Sizes come from project CatCount, measured by the shelf-metre — the General Collection “shrank” in 2024 only because shelving was optimised.',
+        src:'SNL key figures 2023/24',
+        holders:['📥 +14,067 monographs from the book trade (2024)','📥 +2,546 acquired outside the trade']},
+      storage:{icon:'⛰️', title:'Three sites, one memory',
+        stat:{value:3, suffix:' sites'}, sub:'Bern · Lugano · Neuchâtel',
+        body:'Underground stacks beneath Bern hold much of the collection at a stable climate. The Literary Archives keep 455 archives & estates; the Graphic Collection 292 archive holdings; the Phonotheque sits in Lugano, the Centre Dürrenmatt in Neuchâtel.',
+        fun:'Three locations, four national languages, one collection.',
+        src:'SNL key figures 2023/24',
+        holders:['⏳ Storage capacity']},
+      digital:{icon:'💾', title:'The digital archive',
+        stat:{value:678114}, sub:'digital archive packets preserved (2024)',
+        body:'565,209 packets from the General Collection + 112,905 from the National Phonotheque — up ~9% in one year. Discovery runs through four catalogues: Helveticat (2.21 M records), HelveticArchives (852 k), the Swiss poster catalogue (107 k) and the Phonotheque catalogue (330 k).',
+        fun:'An “archive packet” is a digital preservation container — the digital cousin of an acid-free archive box.',
+        src:'SNL key figures 2023/24',
+        holders:['⏳ Size in PB']},
+      virtual:{icon:'🌐', title:'Visitors in the sky',
+        stat:{value:9044405}, sub:'virtual visits a year, incl. associated platforms',
+        body:'The platforms behind it: e-newspaperarchives.ch (512,037 visits), fonoteca.ch (528,371), nb.admin.ch (169,119) and cdn.ch (38,602) — plus wider reach via Wikimedia Commons. Each virtual visit costs about €4.29.',
+        fun:'Roughly one virtual visit for every inhabitant of Switzerland, every year.',
+        src:'SNL key figures 2023/24 · ReVerDi Table 3',
+        holders:[]}
+    }
+  }
+};
+/* ---- v3 additions: satellite sites + digital-world spots ---- */
+LIBS.bl.spots.sites = {icon:'🏭', title:'Boston Spa campus',
+  stat:{value:2, suffix:' sites'}, sub:'St Pancras, London · Boston Spa, Yorkshire',
+  body:'London is the public face — reading rooms, exhibitions, events. Boston Spa in rural Yorkshire is the memory: most of the physical collection lives there in automated vaults, with additional storage under construction.',
+  fun:'A book you order in London may sleep 300 km north in Yorkshire.',
+  src:'British Library (2025)', holders:['⏳ Shelf-km at Boston Spa']};
+LIBS.bl.spots.platforms = {icon:'🧭', title:'Catalogues & platforms',
+  stat:{value:null}, sub:'records & platform visits — being compiled',
+  body:'The BL’s catalogue plus platforms for newspapers, sounds and manuscripts online. After the 2023 cyber-attack, restoring search was the first priority — the catalogue is the front door to everything.',
+  fun:'No catalogue, no library: 170 million items are only findable because they are described.',
+  src:'placeholder — to be added', holders:['⏳ Catalogue records','⏳ Platform visits']};
+LIBS.kb.spots.storage = {icon:'📦', title:'A full house',
+  quote:'“Physical storage is nearing capacity.”', sub:'one city-centre building holds everything — for now',
+  body:'The KB’s compact store in The Hague is almost full. That pressure is exactly why a brand-new automated vault is rising outside the city — visit the construction site next door.',
+  fun:'When the new vault opens, an entire national collection will move house.',
+  src:'KB (2023)', holders:['⏳ Shelf occupancy']};
+LIBS.kb.spots.sites = {icon:'🏗️', title:'The construction site',
+  quote:'Under construction: a purpose-built, passive-climate automated vault near The Hague.',
+  sub:'will house the full physical collection, with room to grow',
+  body:'Passive climate means stable temperature and humidity with minimal energy — preservation and sustainability in one design.',
+  fun:'The whole national collection will fit in one automated building.',
+  src:'KB (2023)', holders:['⏳ Capacity','⏳ Opening date']};
+LIBS.kb.spots.platforms = {icon:'🧭', title:'Delpher & the catalogue',
+  stat:{value:null}, sub:'platform visits — being compiled',
+  body:'Delpher is the beloved national platform of digitised newspapers, books and magazines; the KB also provides website services to Dutch public libraries.',
+  fun:'Delpher lets anyone read 17th-century Dutch newspapers from their sofa.',
+  src:'placeholder — to be added', holders:['⏳ Delpher visits','⏳ Delpher page count']};
+LIBS.snl.spots.storage = {icon:'⛰️', title:'Beneath Bern',
+  quote:'“Switzerland’s memory lies literally beneath its capital.”', sub:'underground stacks at stable climate',
+  body:'The Bern stacks hold the General Collection, the Graphic Collection (292 archive holdings) and the Swiss Literary Archives (455 archives & estates) — cool, dark and stable.',
+  fun:'The best spa a 500-year-old book can ask for: constant climate, no sunlight.',
+  src:'SNL key figures 2023/24', holders:['⏳ Storage capacity']};
+LIBS.snl.spots.sites = {icon:'🎶', title:'Lugano & Neuchâtel',
+  stat:{value:597422}, sub:'objects held at the two satellite sites',
+  body:'The Swiss National Phonotheque in Lugano keeps 594,896 sound carriers and digitised 50,427 sound files in 2024 alone (catalogue: 330,121 records). The Centre Dürrenmatt in Neuchâtel holds 2,526 works.',
+  fun:'Switzerland’s memory sings in Italian in Lugano — and paints in Neuchâtel.',
+  src:'SNL key figures 2023/24', holders:[]};
+LIBS.snl.spots.platforms = {icon:'🧭', title:'Four catalogues, four platforms',
+  stat:{value:1248129}, sub:'visits across the four SNL platforms (2024)',
+  body:'e-newspaperarchives.ch (512,037), fonoteca.ch (528,371), nb.admin.ch (169,119) and cdn.ch (38,602). Behind them, four catalogues describe everything: Helveticat (2.21 M records), HelveticArchives (852 k), the poster catalogue (107 k) and the Phonotheque catalogue (330 k).',
+  fun:'The catalogue is the map; the platforms are the doors.',
+  src:'SNL key figures 2023/24', holders:[]};
+LIBS.snl.spots.virtual.body = 'Across all channels combined — 219× the physical visits, at €4.29 per virtual visit, the leanest online operation of the three. The platform breakdown lives in the “Four catalogues” dot.';
+LIBS.snl.spots.digital.body = '565,209 packets from the General Collection + 112,905 from the National Phonotheque — up ~9% in one year. From e-books to web archives, everything Swiss and digital is preserved here.';
+
+var LIBORDER = ['bl','kb','snl'];
+var SPOTIDS = ['mission','house','visitors','reading','collection','storage','sites','digitised','digital','virtual','platforms'];
+var TOTAL = LIBORDER.length * SPOTIDS.length;                 /* 33 */
+var PTS_DISCOVERY = 100, PTS_LIB = 300, PTS_ALL = 400;        /* max 4,600 */
+var RANKS = [[0,'Newcomer'],[800,'Curious Visitor'],[2000,'Stack Explorer'],[3400,'Vault Master'],[4600,'Master Archivist']];
+var PANEL_PLACE = {mission:'', house:'left', visitors:'', reading:'', digitised:'left',
+                   collection:'lowleft', storage:'lowleft', sites:'left',
+                   digital:'left', virtual:'left', platforms:'left'};
+
+var TREASURES = {
+  bl:{icon:'📜', title:'Magna Carta, 1215', stat:{value:1215}, sub:'the secret treasure of the British Library',
+    body:'The BL holds two of only four surviving original copies of the 1215 Magna Carta — the charter that first put the king under the law.',
+    fun:'Eight hundred years old, and still one of the most visited objects in the building.',
+    src:'British Library'},
+  kb:{icon:'📖', title:'The Egmond Gospels', stat:{value:900, prefix:'± AD '}, sub:'the secret treasure of the KB',
+    body:'A Latin gospel book made around AD 900 — among the oldest books in the Netherlands, with miniatures showing Count Dirk II and his wife Hildegard donating it to Egmond Abbey.',
+    fun:'A thousand years before Delpher, this was Dutch data storage at its finest.',
+    src:'KB'},
+  snl:{icon:'🎨', title:'Dürrenmatt’s secret gift', stat:{value:1991}, sub:'the year his archive founded the Swiss Literary Archives',
+    body:'Friedrich Dürrenmatt’s donated archive — his manuscripts, and the paintings he kept private all his life — founded the Swiss Literary Archives, and lives on at the Centre Dürrenmatt in Neuchâtel.',
+    fun:'The playwright who painted in secret became the foundation of a national archive.',
+    src:'Swiss National Library'}
+};
+var PTS_TREASURE = 500;
+var doorOpen = {}, treasureClaimed = {}, goldenDone = false;
+
+var cur = 'bl';
+var discovered = {};   /* in-memory only — no browser storage */
+var points = 0, libBonus = {}, allBonus = false, lastRank = 'Newcomer';
+
+/* ============ SCENE BUILDERS ============ */
+function el(tag, attrs){
+  var e = document.createElementNS(SVGNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function mulberry(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+var BOOKCOLS = ['#3987e5','#c98500','#d55181','#8fa0c8','#2ea36a','#e8ecff'];
+function buildRacks(lib){
+  var g = $('#racks'); g.innerHTML = '';
+  var n = LIBS[lib].racks, w = 18, floor = 766;
+  var start, gap;
+  if (n <= 8){ gap = 26; var tw = n*w + (n-1)*gap; start = 640 - tw/2; }
+  else { start = 330; gap = (614 - n*w) / (n-1); }
+  var rnd = mulberry(42);
+  for (var i=0;i<n;i++){
+    var x = start + i*(w+gap);
+    var h = 118 + Math.round(rnd()*26);
+    var y = floor - h;
+    g.appendChild(el('rect', {x:x, y:y, width:w, height:h, rx:2, fill:'var(--rack)', stroke:'var(--sep)','stroke-width':1.5}));
+    for (var s=0;s<4;s++){
+      var sh = (h-14)/4, sy = y + 8 + s*sh;
+      g.appendChild(el('rect', {x:x+2, y:sy+sh-4, width:w-4, height:2, fill:'var(--sep)'}));
+      var bx = x+3;
+      while (bx < x+w-4){
+        var bw = 2 + rnd()*3;
+        if (rnd() > 0.25){
+          g.appendChild(el('rect', {x:bx, y:sy+2, width:bw, height:sh-8,
+            fill:BOOKCOLS[Math.floor(rnd()*BOOKCOLS.length)], opacity:0.6}));
+        }
+        bx += bw + 1.5;
+      }
+    }
+  }
+}
+function buildServers(lib){
+  var g = $('#servers'); g.innerHTML = '';
+  var n = LIBS[lib].servers, w = 64, h = 11, gap = 2, x = 800, base = 414;
+  for (var i=0;i<n;i++){
+    var y = base - (i+1)*(h+gap);
+    g.appendChild(el('rect', {x:x, y:y, width:w, height:h, rx:2, fill:'var(--unit)', stroke:'var(--unitstroke)'}));
+    var led = el('circle', {cx:x+w-8, cy:y+h/2, r:2.4, fill:'#4be38a', 'class':'led'});
+    led.style.animationDelay = (-i*0.37)+'s';
+    g.appendChild(led);
+  }
+}
+function buildPeople(lib){
+  var g = $('#people'); g.innerHTML = '';
+  var seats = [[415,288],[440,288],[462,288],[512,288],[536,288],[558,288],[695,290]];
+  var n = Math.min(LIBS[lib].readers, seats.length);
+  var cols = ['#8fa0c8','#6d7692','#a9b7dc'];
+  for (var i=0;i<n;i++){
+    var p = seats[i];
+    g.appendChild(el('circle', {cx:p[0], cy:p[1]-6, r:4.5, fill:cols[i%3]}));
+    g.appendChild(el('rect', {x:p[0]-5.5, y:p[1]-1, width:11, height:13, rx:3, fill:cols[i%3]}));
+  }
+}
+function buildStars(){
+  var g = $('#stars');
+  var rnd = mulberry(7);
+  for (var i=0;i<70;i++){
+    var cx = Math.round(rnd()*1280), cy = Math.round(rnd()*330);
+    if (cx > 940 && cy < 250) continue;             /* keep the digital archive clear */
+    var s = el('circle', {cx:cx, cy:cy, r:(0.7+rnd()*1.1).toFixed(2), fill:'#dfe6ff', 'class':'star'});
+    s.style.animationDelay = (-rnd()*3.4).toFixed(2)+'s';
+    g.appendChild(s);
+  }
+}
+
+/* ============ LIBRARY & MODE SWITCH ============ */
+function switchLib(lib){
+  if (lib === cur) return;
+  cur = lib;
+  document.body.dataset.lib = lib;
+  document.querySelectorAll('.libbtn').forEach(function(b){
+    b.setAttribute('aria-pressed', b.dataset.lib === lib ? 'true' : 'false');
+  });
+  LIBORDER.forEach(function(l){
+    $('#sky-'+l).classList.toggle('on', l === lib);
+    $('#sat-'+l).classList.toggle('on', l === lib);
+  });
+  ['#people','#servers','#racks','#crane','#trolley','#cloud'].forEach(function(s){ $(s).classList.add('fade'); });
+  closePanel();
+  setTimeout(function(){
+    $('#plateName').textContent = LIBS[lib].plate;
+    $('#vaultLabel').textContent = LIBS[lib].vault;
+    $('#cloudLabel').textContent = LIBS[lib].cloudLabel;
+    $('#cloudCore').style.transform = 'scale(' + LIBS[lib].cloudScale + ')';
+    buildRacks(lib); buildServers(lib); buildPeople(lib);
+    $('#crane').style.display = LIBS[lib].crane ? '' : 'none';
+    $('#trolley').style.display = LIBS[lib].crane ? 'none' : '';
+    markHotspots(); updateDoors();
+    ['#people','#servers','#racks','#crane','#trolley','#cloud'].forEach(function(s){ $(s).classList.remove('fade'); });
+  }, 280);
+}
+function switchMode(){
+  var body = document.body;
+  var toDigital = body.dataset.mode === 'day';
+  body.dataset.mode = toDigital ? 'night' : 'day';
+  $('#modeBtn').textContent = toDigital ? '☀️ Physical world' : '🌌 Digital world';
+  $('#modeBtn').setAttribute('aria-label', toDigital ? 'Switch to the physical world' : 'Switch to the digital world');
+  closePanel();
+}
+
+/* ============ FACT PANEL ============ */
+var countTimer = null;
+function countUp(elm, target, prefix, suffix, decimals, plain){
+  if (countTimer) cancelAnimationFrame(countTimer);
+  var t0 = null, DUR = 950;
+  function frame(ts){
+    if (!t0) t0 = ts;
+    var p = Math.min(1, (ts - t0)/DUR);
+    var eased = 1 - Math.pow(1-p, 3);
+    var v = target * eased;
+    elm.textContent = prefix + (decimals ? v.toFixed(decimals) : (plain ? String(Math.round(v)) : fmt(Math.round(v)))) + suffix;
+    if (p < 1) countTimer = requestAnimationFrame(frame);
+  }
+  countTimer = requestAnimationFrame(frame);
+}
+function openSpot(spotId, hsEl){
+  var d = LIBS[cur].spots[spotId];
+  if (!d) return;
+  $('#pIcon').textContent = d.icon;
+  $('#pLib').textContent = LIBS[cur].name;
+  $('#pTitle').textContent = d.title;
+  var stat = $('#pStat');
+  stat.classList.remove('is-quote');
+  if (countTimer){ cancelAnimationFrame(countTimer); countTimer = null; }
+  if (d.quote){ stat.classList.add('is-quote'); stat.textContent = d.quote; }
+  else if (d.stat && d.stat.value !== null && d.stat.value !== undefined){
+    countUp(stat, d.stat.value, d.stat.prefix || '', d.stat.suffix || '', d.stat.decimals || 0);
+  } else { stat.textContent = '？'; }
+  $('#pSub').textContent = d.sub || '';
+  $('#pBody').textContent = d.body || '';
+  var fun = $('#pFun');
+  if (d.fun){ fun.style.display = 'flex'; $('#pFunText').textContent = d.fun; }
+  else fun.style.display = 'none';
+  var hold = $('#pHolders'); hold.innerHTML = '';
+  (d.holders || []).forEach(function(h){
+    var c = document.createElement('span'); c.className = 'chip'; c.textContent = h;
+    hold.appendChild(c);
+  });
+  $('#pSrc').textContent = d.src ? 'Source: ' + d.src : '';
+  /* scoring */
+  var key = cur + ':' + spotId;
+  var found = $('#pFound');
+  if (!discovered[key]){
+    discovered[key] = true;
+    addPoints(PTS_DISCOVERY, hsEl);
+    found.textContent = '✓ New discovery · +' + PTS_DISCOVERY + ' points';
+    checkBonuses(hsEl);
+  } else {
+    found.textContent = 'Already in your collection';
+  }
+  markHotspots(); updateHud();
+  var panel = $('#panel');
+  panel.classList.remove('left','lowleft','gold');
+  var place = PANEL_PLACE[spotId];
+  if (place === 'left') panel.classList.add('left');
+  if (place === 'lowleft') panel.classList.add('lowleft');
+  panel.classList.add('open');
+}
+function closePanel(){ $('#panel').classList.remove('open'); }
+function markHotspots(){
+  document.querySelectorAll('.hs').forEach(function(h){
+    var done = !!discovered[cur + ':' + h.dataset.spot];
+    h.classList.toggle('done', done);
+    var sym = h.querySelector('.sym');
+    if (sym) sym.textContent = done ? '✓' : '+';
+  });
+}
+
+/* ============ SCORING ============ */
+function libCount(lib){
+  return SPOTIDS.filter(function(s){ return discovered[lib + ':' + s]; }).length;
+}
+function addPoints(n, hsEl){
+  points += n;
+  if (hsEl) floatFx('+' + n, hsEl);
+  updateHud();
+}
+function floatFx(text, hsEl){
+  var wrapR = $('.scene-wrap').getBoundingClientRect();
+  var r = hsEl.getBoundingClientRect();
+  var fx = document.createElement('span');
+  fx.className = 'fx'; fx.textContent = text;
+  fx.style.left = (r.left + r.width/2 - wrapR.left) + 'px';
+  fx.style.top  = (r.top - wrapR.top - 8) + 'px';
+  $('.scene-wrap').appendChild(fx);
+  setTimeout(function(){ fx.remove(); }, 1200);
+}
+function rankFor(p){
+  var name = RANKS[0][1];
+  RANKS.forEach(function(r){ if (p >= r[0]) name = r[1]; });
+  return name;
+}
+function checkBonuses(hsEl){
+  LIBORDER.forEach(function(lib){
+    if (!libBonus[lib] && libCount(lib) === SPOTIDS.length){
+      libBonus[lib] = true;
+      addPoints(PTS_LIB, hsEl);
+      toast('🏛️', LIBS[lib].name + ' complete!', 'All ' + SPOTIDS.length + ' discoveries found · +' + PTS_LIB + ' bonus points');
+      setTimeout(function(){
+        doorOpen[lib] = true; updateDoors();
+        toast('🗝️','A golden door has appeared…','Something secret is now hidden in the ' + LIBS[lib].name + '. Find the glowing gold door and click it!');
+      }, 2600);
+      return;
+    }
+  });
+  var all = LIBORDER.every(function(l){ return libCount(l) === SPOTIDS.length; });
+  if (all && !allBonus){
+    allBonus = true;
+    addPoints(PTS_ALL, hsEl);
+    setTimeout(function(){
+      toast('🏆','Master Archivist','All ' + TOTAL + ' discoveries · ' + fmt(points) + ' points. The vaults hold no secrets from you.');
+    }, 1200);
+  }
+}
+function updateHud(){
+  $('#hudPts').textContent = fmt(points);
+  var rk = rankFor(points);
+  $('#hudRank').textContent = rk;
+  if (rk !== lastRank){
+    lastRank = rk;
+    if (!allBonus) toast('🎖️','Rank up: ' + rk, fmt(points) + ' points — keep exploring!');
+  }
+  LIBORDER.forEach(function(lib){
+    $('#lb-' + lib).style.width = (libCount(lib)/SPOTIDS.length*100) + '%';
+  });
+  var left = TOTAL - Object.keys(discovered).length;
+  $('#hintProgress').textContent = left > 0 ? (left + ' discover' + (left===1?'y':'ies') + ' to go') : 'All found — Master Archivist 🏆';
+}
+var toastTimer = null;
+function toast(emoji, title, sub){
+  $('#tEmoji').textContent = emoji;
+  $('#tTitle').textContent = title;
+  $('#tSub').textContent = sub;
+  var t = $('#toast');
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3800);
+}
+
+/* ---- golden doors, treasures, passport ---- */
+function updateDoors(){
+  LIBORDER.forEach(function(l){
+    $('#door-' + l).classList.toggle('show', !!doorOpen[l] && cur === l);
+  });
+}
+var DOOR_PLACE = {bl:'left', kb:'left', snl:'lowleft'};
+function openTreasure(lib, doorEl){
+  var t = TREASURES[lib];
+  $('#pIcon').textContent = t.icon;
+  $('#pLib').textContent = LIBS[lib].name + ' · Secret';
+  $('#pTitle').textContent = t.title;
+  var stat = $('#pStat'); stat.classList.remove('is-quote');
+  countUp(stat, t.stat.value, t.stat.prefix || '', t.stat.suffix || '', 0, true);
+  $('#pSub').textContent = t.sub;
+  $('#pBody').textContent = t.body;
+  $('#pFun').style.display = 'flex'; $('#pFunText').textContent = t.fun;
+  $('#pHolders').innerHTML = '';
+  $('#pSrc').textContent = 'Source: ' + t.src;
+  var found = $('#pFound');
+  if (!treasureClaimed[lib]){
+    treasureClaimed[lib] = true;
+    addPoints(PTS_TREASURE, doorEl);
+    $('#relic-' + lib).classList.add('lit');
+    found.textContent = '✓ Secret treasure claimed · +' + PTS_TREASURE + ' points';
+    checkGoldenHour();
+  } else {
+    found.textContent = 'Treasure already in your collection';
+  }
+  var panel = $('#panel');
+  panel.classList.remove('left','lowleft','gold');
+  if (DOOR_PLACE[lib] === 'left') panel.classList.add('left');
+  if (DOOR_PLACE[lib] === 'lowleft') panel.classList.add('lowleft');
+  panel.classList.add('gold');
+  panel.classList.add('open');
+}
+function checkGoldenHour(){
+  var all = LIBORDER.every(function(l){ return treasureClaimed[l]; });
+  if (all && !goldenDone){
+    goldenDone = true;
+    setTimeout(function(){
+      document.body.classList.add('golden');
+      $('#ppPts').textContent = '★ ' + fmt(points) + ' points';
+      $('#passport').classList.add('show');
+    }, 1400);
+  }
+}
+document.querySelectorAll('.gdoor').forEach(function(d){
+  d.addEventListener('click', function(e){ e.stopPropagation(); openTreasure(d.dataset.door, d); });
+  d.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openTreasure(d.dataset.door, d); }
+  });
+});
+$('#ppClose').addEventListener('click', function(){ $('#passport').classList.remove('show'); });
+
+/* ---- 3-step onboarding tour ---- */
+var TOUR = [
+  {sel:'.switcher',  text:'Three libraries, one building. Click these buttons to switch country — the whole world morphs: shelves, visitors, skyline, satellite sites.'},
+  {sel:'#modeBtn',   text:'Two worlds. ☀️ Day is the physical library. 🌌 Night is the digital world glowing in the sky. Click here anytime to travel between them.'},
+  {sel:'.hs[data-spot="mission"]', text:'The glowing dots. Click them to uncover the real numbers. Every discovery earns points — and completing everything reveals secrets…'}
+];
+var tourStep = -1;
+function clearTourMarks(){
+  document.querySelectorAll('.tour-ring').forEach(function(e){ e.classList.remove('tour-ring'); });
+  document.querySelectorAll('.hs.tour-big').forEach(function(e){ e.classList.remove('tour-big'); });
+}
+function showTourStep(i){
+  clearTourMarks();
+  var card = $('#tourcard');
+  if (i >= TOUR.length){ tourStep = -1; card.classList.remove('show'); return; }
+  tourStep = i;
+  var t = TOUR[i], target = document.querySelector(t.sel);
+  if (!target){ showTourStep(i + 1); return; }
+  if (target.classList.contains('hs')) target.classList.add('tour-big');
+  else target.classList.add('tour-ring');
+  $('#tStep').textContent = (i + 1) + ' / ' + TOUR.length;
+  $('#tText').textContent = t.text;
+  $('#tNext').textContent = (i === TOUR.length - 1) ? 'Start exploring!' : 'Next';
+  card.classList.add('show');
+  var r = target.getBoundingClientRect();
+  var top = r.bottom + window.pageYOffset + 12;
+  var left = r.left + window.pageXOffset;
+  left = Math.min(left, window.innerWidth - 320);
+  left = Math.max(12, left);
+  card.style.top = top + 'px';
+  card.style.left = left + 'px';
+}
+$('#tNext').addEventListener('click', function(){ showTourStep(tourStep + 1); });
+$('#tSkip').addEventListener('click', function(){ showTourStep(TOUR.length); });
+
+/* ============ INIT ============ */
+buildStars();
+buildRacks('bl'); buildServers('bl'); buildPeople('bl');
+updateHud();
+
+document.querySelectorAll('.libbtn').forEach(function(b){
+  b.addEventListener('click', function(){ switchLib(b.dataset.lib); });
+});
+$('#modeBtn').addEventListener('click', switchMode);
+document.querySelectorAll('.hs').forEach(function(h){
+  h.addEventListener('click', function(e){ e.stopPropagation(); openSpot(h.dataset.spot, h); });
+  h.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openSpot(h.dataset.spot, h); }
+  });
+});
+/* close panel: X button, Escape, clicking empty scene, or mouse leaving the panel */
+$('#pClose').addEventListener('click', closePanel);
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePanel(); });
+$('#scene').addEventListener('click', function(e){
+  if (!e.target.closest('.hs')) closePanel();
+});
+var panelEl = $('#panel'), leaveTimer = null;
+panelEl.addEventListener('mouseenter', function(){ if (leaveTimer) clearTimeout(leaveTimer); });
+panelEl.addEventListener('mouseleave', function(){
+  leaveTimer = setTimeout(closePanel, 350);
+});
+/* ---- password gate = the entry page (client-side preview lock only) ---- */
+var PW = atob('bmw0Z3JlZW4yMDI2');
+$('#gateForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if ($('#gatePw').value.trim() === PW){
+    $('#gate').classList.add('hide');
+    setTimeout(function(){ showTourStep(0); }, 700);
+  } else {
+    $('#gateErr').textContent = 'That’s not it — check the password and try again.';
+    var g = $('#gate');
+    g.classList.remove('shake'); void g.offsetWidth; g.classList.add('shake');
+    $('#gatePw').select();
+  }
+});
+
+/* ---- floating collectibles: the stuff national libraries keep ---- */
+function seedFloaties(container){
+  if (!container) return;
+  var EMO = ['📚','📖','📜','📰','🗺️','💿','📼','🎞️','📷','✉️','🎙️','📮','🎼','🖼️'];
+  EMO.forEach(function(e, i){
+    var sp = document.createElement('span');
+    sp.className = 'floaty'; sp.textContent = e;
+    var zone = i % 4, x, y;
+    if (zone === 0){ x = 2  + Math.random()*13; y = 6 + Math.random()*80; }      /* left rim  */
+    else if (zone === 1){ x = 85 + Math.random()*11; y = 6 + Math.random()*80; } /* right rim */
+    else if (zone === 2){ x = 18 + Math.random()*64; y = 2 + Math.random()*10; } /* top band  */
+    else { x = 18 + Math.random()*64; y = 84 + Math.random()*10; }               /* low band  */
+    sp.style.left = x + '%';
+    sp.style.top = y + '%';
+    sp.style.fontSize = Math.round(20 + Math.random()*20) + 'px';
+    sp.style.setProperty('--r0', (Math.random()*14 - 7).toFixed(1) + 'deg');
+    sp.style.setProperty('--r1', (Math.random()*14 - 7).toFixed(1) + 'deg');
+    sp.style.animationDuration = (2.8 + Math.random()*2.6).toFixed(2) + 's';
+    sp.style.animationDelay = (-Math.random()*3).toFixed(2) + 's';
+    container.appendChild(sp);
+  });
+}
+seedFloaties($('#gateFloat'));
+})();
+</script>
+</body>
+</html>
