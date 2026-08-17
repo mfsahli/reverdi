@@ -195,36 +195,88 @@
   .fund{font-size:13px;color:#8f9dbd;margin-top:8px;line-height:1.7}
   .foot-bottom{border-top:1px solid #24325a;margin-top:34px;padding-top:18px;font-size:12.5px;color:#7e8cad;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   .note{font-size:12px;color:#94a1c0;font-style:italic;margin-top:14px}
-  /* --- National Library Explorer: gamified nav button + hero announcement --- */
-  .explorer-link{position:relative;display:inline-flex;align-items:center;gap:6px;
-    font-family:'Chalkboard SE','Comic Sans MS','Segoe Print',cursive;
-    font-size:13px;font-weight:700;color:var(--navy);
-    background:linear-gradient(105deg,#E8B83A,#F6D98B);
-    border-radius:999px;padding:6px 14px;margin-left:4px;
-    box-shadow:0 3px 10px rgba(232,184,58,.45);
-    transform:rotate(-2deg);transition:transform .2s, box-shadow .2s}
-  .explorer-link:hover{transform:rotate(2deg) scale(1.07);box-shadow:0 5px 16px rgba(232,184,58,.6);color:var(--navy)}
-  .explorer-link .xdot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
-    background:#D64545;border:2px solid #fff;animation:xping 1.8s ease-in-out infinite}
-  @keyframes xping{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
-  @media(max-width:860px){.nav-links .explorer-link{padding:6px 14px;margin:10px 24px;align-self:flex-start}}
-  .explorer-hero{position:relative;margin-top:34px;background:rgba(202,220,252,.08);
-    border:1.5px solid rgba(202,220,252,.35);border-radius:16px;padding:22px 26px}
-  .explorer-hero-in{display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
-  .xh-badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--navy);background:var(--yellow);border-radius:999px;padding:3px 10px;margin-bottom:8px}
-  .explorer-hero h3{font-size:22px;color:#fff;margin:0 0 6px;font-weight:800}
-  .explorer-hero p{color:#B9C4DE;font-size:14.5px;max-width:54ch;margin:0}
-  .xh-btn{display:inline-flex;align-items:center;gap:10px;
-    font-family:'Chalkboard SE','Comic Sans MS','Segoe Print',cursive;
-    font-size:18px;font-weight:700;color:var(--navy);
-    background:linear-gradient(105deg,#E8B83A,#F6D98B);
-    border-radius:999px;padding:15px 26px;white-space:nowrap;
-    box-shadow:0 8px 24px rgba(232,184,58,.45);transform:rotate(-2deg);transition:.2s}
-  .xh-btn:hover{transform:rotate(1deg) scale(1.05);box-shadow:0 12px 32px rgba(232,184,58,.6)}
-  .xh-float{position:absolute;font-size:22px;opacity:.85;animation:xfloat 3.4s ease-in-out infinite alternate}
-  .xh-float.f2{animation-delay:-1.7s}
-  @keyframes xfloat{from{transform:translateY(2px) rotate(-6deg)}to{transform:translateY(-8px) rotate(6deg)}}
+  /* --- Library Game: restrained nav link (no yellow, site font) --- */
+  .explorer-link{position:relative;display:inline-flex;align-items:center;gap:7px;
+    font-size:13.5px;font-weight:700;color:var(--navy);
+    border:1px solid var(--border);border-radius:999px;padding:5px 13px;margin-left:2px;transition:.16s}
+  .explorer-link:hover{border-color:#b9c6e2;background:#F4F7FD;color:var(--navy)}
+  .explorer-link .xdot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
+  @media(max-width:860px){.nav-links .explorer-link{margin:10px 24px;align-self:flex-start}}
+
+  /* ===================== HERO — physical ⇄ digital =============================
+     One switch in the middle of the blue band moves the whole section between
+     the physical world and the digital one: background tone, background art,
+     the sentence and the results link all change with it. Starts on Hybrid.
+     ============================================================================ */
+  .hero{position:relative;overflow:hidden;padding:74px 0 68px;
+    background:radial-gradient(1200px 520px at 50% -12%,#1C2C58 0%,var(--navy) 58%);
+    transition:background .8s ease}
+  .hero.m-real{background:radial-gradient(1200px 560px at 50% -12%,#33529A 0%,#1B3068 62%)}
+  .hero.m-digital{background:radial-gradient(1100px 540px at 50% -12%,#0E1B40 0%,#04081A 64%)}
+  .hero .wrap{position:relative;z-index:3}
+  .hero-bg{position:absolute;inset:0;z-index:1;--b:52%}
+  .hero-scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .scene-real{clip-path:inset(0 calc(100% - var(--b)) 0 0)}
+  .scene-digital{clip-path:inset(0 0 0 var(--b))}
+  .hero-seam{position:absolute;top:0;bottom:0;left:var(--b);width:1px;z-index:2;transition:opacity .5s;
+    background:linear-gradient(180deg,rgba(202,220,252,0),rgba(202,220,252,.42) 22%,rgba(202,220,252,.42) 78%,rgba(202,220,252,0))}
+  .hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;transition:background .8s ease;
+    background:radial-gradient(820px 400px at 50% 48%,rgba(14,26,64,.80),rgba(14,26,64,0) 72%),
+               linear-gradient(180deg,rgba(14,26,64,.72) 0%,rgba(14,26,64,.52) 42%,rgba(14,26,64,.52) 60%,rgba(14,26,64,.84) 100%)}
+  .hero.m-real .hero-scrim{
+    background:radial-gradient(820px 400px at 50% 48%,rgba(17,35,88,.70),rgba(17,35,88,0) 72%),
+               linear-gradient(180deg,rgba(17,35,88,.58) 0%,rgba(17,35,88,.34) 42%,rgba(17,35,88,.34) 60%,rgba(17,35,88,.76) 100%)}
+  .hero.m-digital .hero-scrim{
+    background:radial-gradient(820px 400px at 50% 48%,rgba(4,9,26,.80),rgba(4,9,26,0) 72%),
+               linear-gradient(180deg,rgba(4,9,26,.70) 0%,rgba(4,9,26,.48) 42%,rgba(4,9,26,.48) 60%,rgba(4,9,26,.84) 100%)}
+
+  /* centred hero content */
+  .hero-inner{text-align:center;max-width:880px;margin:0 auto}
+  .hero-inner h1{margin-left:auto;margin-right:auto}
+  .hero-inner .tagline{margin-bottom:18px}
+  .hero-inner p.intro{max-width:64ch;margin:0 auto}
+  .hero-inner .pillars{justify-content:center;margin-top:20px}
+  .hero-inner .cta{justify-content:center;margin-top:20px}
+
+  /* the switch */
+  .modeswitch{position:relative;display:inline-flex;align-items:center;margin:34px auto 0;padding:6px;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.26);border-radius:999px;
+    backdrop-filter:blur(10px);box-shadow:0 16px 44px rgba(3,9,26,.38)}
+  .modeswitch .thumb{position:absolute;top:6px;bottom:6px;left:0;width:0;border-radius:999px;background:#fff;z-index:0;
+    box-shadow:0 6px 18px rgba(0,0,0,.30);transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
+  .msbtn{position:relative;z-index:1;font:inherit;font-size:15px;font-weight:700;color:#DCE4F7;cursor:pointer;
+    background:none;border:0;padding:12px 22px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;
+    white-space:nowrap;transition:color .3s}
+  .msbtn .ic{font-size:18px;line-height:1;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  .msbtn:hover{color:#fff}
+  .msbtn[aria-selected="true"]{color:var(--navy)}
+  .msbtn[aria-selected="true"]:hover{color:var(--navy)}
+  .msbtn[aria-selected="true"] .ic{transform:scale(1.22)}
+  .msbtn:focus-visible{outline:2px solid var(--lblue);outline-offset:3px}
+  .switch-hint{font-size:12.5px;color:#95A4C6;margin-top:11px}
+
+  /* the sentence + contextual link */
+  .mode-line{font-size:16.5px;color:#D6E0F7;max-width:62ch;margin:22px auto 0;min-height:56px;
+    transition:opacity .25s,transform .25s}
+  .mode-line.swap{opacity:0;transform:translateY(5px)}
+  .mode-line b{color:#fff;font-weight:700}
+  .cta-general{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .btn.ghost.sm{padding:10px 18px;font-size:14px;border-color:rgba(255,255,255,.22)}
+  .hero-more{display:inline-block;margin-top:16px;font-size:13.5px;color:#A9B6D6;border-bottom:1px solid rgba(169,182,214,.4)}
+  .hero-more:hover{color:#fff;border-color:#fff}
+  @media(max-width:980px){
+    .hero-scrim,.hero.m-real .hero-scrim,.hero.m-digital .hero-scrim{
+      background:linear-gradient(180deg,rgba(14,26,64,.90) 0%,rgba(14,26,64,.80) 40%,rgba(14,26,64,.74) 70%,rgba(14,26,64,.90) 100%)}
+  }
+  @media(max-width:640px){
+    .msbtn{padding:10px 13px;font-size:13.5px;gap:7px}
+    .msbtn .ic{font-size:16px}
+    /* the three sentences are the same length, but at phone widths one of
+       them can still take an extra line — reserve the space so the block
+       below never jumps when you flip the switch */
+    .mode-line{font-size:15.5px;min-height:104px}
+  }
+  @media (prefers-reduced-motion:reduce){.hero-scene *{animation:none !important}}
 </style>
 </head>
 <body>
@@ -240,7 +292,7 @@
       <a href="pages/lcsa-results.html">Results</a>
       <a href="pages/open-heritage.html">Wikimedia</a>
       <a href="pages/outputs.html">Outputs</a>
-      <a class="explorer-link" href="pages/national-library-explorer.html">📚💾 Library Game<span class="xdot"></span></a>
+      <a class="explorer-link" href="pages/national-library-explorer.html"><span class="xdot"></span>Library Game</a>
       <a href="#team">Team</a>
       <a href="#news">News</a>
       <a href="#contact">Contact</a>
@@ -249,36 +301,156 @@
 </header>
 
 <!-- HERO -->
-<section class="hero" id="top" style="padding-top:80px">
+<section class="hero" id="top">
+
+  <!-- background: physical archive (left) wipes into data centre (right) -->
+  <div class="hero-bg" id="heroBg" aria-hidden="true">
+
+    <svg class="hero-scene scene-real" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="spinesPat" width="24" height="74" patternUnits="userSpaceOnUse">
+          <rect x="1"  y="12" width="4" height="62" fill="#CADCFC" opacity=".55"/>
+          <rect x="6"  y="6"  width="3" height="68" fill="#CADCFC" opacity=".40"/>
+          <rect x="10" y="16" width="5" height="58" fill="#CADCFC" opacity=".62"/>
+          <rect x="16" y="9"  width="3" height="65" fill="#CADCFC" opacity=".34"/>
+          <rect x="20" y="20" width="3" height="54" fill="#CADCFC" opacity=".50"/>
+        </pattern>
+      </defs>
+      <g opacity=".62">
+        <!-- arcade of arches -->
+        <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".30">
+          <path d="M40 530V300q0-78 78-78t78 78v230"/>
+          <path d="M276 530V300q0-78 78-78t78 78v230"/>
+          <path d="M512 530V300q0-78 78-78t78 78v230"/>
+          <path d="M748 530V300q0-78 78-78t78 78v230"/>
+          <path d="M984 530V300q0-78 78-78t78 78v230"/>
+          <path d="M1220 530V300q0-78 78-78t78 78v230"/>
+        </g>
+        <!-- shelf runs -->
+        <g>
+          <rect x="60" y="196" width="1320" height="74" fill="url(#spinesPat)"/>
+          <rect x="56" y="270" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
+          <rect x="60" y="300" width="1320" height="74" fill="url(#spinesPat)"/>
+          <rect x="56" y="374" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
+          <rect x="60" y="404" width="1320" height="74" fill="url(#spinesPat)"/>
+          <rect x="56" y="478" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
+          <!-- uprights -->
+          <g fill="#CADCFC" opacity=".45">
+            <rect x="56" y="190" width="5" height="296"/><rect x="500" y="190" width="5" height="296"/>
+            <rect x="944" y="190" width="5" height="296"/><rect x="1379" y="190" width="5" height="296"/>
+          </g>
+        </g>
+        <!-- rolling ladder -->
+        <g stroke="#CADCFC" stroke-width="3" opacity=".55" fill="none">
+          <path d="M660 186v306M700 186v306"/>
+          <path d="M660 236h40M660 286h40M660 336h40M660 386h40M660 436h40"/>
+        </g>
+        <!-- archive boxes -->
+        <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".45">
+          <rect x="120" y="494" width="86" height="44" rx="2"/><path d="M150 494v44M120 512h86"/>
+          <rect x="214" y="494" width="86" height="44" rx="2"/><path d="M244 494v44"/>
+          <rect x="1160" y="494" width="86" height="44" rx="2"/><path d="M1190 494v44M1160 512h86"/>
+        </g>
+        <!-- dust in the light -->
+        <g fill="#E8EEFF" opacity=".55">
+          <circle cx="380" cy="150" r="2.5"><animate attributeName="cy" values="150;110;150" dur="17s" repeatCount="indefinite"/></circle>
+          <circle cx="820" cy="120" r="2"><animate attributeName="cy" values="120;168;120" dur="21s" repeatCount="indefinite"/></circle>
+          <circle cx="1120" cy="160" r="2.5"><animate attributeName="cy" values="160;118;160" dur="19s" repeatCount="indefinite"/></circle>
+          <circle cx="560" cy="96" r="1.8"><animate attributeName="cy" values="96;140;96" dur="23s" repeatCount="indefinite"/></circle>
+        </g>
+      </g>
+    </svg>
+
+    <svg class="hero-scene scene-digital" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="meshPat" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M48 0H0V48" fill="none" stroke="#CADCFC" stroke-width="1" opacity=".30"/>
+        </pattern>
+        <pattern id="slotPat" width="104" height="18" patternUnits="userSpaceOnUse">
+          <rect x="8" y="5" width="70" height="8" rx="2" fill="#CADCFC" opacity=".34"/>
+          <rect x="84" y="6" width="6"  height="6" rx="1" fill="#4FC2C9" opacity=".65"/>
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="1440" height="560" fill="url(#meshPat)"/>
+      <g opacity=".58">
+        <!-- server rows -->
+        <g>
+          <rect x="60"   y="212" width="312" height="252" fill="url(#slotPat)"/>
+          <rect x="404"  y="212" width="312" height="252" fill="url(#slotPat)"/>
+          <rect x="748"  y="212" width="312" height="252" fill="url(#slotPat)"/>
+          <rect x="1092" y="212" width="288" height="252" fill="url(#slotPat)"/>
+          <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".5">
+            <rect x="60" y="212" width="312" height="252"/><rect x="404" y="212" width="312" height="252"/>
+            <rect x="748" y="212" width="312" height="252"/><rect x="1092" y="212" width="288" height="252"/>
+          </g>
+          <rect x="56" y="478" width="1328" height="5" fill="#CADCFC" opacity=".45"/>
+        </g>
+        <!-- status LEDs -->
+        <g fill="#4FC2C9">
+          <circle cx="96" cy="192" r="4"><animate attributeName="opacity" values="1;.15;1" dur="3.1s" repeatCount="indefinite"/></circle>
+          <circle cx="440" cy="192" r="4"><animate attributeName="opacity" values=".2;1;.2" dur="4.3s" repeatCount="indefinite"/></circle>
+          <circle cx="784" cy="192" r="4"><animate attributeName="opacity" values="1;.2;1" dur="5.2s" repeatCount="indefinite"/></circle>
+          <circle cx="1128" cy="192" r="4"><animate attributeName="opacity" values=".25;1;.25" dur="3.7s" repeatCount="indefinite"/></circle>
+        </g>
+        <!-- data flows -->
+        <g fill="none" stroke="#CADCFC" stroke-width="2" stroke-dasharray="10 14" opacity=".55">
+          <path d="M0 120C240 60 420 168 700 120s520-72 740-12">
+            <animate attributeName="stroke-dashoffset" values="0;-240" dur="9s" repeatCount="indefinite"/></path>
+          <path d="M0 522C260 486 460 540 720 510s480-54 720-24">
+            <animate attributeName="stroke-dashoffset" values="0;-240" dur="13s" repeatCount="indefinite"/></path>
+        </g>
+        <!-- nodes -->
+        <g stroke="#CADCFC" fill="none" opacity=".6">
+          <circle cx="700" cy="120" r="7" fill="#CADCFC" stroke="none"/>
+          <circle cx="700" cy="120" r="16" stroke-width="1.5">
+            <animate attributeName="r" values="10;28;10" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values=".8;0;.8" dur="6s" repeatCount="indefinite"/></circle>
+          <circle cx="240" cy="86" r="5" fill="#CADCFC" stroke="none"/>
+          <circle cx="1180" cy="96" r="5" fill="#CADCFC" stroke="none"/>
+        </g>
+      </g>
+    </svg>
+
+    <div class="hero-seam" id="heroSeam"></div>
+    <div class="hero-scrim"></div>
+  </div>
+
   <div class="wrap">
-    <div class="eyebrow">Belmont Forum · Climate &amp; Cultural Heritage</div>
+   <div class="hero-inner">
+    <div class="eyebrow">Belmont Forum &middot; Climate &amp; Cultural Heritage</div>
     <h1>ReVerDi — Real versus Digital</h1>
     <div class="tagline">Sustainability optimisation in national libraries</div>
     <p class="intro">How should national libraries balance their physical and digital collections? We assess all three pillars of sustainability together — environmental, economic, and social — across Switzerland, the United Kingdom and the Netherlands.</p>
+
+    <!-- physical / hybrid / digital switch -->
+    <div class="modeswitch" id="modeSwitch" role="tablist" aria-label="Physical, hybrid or digital collection">
+      <span class="thumb" id="msThumb"></span>
+      <button class="msbtn" role="tab" data-mode="real"    aria-selected="false"><span class="ic">📖</span>Physical</button>
+      <button class="msbtn" role="tab" data-mode="hybrid"  aria-selected="true"><span class="ic">⚖️</span>Hybrid</button>
+      <button class="msbtn" role="tab" data-mode="digital" aria-selected="false"><span class="ic">💾</span>Digital</button>
+    </div>
+    <div class="switch-hint" id="switchHint">Start in the middle — click a side to move the whole collection there.</div>
+
+    <p class="mode-line" id="modeLine"></p>
+
+    <div class="cta">
+      <a class="btn primary" id="modeCta" href="pages/lcsa-results.html">Read our first results</a>
+    </div>
+    <div class="cta-general">
+      <a class="btn ghost sm" href="pages/method-lcsa.html">Method</a>
+      <a class="btn ghost sm" href="pages/outputs.html">Outputs</a>
+      <a class="btn ghost sm" href="#team">Team</a>
+    </div>
+
     <div class="pillars">
       <span class="pill"><span class="pd" style="background:var(--teal)"></span>Environmental</span>
       <span class="pill"><span class="pd" style="background:var(--yellow)"></span>Economic</span>
       <span class="pill"><span class="pd" style="background:var(--violet)"></span>Social</span>
-      <a class="pill pill-link" href="pages/method-lcsa.html" title="How the three pillars combine into one method">combined&nbsp;in&nbsp;one&nbsp;method: LCSA&nbsp;→</a>
-    </div>
-    <div class="cta">
-      <a class="btn primary" href="pages/lcsa-results.html">Read our first results</a>
-      <a class="btn ghost" href="pages/lcsa-results.html#glam">Relevant for the wider GLAM sector?</a>
-      <a class="btn ghost" href="#team">Meet the team</a>
+      <a class="pill pill-link" href="pages/method-lcsa.html" title="How the three pillars combine into one method">combined&nbsp;in&nbsp;one&nbsp;method: LCSA&nbsp;&rarr;</a>
     </div>
 
-    <div class="explorer-hero">
-      <span class="xh-float" style="top:-12px;left:18px">📚</span>
-      <span class="xh-float f2" style="bottom:-10px;right:150px">💿</span>
-      <div class="explorer-hero-in">
-        <div>
-          <div class="xh-badge">New · Interactive</div>
-          <h3>Step inside three national libraries</h3>
-          <p>The British Library, the KB and the Swiss National Library as one playable building — physical world by day, digital world by night. Collect 33 discoveries and find the golden doors.</p>
-        </div>
-        <a class="xh-btn" href="pages/national-library-explorer.html">📚💾 Play the Library Game →</a>
-      </div>
-    </div>
+    <a class="hero-more" href="pages/lcsa-results.html#glam">Relevant for the wider GLAM sector? &rarr;</a>
+   </div>
   </div>
 </section>
 
@@ -554,6 +726,98 @@ document.getElementById('yr').textContent=new Date().getFullYear();
   box.addEventListener('mouseenter',function(){clearInterval(timer);});
   box.addEventListener('mouseleave',restart);
   render();restart();
+})();
+
+/* ---------------- HERO: physical / hybrid / digital switch ----------------
+   Changes the tone of the blue band, wipes the background art between the
+   archive and the data centre, and swaps the sentence and the results link.
+   Figures quoted: ReVerDi comparative study (Table 3) and institutional
+   annual reports 2023–2024; preliminary and provisional.                  */
+(function(){
+  var sw=document.getElementById('modeSwitch');
+  if(!sw) return;
+  var hero=document.querySelector('.hero');
+  var bg=document.getElementById('heroBg'), seam=document.getElementById('heroSeam');
+  var thumb=document.getElementById('msThumb');
+  var lineEl=document.getElementById('modeLine'), ctaEl=document.getElementById('modeCta');
+  var hintEl=document.getElementById('switchHint');
+  var btns=[].slice.call(sw.querySelectorAll('.msbtn'));
+
+  var MODES={
+    real:{b:100, cls:'m-real',
+      line:'<b>The collection you can touch.</b> Printed books and archives, storage buildings and logistics, conservation and long-term physical preservation.',
+      cta:'Results for the physical collection →', href:'pages/lcsa-results.html',
+      hint:'You are on the physical side — click Hybrid for both, or Digital for the other one.'},
+    hybrid:{b:52, cls:'',
+      line:'<b>Both at once — and that is the research question.</b> Where should each part of a collection live, and what does that balance really cost?',
+      cta:'Read our first results →', href:'pages/lcsa-results.html',
+      hint:'Start in the middle — click a side to move the whole collection there.'},
+    digital:{b:0, cls:'m-digital',
+      line:'<b>The collection you can reach.</b> Born-digital publishing and ever more digitisation, storage and migration, accessibility beyond the reading room.',
+      cta:'Results for the digital collection →', href:'pages/lcsa-results.html',
+      hint:'You are on the digital side — click Hybrid for both, or Physical for the other one.'}
+  };
+  var cur='hybrid', animId=null;
+
+  function placeThumb(){
+    var i=btns.map(function(b){return b.getAttribute('aria-selected')==='true';}).indexOf(true);
+    if(i<0) i=1;
+    var b=btns[i];
+    thumb.style.width=b.offsetWidth+'px';
+    thumb.style.transform='translateX('+(b.offsetLeft-6)+'px)';
+  }
+
+  function setB(v){
+    bg.style.setProperty('--b',v+'%');
+    seam.style.left=v+'%';
+    seam.style.opacity=(v>3&&v<97)?1:0;
+  }
+
+  function setMode(key,instant){
+    var m=MODES[key];
+    if(!m) return;
+    btns.forEach(function(b){ b.setAttribute('aria-selected', b.dataset.mode===key?'true':'false'); });
+    placeThumb();
+    hero.classList.remove('m-real','m-digital');
+    if(m.cls) hero.classList.add(m.cls);
+
+    if(key!==cur||instant){
+      lineEl.classList.add('swap');
+      setTimeout(function(){
+        lineEl.innerHTML=m.line;
+        ctaEl.textContent=m.cta;
+        ctaEl.setAttribute('href',m.href);
+        if(hintEl) hintEl.textContent=m.hint;
+        lineEl.classList.remove('swap');
+      }, instant?0:200);
+    }
+
+    var from=parseFloat(bg.style.getPropertyValue('--b'))||52, to=m.b, t0=null;
+    if(animId) cancelAnimationFrame(animId);
+    if(instant||window.matchMedia('(prefers-reduced-motion: reduce)').matches){ setB(to); }
+    else {
+      animId=requestAnimationFrame(function step(ts){
+        if(t0===null) t0=ts;
+        var p=Math.min(1,(ts-t0)/620), e=1-Math.pow(1-p,3);
+        setB(from+(to-from)*e);
+        if(p<1) animId=requestAnimationFrame(step);
+      });
+    }
+    cur=key;
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){ setMode(b.dataset.mode); });
+    b.addEventListener('keydown',function(e){
+      var i=btns.indexOf(b);
+      if(e.key==='ArrowRight'&&i<btns.length-1){ btns[i+1].focus(); setMode(btns[i+1].dataset.mode); }
+      if(e.key==='ArrowLeft'&&i>0){ btns[i-1].focus(); setMode(btns[i-1].dataset.mode); }
+    });
+  });
+  window.addEventListener('resize',placeThumb);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(placeThumb);
+
+  setMode('hybrid',true);
 })();
 </script>
 </body>
