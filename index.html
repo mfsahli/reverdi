@@ -71,7 +71,7 @@
   .pill .pd{width:9px;height:9px;border-radius:50%}
   .pill-link{background:rgba(232,184,58,.16);border-color:rgba(232,184,58,.5);color:var(--yellow);font-weight:700}
   .pill-link:hover{background:rgba(232,184,58,.26)}
-  .cta{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
+  .cta{display:flex;gap:14px;margin-top:16px;flex-wrap:wrap}
   .btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:700;font-size:14.5px}
   .btn.primary{background:var(--yellow);color:var(--navy)}
   .btn.ghost{border:1px solid rgba(255,255,255,.28);color:#fff}
@@ -130,6 +130,14 @@
   .xcard h4{font-size:19px;color:var(--navy);margin:8px 0 6px}
   .xcard p{font-size:14px;color:var(--muted)}
   .xcard .arrow{margin-top:14px;font-weight:700;color:var(--navy);font-size:14px}
+  /* the game gets its own frame and a live dot */
+  .xcard.xgame{border:2px solid var(--teal);background:linear-gradient(180deg,#fbfeff,#f2fbfc)}
+  .xcard.xgame:hover{border-color:#3aa8b0;box-shadow:0 12px 30px rgba(79,194,201,.22)}
+  .xcard.xgame .tag{color:#2b8f97;display:inline-flex;align-items:center;gap:7px}
+  .xcard.xgame .xdot{width:8px;height:8px;border-radius:50%;background:var(--teal);
+    box-shadow:0 0 0 0 rgba(79,194,201,.6);animation:xpulse 2.4s ease-out infinite}
+  @keyframes xpulse{0%{box-shadow:0 0 0 0 rgba(79,194,201,.55)}70%{box-shadow:0 0 0 9px rgba(79,194,201,0)}100%{box-shadow:0 0 0 0 rgba(79,194,201,0)}}
+  .xcard.xgame .arrow{color:#2b8f97}
 
   /* PUBLICATIONS */
   .pubwrap{margin-top:30px;display:flex;flex-direction:column;gap:16px}
@@ -209,10 +217,10 @@
      the sentence and the results link all change with it. Starts on Hybrid.
      ============================================================================ */
   .hero{position:relative;overflow:hidden;padding:74px 0 68px;
-    background:radial-gradient(1200px 520px at 50% -12%,#1C2C58 0%,var(--navy) 58%);
+    background:radial-gradient(1200px 540px at 50% -12%,#1C2C58 0%,var(--navy) 60%);
     transition:background .8s ease}
-  .hero.m-real{background:radial-gradient(1200px 560px at 50% -12%,#33529A 0%,#1B3068 62%)}
-  .hero.m-digital{background:radial-gradient(1100px 540px at 50% -12%,#0E1B40 0%,#04081A 64%)}
+  .hero.m-real{background:radial-gradient(1200px 540px at 50% -12%,#33529A 0%,#1B3068 60%)}
+  .hero.m-digital{background:radial-gradient(1200px 540px at 50% -12%,#0E1B40 0%,#04081A 60%)}
   .hero .wrap{position:relative;z-index:3}
   .hero-bg{position:absolute;inset:0;z-index:1;--b:52%}
   .hero-scene{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -221,31 +229,75 @@
   .hero-seam{position:absolute;top:0;bottom:0;left:var(--b);width:1px;z-index:2;transition:opacity .5s;
     background:linear-gradient(180deg,rgba(202,220,252,0),rgba(202,220,252,.42) 22%,rgba(202,220,252,.42) 78%,rgba(202,220,252,0))}
   .hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;transition:background .8s ease;
-    background:radial-gradient(820px 400px at 50% 48%,rgba(14,26,64,.80),rgba(14,26,64,0) 72%),
-               linear-gradient(180deg,rgba(14,26,64,.72) 0%,rgba(14,26,64,.52) 42%,rgba(14,26,64,.52) 60%,rgba(14,26,64,.84) 100%)}
+    background:linear-gradient(90deg,rgba(14,26,64,.55) 0%,rgba(14,26,64,.30) 46%,rgba(14,26,64,.12) 70%,rgba(14,26,64,.42) 100%)}
   .hero.m-real .hero-scrim{
-    background:radial-gradient(820px 400px at 50% 48%,rgba(17,35,88,.70),rgba(17,35,88,0) 72%),
-               linear-gradient(180deg,rgba(17,35,88,.58) 0%,rgba(17,35,88,.34) 42%,rgba(17,35,88,.34) 60%,rgba(17,35,88,.76) 100%)}
+    background:linear-gradient(90deg,rgba(17,35,88,.50) 0%,rgba(17,35,88,.26) 46%,rgba(17,35,88,.08) 70%,rgba(17,35,88,.34) 100%)}
   .hero.m-digital .hero-scrim{
-    background:radial-gradient(820px 400px at 50% 48%,rgba(4,9,26,.80),rgba(4,9,26,0) 72%),
-               linear-gradient(180deg,rgba(4,9,26,.70) 0%,rgba(4,9,26,.48) 42%,rgba(4,9,26,.48) 60%,rgba(4,9,26,.84) 100%)}
+    background:linear-gradient(90deg,rgba(4,9,26,.60) 0%,rgba(4,9,26,.34) 46%,rgba(4,9,26,.12) 70%,rgba(4,9,26,.46) 100%)}
 
-  /* centred hero content */
-  .hero-inner{text-align:center;max-width:880px;margin:0 auto}
-  .hero-inner h1{margin-left:auto;margin-right:auto}
-  .hero-inner .tagline{margin-bottom:18px}
-  .hero-inner p.intro{max-width:64ch;margin:0 auto}
-  .hero-inner .pillars{justify-content:center;margin-top:20px}
-  .hero-inner .cta{justify-content:center;margin-top:20px}
+  /* one centred card of text, floating over the moving scene */
+  .hero-grid{display:grid;place-items:center;padding:14px 0}
+  .hero-float{width:min(660px,100%)}
+  .hero-card{background:rgba(8,15,38,.94);border:1px solid rgba(202,220,252,.22);border-radius:22px;
+    padding:24px 34px 22px;box-shadow:0 26px 70px rgba(3,8,24,.5);text-align:center;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+  .hero-card:hover{transform:translateY(-6px) scale(1.012);border-color:rgba(202,220,252,.5);
+    box-shadow:0 36px 90px rgba(3,8,24,.6)}
+  .hero-card h1,.hero-card .tagline,.hero-card p.intro{margin-left:auto;margin-right:auto}
+  .hero-card .cta,.hero-card .cta-general,.hero-card .pillars,.hero-card .modeswitch{justify-content:center}
+  .hero-card .modeswitch{margin-left:auto;margin-right:auto}
+  .hero-card .mode-line{margin-left:auto;margin-right:auto;text-align:center}
+
+  .hero-card h1{font-size:clamp(30px,3.6vw,42px);margin:.14em 0 .06em;line-height:1.08}
+  .hero-card .tagline{font-size:17px;margin-bottom:9px}
+  .hero-card p.intro{font-size:15px;color:#B9C4DE;max-width:48ch}
+  .hero-card .cta{margin-top:22px}
+  .hero-card .pillars{margin-top:12px}
+  /* buttons are solid, never washed out by the art behind */
+  .hero-card .btn.ghost{background:#16224a;border-color:rgba(202,220,252,.28)}
+  .hero-card .btn.ghost:hover{background:#1d2c5c}
+  .hero-card .pill{background:rgba(255,255,255,.10)}
+  /* the logo writes itself out: Re→Real, Ver→versus, Di→Digital, and back */
+  .logo-h1{letter-spacing:-.02em}
+  .lg{display:inline-block;white-space:nowrap}
+  .lg .seg{display:inline-block}
+  .lg i{display:inline-block;font-style:normal;max-width:0;opacity:0;overflow:hidden;vertical-align:bottom;
+    transition:max-width 1.35s cubic-bezier(.55,0,.2,1),opacity .8s ease}
+  .lg .sp{display:inline-block;max-width:0;overflow:hidden;white-space:pre;
+    transition:max-width 1.35s cubic-bezier(.55,0,.2,1)}
+  .lg.open i{opacity:1}
+  .lg.open .s1 i{max-width:2.2em}
+  .lg.open .s2 i{max-width:3.6em}
+  .lg.open .s3 i{max-width:4.8em}
+  .lg.open .sp{max-width:.42em}
+  .lg i{color:var(--yellow)}                /* real · versus · digital, all in the brand yellow */
+  .lg .s1{transition-delay:0s}
+  .lg .s2 i{transition-delay:.28s}
+  .lg .s3 i{transition-delay:.56s}
+  .lg .vv{font-weight:inherit;display:inline-block;transition:transform .4s}
+  .lg.open .vv{text-transform:lowercase}
+  @media (prefers-reduced-motion:reduce){.lg i,.lg .sp{transition:none}}
+  /* animated wordmark */
+  .wm{display:inline-block;white-space:nowrap}
+  .wm i{display:inline-block;font-style:normal;transition:transform .3s cubic-bezier(.2,.8,.2,1),color .3s}
+  .wm:hover i{transform:translateY(-6px)}
+  .wm:hover i:nth-child(2){transition-delay:.04s}.wm:hover i:nth-child(3){transition-delay:.08s}
+  .wm:hover i:nth-child(4){transition-delay:.12s}.wm:hover i:nth-child(5){transition-delay:.16s}
+  .wm:hover i:nth-child(6){transition-delay:.2s}.wm:hover i:nth-child(7){transition-delay:.24s}
+  .wm .sh{background:linear-gradient(100deg,#fff 0%,#fff 38%,var(--lblue) 50%,#fff 62%,#fff 100%);
+    background-size:280% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:wmshine 9s ease-in-out infinite}
+  @keyframes wmshine{0%,8%{background-position:120% 0}55%,100%{background-position:-40% 0}}
+  @media (prefers-reduced-motion:reduce){.wm .sh{animation:none;color:#fff;-webkit-text-fill-color:#fff}}
 
   /* the switch */
-  .modeswitch{position:relative;display:inline-flex;align-items:center;margin:34px auto 0;padding:6px;
+  .modeswitch{position:relative;display:inline-flex;align-items:center;margin:18px 0 0;padding:5px;
     background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.26);border-radius:999px;
     backdrop-filter:blur(10px);box-shadow:0 16px 44px rgba(3,9,26,.38)}
   .modeswitch .thumb{position:absolute;top:6px;bottom:6px;left:0;width:0;border-radius:999px;background:#fff;z-index:0;
     box-shadow:0 6px 18px rgba(0,0,0,.30);transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
-  .msbtn{position:relative;z-index:1;font:inherit;font-size:15px;font-weight:700;color:#DCE4F7;cursor:pointer;
-    background:none;border:0;padding:12px 22px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;
+  .msbtn{position:relative;z-index:1;font:inherit;font-size:14.5px;font-weight:700;color:#DCE4F7;cursor:pointer;
+    background:none;border:0;padding:10px 20px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;
     white-space:nowrap;transition:color .3s}
   .msbtn .ic{font-size:18px;line-height:1;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
   .msbtn:hover{color:#fff}
@@ -253,14 +305,14 @@
   .msbtn[aria-selected="true"]:hover{color:var(--navy)}
   .msbtn[aria-selected="true"] .ic{transform:scale(1.22)}
   .msbtn:focus-visible{outline:2px solid var(--lblue);outline-offset:3px}
-  .switch-hint{font-size:12.5px;color:#95A4C6;margin-top:11px}
+  .switch-hint{font-size:12px;color:#B9C4DE;margin-top:9px}
 
   /* the sentence + contextual link */
-  .mode-line{font-size:16.5px;color:#D6E0F7;max-width:62ch;margin:22px auto 0;min-height:56px;
+  .mode-line{font-size:14.5px;color:#D6E0F7;max-width:46ch;margin:12px auto 0;height:66px;overflow:hidden;
     transition:opacity .25s,transform .25s}
   .mode-line.swap{opacity:0;transform:translateY(5px)}
   .mode-line b{color:#fff;font-weight:700}
-  .cta-general{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .cta-general{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;justify-content:center}
   .btn.ghost.sm{padding:10px 18px;font-size:14px;border-color:rgba(255,255,255,.22)}
   .hero-more{display:inline-block;margin-top:16px;font-size:13.5px;color:#A9B6D6;border-bottom:1px solid rgba(169,182,214,.4)}
   .hero-more:hover{color:#fff;border-color:#fff}
@@ -274,9 +326,25 @@
     /* the three sentences are the same length, but at phone widths one of
        them can still take an extra line — reserve the space so the block
        below never jumps when you flip the switch */
-    .mode-line{font-size:15.5px;min-height:104px}
+    .mode-line{font-size:14px;height:auto;min-height:84px}
   }
   @media (prefers-reduced-motion:reduce){.hero-scene *{animation:none !important}}
+
+  /* short laptop windows: shrink the card rather than push the page off-screen */
+  @media(max-height:800px) and (min-width:981px){
+    .hero-card{padding:18px 30px 16px}
+    .hero-card h1{font-size:clamp(26px,3vw,34px)}
+    .hero-card .tagline{font-size:15.5px;margin-bottom:7px}
+    .hero-card p.intro{font-size:14px}
+    .hero-card .modeswitch{margin-top:14px}
+    .hero-card .msbtn{padding:8px 17px;font-size:13.5px}
+    .hero-card .mode-line{font-size:13.5px;height:60px;margin-top:10px}
+    .hero-card .cta{margin-top:13px}
+    .hero-card .btn{padding:10px 18px}
+    .hero-card .pillars{margin-top:10px}
+    .hero-card .pill{padding:5px 12px;font-size:12.5px}
+    .hero-grid{padding:10px 0}
+  }
 </style>
 </head>
 <body>
@@ -292,7 +360,7 @@
       <a href="pages/lcsa-results.html">Results</a>
       <a href="pages/open-heritage.html">Wikimedia</a>
       <a href="pages/outputs.html">Outputs</a>
-      <a class="explorer-link" href="pages/national-library-explorer.html"><span class="xdot"></span>Library Game</a>
+      <a class="explorer-link" href="pages/national-library-explorer-v4.html"><span class="xdot"></span>Library Game</a>
       <a href="#team">Team</a>
       <a href="#news">News</a>
       <a href="#contact">Contact</a>
@@ -316,7 +384,7 @@
           <rect x="20" y="20" width="3" height="54" fill="#CADCFC" opacity=".50"/>
         </pattern>
       </defs>
-      <g opacity=".62">
+      <g opacity=".60">
         <!-- arcade of arches -->
         <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".30">
           <path d="M40 530V300q0-78 78-78t78 78v230"/>
@@ -334,6 +402,7 @@
           <rect x="56" y="374" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
           <rect x="60" y="404" width="1320" height="74" fill="url(#spinesPat)"/>
           <rect x="56" y="478" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
+          <rect x="56" y="190" width="1328" height="5" fill="#CADCFC" opacity=".45"/>
           <!-- uprights -->
           <g fill="#CADCFC" opacity=".45">
             <rect x="56" y="190" width="5" height="296"/><rect x="500" y="190" width="5" height="296"/>
@@ -347,9 +416,9 @@
         </g>
         <!-- archive boxes -->
         <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".45">
-          <rect x="120" y="494" width="86" height="44" rx="2"/><path d="M150 494v44M120 512h86"/>
-          <rect x="214" y="494" width="86" height="44" rx="2"/><path d="M244 494v44"/>
-          <rect x="1160" y="494" width="86" height="44" rx="2"/><path d="M1190 494v44M1160 512h86"/>
+          <rect x="120" y="430" width="86" height="44" rx="2"/><path d="M150 430v44M120 448h86"/>
+          <rect x="214" y="430" width="86" height="44" rx="2"/><path d="M244 430v44"/>
+          <rect x="1160" y="430" width="86" height="44" rx="2"/><path d="M1190 430v44M1160 448h86"/>
         </g>
         <!-- dust in the light -->
         <g fill="#E8EEFF" opacity=".55">
@@ -372,25 +441,27 @@
         </pattern>
       </defs>
       <rect x="0" y="0" width="1440" height="560" fill="url(#meshPat)"/>
-      <g opacity=".58">
-        <!-- server rows -->
+      <g opacity=".60">
+        <!-- server rows — same band as the shelves opposite, so the two
+             worlds are exactly the same size when you switch -->
         <g>
-          <rect x="60"   y="212" width="312" height="252" fill="url(#slotPat)"/>
-          <rect x="404"  y="212" width="312" height="252" fill="url(#slotPat)"/>
-          <rect x="748"  y="212" width="312" height="252" fill="url(#slotPat)"/>
-          <rect x="1092" y="212" width="288" height="252" fill="url(#slotPat)"/>
+          <rect x="60"   y="196" width="312" height="282" fill="url(#slotPat)"/>
+          <rect x="404"  y="196" width="312" height="282" fill="url(#slotPat)"/>
+          <rect x="748"  y="196" width="312" height="282" fill="url(#slotPat)"/>
+          <rect x="1092" y="196" width="288" height="282" fill="url(#slotPat)"/>
           <g fill="none" stroke="#CADCFC" stroke-width="2" opacity=".5">
-            <rect x="60" y="212" width="312" height="252"/><rect x="404" y="212" width="312" height="252"/>
-            <rect x="748" y="212" width="312" height="252"/><rect x="1092" y="212" width="288" height="252"/>
+            <rect x="60" y="196" width="312" height="282"/><rect x="404" y="196" width="312" height="282"/>
+            <rect x="748" y="196" width="312" height="282"/><rect x="1092" y="196" width="288" height="282"/>
           </g>
-          <rect x="56" y="478" width="1328" height="5" fill="#CADCFC" opacity=".45"/>
+          <rect x="56" y="478" width="1328" height="5" fill="#CADCFC" opacity=".5"/>
+          <rect x="56" y="190" width="1328" height="5" fill="#CADCFC" opacity=".45"/>
         </g>
         <!-- status LEDs -->
         <g fill="#4FC2C9">
-          <circle cx="96" cy="192" r="4"><animate attributeName="opacity" values="1;.15;1" dur="3.1s" repeatCount="indefinite"/></circle>
-          <circle cx="440" cy="192" r="4"><animate attributeName="opacity" values=".2;1;.2" dur="4.3s" repeatCount="indefinite"/></circle>
-          <circle cx="784" cy="192" r="4"><animate attributeName="opacity" values="1;.2;1" dur="5.2s" repeatCount="indefinite"/></circle>
-          <circle cx="1128" cy="192" r="4"><animate attributeName="opacity" values=".25;1;.25" dur="3.7s" repeatCount="indefinite"/></circle>
+          <circle cx="96" cy="176" r="4"><animate attributeName="opacity" values="1;.15;1" dur="3.1s" repeatCount="indefinite"/></circle>
+          <circle cx="440" cy="176" r="4"><animate attributeName="opacity" values=".2;1;.2" dur="4.3s" repeatCount="indefinite"/></circle>
+          <circle cx="784" cy="176" r="4"><animate attributeName="opacity" values="1;.2;1" dur="5.2s" repeatCount="indefinite"/></circle>
+          <circle cx="1128" cy="176" r="4"><animate attributeName="opacity" values=".25;1;.25" dur="3.7s" repeatCount="indefinite"/></circle>
         </g>
         <!-- data flows -->
         <g fill="none" stroke="#CADCFC" stroke-width="2" stroke-dasharray="10 14" opacity=".55">
@@ -415,12 +486,15 @@
     <div class="hero-scrim"></div>
   </div>
 
-  <div class="wrap">
-   <div class="hero-inner">
+  <div class="wrap hero-grid">
+   <div class="hero-float">
+   <div class="hero-card">
     <div class="eyebrow">Belmont Forum &middot; Climate &amp; Cultural Heritage</div>
-    <h1>ReVerDi — Real versus Digital</h1>
+    <h1 class="logo-h1"><span class="lg" id="lg" aria-label="ReVerDi — Real versus Digital">
+      <span class="seg s1">Re<i>al</i></span><span class="sp">&nbsp;</span><span class="seg s2"><b class="vv">V</b>er<i>sus</i></span><span class="sp">&nbsp;</span><span class="seg s3">Di<i>gital</i></span>
+    </span></h1>
     <div class="tagline">Sustainability optimisation in national libraries</div>
-    <p class="intro">How should national libraries balance their physical and digital collections? We assess all three pillars of sustainability together — environmental, economic, and social — across Switzerland, the United Kingdom and the Netherlands.</p>
+    <p class="intro">Shelves or servers? We measure both — environmentally, economically and socially — in Switzerland, the UK and the Netherlands.</p>
 
     <!-- physical / hybrid / digital switch -->
     <div class="modeswitch" id="modeSwitch" role="tablist" aria-label="Physical, hybrid or digital collection">
@@ -429,8 +503,6 @@
       <button class="msbtn" role="tab" data-mode="hybrid"  aria-selected="true"><span class="ic">⚖️</span>Hybrid</button>
       <button class="msbtn" role="tab" data-mode="digital" aria-selected="false"><span class="ic">💾</span>Digital</button>
     </div>
-    <div class="switch-hint" id="switchHint">Start in the middle — click a side to move the whole collection there.</div>
-
     <p class="mode-line" id="modeLine"></p>
 
     <div class="cta">
@@ -446,10 +518,8 @@
       <span class="pill"><span class="pd" style="background:var(--teal)"></span>Environmental</span>
       <span class="pill"><span class="pd" style="background:var(--yellow)"></span>Economic</span>
       <span class="pill"><span class="pd" style="background:var(--violet)"></span>Social</span>
-      <a class="pill pill-link" href="pages/method-lcsa.html" title="How the three pillars combine into one method">combined&nbsp;in&nbsp;one&nbsp;method: LCSA&nbsp;&rarr;</a>
     </div>
-
-    <a class="hero-more" href="pages/lcsa-results.html#glam">Relevant for the wider GLAM sector? &rarr;</a>
+   </div>
    </div>
   </div>
 </section>
@@ -555,7 +625,7 @@
   <div class="wrap">
     <div class="eyebrow">Explore</div>
     <h2 class="section-title">Research &amp; outputs</h2>
-    <p class="lead">The project runs across several strands. Each will grow into its own page — for now, start with the publications.</p>
+    <p class="lead">The project runs across several strands — and one of them you can walk through yourself.</p>
     <div class="explore">
       <a class="xcard" href="pages/outputs.html">
         <div class="tag">Strand</div><h4>Outputs</h4>
@@ -567,10 +637,10 @@
         <p>What national libraries open on Wikimedia Commons, where it travels, and what generative AI does to its value.</p>
         <div class="arrow">Explore →</div>
       </a>
-      <a class="xcard" href="pages/outputs.html">
-        <div class="tag">Strand</div><h4>The future library 2050</h4>
-        <p>Three strategic scenarios for the national library of the future — and their sustainability trade-offs.</p>
-        <div class="arrow">Coming soon →</div>
+      <a class="xcard xgame" href="pages/national-library-explorer-v4.html">
+        <div class="tag"><span class="xdot"></span>Interactive</div><h4>The Library Game</h4>
+        <p>Walk one reader through four decisions — what to read, paper or screen, how you travel, how long — and see the life-cycle emissions that follow.</p>
+        <div class="arrow">Play the Library Game →</div>
       </a>
     </div>
   </div>
@@ -728,6 +798,17 @@ document.getElementById('yr').textContent=new Date().getFullYear();
   render();restart();
 })();
 
+/* ---------------- HERO: the logo that writes itself out ---------------- */
+(function(){
+  var lg=document.getElementById('lg'); if(!lg) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var open=false;
+  setInterval(function(){
+    open=!open;
+    lg.classList.toggle('open',open);
+  }, 7000);
+})();
+
 /* ---------------- HERO: physical / hybrid / digital switch ----------------
    Changes the tone of the blue band, wipes the background art between the
    archive and the data centre, and swaps the sentence and the results link.
@@ -745,15 +826,15 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 
   var MODES={
     real:{b:100, cls:'m-real',
-      line:'<b>The collection you can touch.</b> Printed books and archives, storage buildings and logistics, conservation and long-term physical preservation.',
+      line:'<b>The collection you can touch.</b> Books, archives, buildings and logistics — and conservation for the long term.',
       cta:'Results for the physical collection →', href:'pages/lcsa-results.html',
       hint:'You are on the physical side — click Hybrid for both, or Digital for the other one.'},
     hybrid:{b:52, cls:'',
-      line:'<b>Both at once — and that is the research question.</b> Where should each part of a collection live, and what does that balance really cost?',
+      line:'<b>Both at once — the research question.</b> Where should each part of a collection live, and what does it truly cost?',
       cta:'Read our first results →', href:'pages/lcsa-results.html',
       hint:'Start in the middle — click a side to move the whole collection there.'},
     digital:{b:0, cls:'m-digital',
-      line:'<b>The collection you can reach.</b> Born-digital publishing and ever more digitisation, storage and migration, accessibility beyond the reading room.',
+      line:'<b>The collection you can reach.</b> Born-digital publishing, digitisation, storage and migration — access anywhere.',
       cta:'Results for the digital collection →', href:'pages/lcsa-results.html',
       hint:'You are on the digital side — click Hybrid for both, or Physical for the other one.'}
   };
