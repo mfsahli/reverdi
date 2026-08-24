@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ReVerDi — Open cultural heritage (sub-page). Lives in /pages, loads figures from ../figures/.
+  ReVerDi: Open cultural heritage (sub-page). Lives in /pages, loads figures from ../figures/.
   Figures come from the Wikimedia research programme. Edit text freely.
 -->
 <html lang="en">
@@ -197,6 +197,16 @@
   .pgt-svg text{font-family:inherit;font-size:10.5px;fill:var(--muted)}
   .pgl-chip{cursor:pointer;user-select:none;transition:opacity .12s}
   .pgl-chip.off{opacity:.35;text-decoration:line-through}
+  /* five questions + ai chart */
+  .fiveq{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 6px}
+  @media(max-width:760px){.fiveq{grid-template-columns:repeat(2,1fr)}}
+  .fq{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .fq b{display:block;font-size:14px;color:var(--navy);margin-bottom:2px}
+  .fq span{font-size:12px;color:var(--muted);line-height:1.4}
+  .aichart{margin:12px 0 4px}
+  .aichart svg{width:100%;height:auto;display:block}
+  .aichart text{font-family:inherit;font-size:10.5px;fill:var(--muted)}
+  .pl .pln+.plv+.pln{margin-top:2px;line-height:1.35}
   /* --- Library Game: restrained nav link, matching the home page --- */
   .explorer-link{display:inline-flex;align-items:center;gap:7px;
     font-size:13.5px;font-weight:700;color:var(--navy);
@@ -234,7 +244,7 @@
     <div class="crumb"><a href="../index.html">Home</a> · Wikimedia</div>
     <div class="eyebrow">Wikimedia Commons · Research strand</div>
     <h1>Open heritage on Wikimedia Commons</h1>
-    <p>What national libraries open, where it travels, and what generative AI does to its value — a three-paper programme on the public value of digitised public-domain heritage.</p>
+    <p>What national libraries open, where it travels, and what generative AI does to its value. A three-paper programme on the public value of digitised public-domain heritage.</p>
   </div>
 </section>
 
@@ -242,35 +252,37 @@
   <div class="wrap">
     <p class="lead">Three national libraries have each uploaded tens of thousands of public-domain images to Wikimedia Commons. We built two large, original datasets on the same images to ask three questions in turn: what gets opened, where it travels, and what generative AI does to its value.</p>
     <div class="statrow reveal">
-      <div class="stat"><div class="v cu" data-to="168030" data-fmt="comma">0</div><div class="l">files in the Wikimedia census</div></div>
-      <div class="stat"><div class="v cu" data-to="173287" data-fmt="comma">0</div><div class="l">detected reuses &mdash; from a random sample of 15,000 images</div></div>
-      <div class="stat"><div class="v cu" data-to="3">0</div><div class="l">national libraries — UK · NL · CH</div></div>
+      <div class="stat"><div class="v cu" data-to="168030" data-fmt="comma">0</div><div class="l">files in the Wikimedia census (complete file-level metadata)</div></div>
+      <div class="stat"><div class="v cu" data-to="161367" data-fmt="comma">0</div><div class="l">detected reuses, from a random sample of 15,000 images</div></div>
+      <div class="stat"><div class="v cu" data-to="3">0</div><div class="l">national libraries · UK · NL · CH</div></div>
     </div>
 
     <div class="journey reveal">
-      <a class="jn" href="#p1"><span class="n">1</span><div><h4>What&#39;s opened</h4><p>Provision · upload strategies</p></div></a>
-      <a class="jn" href="#p2"><span class="n">2</span><div><h4>Where it travels</h4><p>Diffusion · 173k reuses</p></div></a>
+      <a class="jn" href="#p1"><span class="n">1</span><div><h4>What&#39;s opened</h4><p>Provision · three strategies</p></div></a>
+      <a class="jn" href="#p2"><span class="n">2</span><div><h4>Where it travels</h4><p>Diffusion · 161k reuses</p></div></a>
       <a class="jn" href="#p3"><span class="n">3</span><div><h4>Value in the AI era</h4><p>Stock or prompt</p></div></a>
     </div>
 
     <h2>What we study</h2>
-    <p class="body">The same heritage image can be given away for free on Wikimedia, sold as a stock photo for a licence fee, and reused on social media — all at once. We follow each uploaded image across the open web to see where it goes and what it is worth.</p>
+    <p class="body">The same heritage image can be given away for free on Wikimedia, listed for sale on a stock site or print shop, and placed in a news article or a social media post, all at once. We follow each uploaded image across the open web to see where it goes and what it is worth.</p>
     <div class="fig reveal">
       <img src="../figures/wiki_comparison.png" alt="The same public-domain image shown three ways: free on Wikimedia Commons, sold for a licence fee on a stock-photo site, and reused on social media.">
-      <div class="cap">The same image, three worlds — free on Wikimedia Commons (left), sold on a commercial stock site (centre, ~$193), and reused on social media (right).</div>
+      <div class="cap">The same image, three worlds: free on Wikimedia Commons (left), listed on a commercial stock site (centre, ~$193), and reused on social media (right).</div>
     </div>
 
     <!-- PAPER 1 -->
     <div class="paper reveal" id="p1">
       <span class="ptag">Paper 1 · the provision side</span><span class="status">Invited · special issue</span>
-      <h2>Open by Design — putting it online is itself a strategy</h2>
-      <div class="rq"><b>Research question:</b> How do national libraries enact a digitisation strategy through what they actually upload — and what does that mean for public value?</div>
-      <p class="body">From the outside, uploading public-domain images looks like one good deed. Look at what each library actually uploaded — the format, the rights labels, the metadata, the timing — and three very different strategies appear.</p>
+      <h2>Open by Design: open distribution as a strategic choice</h2>
+      <div class="rq"><b>Research question:</b> How do national libraries provide open access to digitised heritage, and what does the way they release it mean for the social value the collections can create?</div>
+      <p class="body">From the outside, uploading public-domain images looks like one good deed. We compare the complete file-level metadata of the three libraries&#39; Wikimedia Commons categories, 168,030 files in total: volume and timing, file size and pixel count, file format, the age of the underlying works, rights labels, descriptive metadata, and who does the uploading. Three distinct strategies appear.</p>
       <div class="pgal">
         <div class="pgal-tabs">
           <button class="pg-seg active" data-k="format">File format</button>
-          <button class="pg-seg" data-k="curation">Curation</button>
+          <button class="pg-seg" data-k="size">Size &amp; pixels</button>
+          <button class="pg-seg" data-k="curation">Description</button>
           <button class="pg-seg" data-k="rights">Rights labels</button>
+          <button class="pg-seg" data-k="who">Who uploads</button>
           <button class="pg-seg" data-k="timing">Upload timing</button>
         </div>
         <div class="pgal-panel">
@@ -281,24 +293,52 @@
         </div>
       </div>
       <div class="strats">
-        <div class="strat"><h4>British Library</h4><p>Decentralised mass-release — huge volume, ambiguous rights, 52 % templated metadata.</p></div>
-        <div class="strat"><h4>Koninklijke Bibliotheek</h4><p>Curator-led — steady, clean public domain, its oldest holdings.</p></div>
-        <div class="strat"><h4>Swiss National Library</h4><p>Centralised uploads; metadata straight from the archive database — mostly TIFF-format access derivatives (processed and downscaled for the platform, not archival masters), multilingual, 95 % attributed.</p></div>
+        <div class="strat"><h4>British Library</h4><p><b>Decentralised, mass release.</b> 90,281 files, concentrated in two release episodes (2014 and 2018); small JPEG files; mixed rights labels (40 % explicit public domain, 48 % &ldquo;no known restrictions&rdquo;); 51.5 % templated English-only descriptions; uploaded mainly by 576 volunteer accounts.</p></div>
+        <div class="strat"><h4>Koninklijke Bibliotheek</h4><p><b>Curator-led.</b> 30,849 files in a moderate, steady flow; JPEG files of its oldest holdings (median creation year 1662); 98 % public domain; object-level bilingual descriptions; uploaded by a small number of staff accounts (top three: 91 %).</p></div>
+        <div class="strat"><h4>Swiss National Library</h4><p><b>Centralised, institutional.</b> 46,900 files, recent and accelerating (largest year 2024); very large TIFF files (median 69.8 MB, 35 megapixels; downsized derivatives of its production files); 99.5 % public domain; short multilingual descriptions with a named creator on 95 %; 97 % through a single official account.</p></div>
       </div>
-      <div class="plain">The lesson: format, licence and metadata are not paperwork — they decide how much public value each upload actually realises.</div>
+      <p class="note">The typology is descriptive and does not rank the three approaches. Each reflects the institution&#39;s mandate, resources and objectives.</p>
+
+      <p class="body" style="font-weight:700;color:var(--navy);margin-top:18px">A model of open distribution: five questions the institution controls</p>
+      <p class="body">Cultural value resides in the collections. Open provision determines under which conditions the digital copies become available beyond the institution&#39;s own systems. Diffusion follows, and social value is only realised when the material is actually used. Provision is the part of this chain that the institution controls, and each choice involves a trade-off.</p>
+      <div class="fiveq">
+        <div class="fq"><b>What</b><span>selection and format: file format, file size, pixel count, full files or smaller derivatives</span></div>
+        <div class="fq"><b>How</b><span>rights labels and description: licence choice, rights clearance, metadata quality</span></div>
+        <div class="fq"><b>Where</b><span>own platforms or external platforms such as Wikimedia Commons</span></div>
+        <div class="fq"><b>Who</b><span>a single official account, staff accounts or community volunteers</span></div>
+        <div class="fq"><b>When</b><span>a single bulk release, a steady flow or an accelerating programme</span></div>
+      </div>
+      <div class="drivers">
+        <div class="driver"><span class="ar up">1</span><p><b>Distribution is a strategic decision, not a technical afterthought.</b> The same act of putting collections online creates very different conditions for diffusion depending on format, rights labels and metadata practice. Institutions that inherit these parameters as defaults, from a vendor, a legacy release or a volunteer community, give up control over them.</p></div>
+        <div class="driver"><span class="ar up">2</span><p><b>Keep rights and provenance metadata in-house.</b> Volunteer provision delivers scale and engagement at low marginal cost, but it disperses responsibility for certain fields.</p></div>
+        <div class="driver"><span class="ar up">3</span><p><b>Match the metrics to the strategy.</b> Where preservation is the aim, technical choices and detailed metadata are the appropriate measures; where access is the aim, reach and diffusion are. A single diffusion metric would penalise the preservation mandate that is part of a national library&#39;s mission.</p></div>
+        <div class="driver"><span class="ar up">4</span><p><b>Open distribution adds resilience.</b> When the British Library&#39;s own systems were down after the 2023 cyber-attack, the copies on Flickr and Wikimedia Commons remained available.</p></div>
+      </div>
+      <div class="plain">The central lesson: how a collection is released shapes the conditions under which its cultural value can become social value. Distribution should be governed deliberately and evaluated with metrics that match the chosen strategy.</div>
     </div>
 
     <!-- PAPER 2 -->
     <div class="paper reveal" id="p2">
       <span class="ptag">Paper 2 · the diffusion side</span><span class="status">Under review · Journal of Cultural Economics</span>
-      <h2>From Digitization to Diffusion — where open heritage travels</h2>
-      <div class="rq"><b>Research question:</b> Once heritage is on Commons, where does it actually go — and which upload choices make an image diffuse?</div>
-      <p class="body">We followed 15,000 library images out into the wild and found them again 173,000 times — on stock sites, in news stories, on Wikipedia, on social media, across dozens of countries. Roughly two in three images were reused at least once.</p>
+      <h2>From Digitization to Diffusion: where open heritage travels</h2>
+      <div class="rq"><b>Research question:</b> Once heritage is on Commons, how much of it is used at all, by whom and where, and does reuse depend on choices the library controls, such as file format, pixel count and licence?</div>
+      <p class="body">We drew a random sample of 5,000 images per library, ran each through reverse-image search and found them again 161,367 times: on stock image platforms, in news articles, blogs and Wikipedia pages, on social media and in print-on-demand shops. 61 percent of images are reused at least once, most often on stock image platforms, and most reuse we can locate sits outside the library&#39;s own country.</p>
+      <div class="chips">
+        <div class="chip"><div class="v cu" data-to="61" data-suffix=" %">0</div><div class="l">of images reused at least once</div></div>
+        <div class="chip"><div class="v cu" data-to="161" data-suffix="k">0</div><div class="l">detected reuses</div></div>
+        <div class="chip"><div class="v cu" data-to="39" data-suffix=" %">0</div><div class="l">of reuses sit on stock platform domains</div></div>
+        <div class="chip"><div class="v">12&ndash;31 %</div><div class="l">of located reuse is domestic (BL, KB: 12 %; SNL: 31 %)</div></div>
+      </div>
+      <div class="perlib" style="margin-top:4px">
+        <div class="pl"><span class="pln">British Library</span><span class="plv">76,535</span><span class="pln">reuses · 76 % of images reused · 20.0 reuses per reused image</span></div>
+        <div class="pl"><span class="pln">Koninklijke Bibliotheek</span><span class="plv">63,062</span><span class="pln">reuses · 59 % of images reused · 21.2 per reused image</span></div>
+        <div class="pl"><span class="pln">Swiss National Library</span><span class="plv">21,770</span><span class="pln">reuses · 48 % of images reused · 9.0 per reused image</span></div>
+      </div>
       <div class="rmap">
         <div class="rmap-head">
           <div>
-            <div class="rmap-title">Where reuse happens — by library</div>
-            <div class="rmap-unit">detected reuses by country · hover a country for the exact count</div>
+            <div class="rmap-title">Where reuse happens, by library</div>
+            <div class="rmap-unit">located reuses by country · hover a country for the exact count</div>
           </div>
           <div class="rmap-toggle">
             <button class="rm-seg active" data-l="BL">British Library</button>
@@ -314,62 +354,78 @@
           </div>
         </div>
         <div class="rmap-legend" id="rmapLegend"></div>
-        <p class="note">Colour intensity = detected reuses in that country. Reuse is strongly European-centred; the Swiss National Library peaks at home, the KB in the Netherlands, while the British Library reaches furthest into English-speaking countries. Excludes an aggregated &ldquo;European Union&rdquo; label.</p>
+        <p class="note">Colour intensity = located reuses in that country, inferred from the top-level domain of the reuse website (this locates the website, not the user). Reuses on generic domains such as .com carry no country information and are not shown. The pattern centres on Europe; the Swiss National Library peaks at home, the KB in the Netherlands, while the British Library reaches further into English-speaking countries.</p>
       </div>
-      <div class="chips">
-        <div class="chip"><div class="v cu" data-to="64" data-suffix=" %">0</div><div class="l">of images reused at least once</div></div>
-        <div class="chip"><div class="v cu" data-to="173" data-suffix="k">0</div><div class="l">detected reuses</div></div>
-        <div class="chip"><div class="v">$181&#8211;423m</div><div class="l">modelled avoided licence cost</div></div>
+
+      <p class="body" style="font-weight:700;color:var(--navy);margin-top:18px">Three kinds of reuse</p>
+      <div class="chanrow">
+        <button class="chan active" data-c="list">Listed for sale<span>14,715 reuses · 12 % of images</span></button>
+        <button class="chan" data-c="news">News · blog · Wikipedia<span>13,251 reuses · 14 % of images</span></button>
+        <button class="chan" data-c="social">Social media<span>10,205 reuses · 10 % of images</span></button>
       </div>
-      <p class="body" style="font-weight:700;color:var(--navy);margin-top:6px">What drives reuse (image-level analysis)</p>
+      <div class="chandesc" id="chanDesc"></div>
+
+      <p class="body" style="font-weight:700;color:var(--navy);margin-top:18px">What goes with reuse (image-level analysis, holding content type and library constant)</p>
       <div class="lchart">
-        <div class="lrow"><div class="lab"><b>Public domain</b><span>Strongest positive lever — commercial &amp; news reuse</span></div><div class="ltrack"><div class="lfill" style="background:#1E7B45" data-w="94">Strong &#9650;</div></div></div>
-        <div class="lrow"><div class="lab"><b>JPEG access format</b><span>Reused far more than TIFF files</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="76">&#9650;</div></div></div>
-        <div class="lrow"><div class="lab"><b>Years online</b><span>Each year online &#8776; +29% odds of reuse</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="60">+29% / yr</div></div></div>
-        <div class="lrow"><div class="lab"><b>Very high resolution</b><span>Less likely to be reused at all&#8230;</span></div><div class="ltrack"><div class="lfill" style="background:#A32D2D" data-w="44">&#9660;</div></div></div>
-        <div class="lrow"><div class="lab"><b>&#8230;once adopted</b><span>High-res images are reused more intensively</span></div><div class="ltrack"><div class="lfill" style="background:#9A6B12" data-w="40">&#9670; intensity</div></div></div>
+        <div class="lrow"><div class="lab"><b>Public domain label</b><span>Strongest association, in every channel we observe, and at both margins</span></div><div class="ltrack"><div class="lfill" style="background:#1E7B45" data-w="94">Strong &#9650;</div></div></div>
+        <div class="lrow"><div class="lab"><b>JPEG format</b><span>More likely to be reused than TIFF and other formats; listing is the exception</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="72">&#9650;</div></div></div>
+        <div class="lrow"><div class="lab"><b>Years online</b><span>Each additional year online &#8776; +31 % odds of reuse, and more reuses once reused</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="60">+31 % / yr</div></div></div>
+        <div class="lrow"><div class="lab"><b>Pixel count</b><span>No clear role in whether an image is reused at all; more news reuse and more listings</span></div><div class="ltrack"><div class="lfill" style="background:#9A6B12" data-w="34">&#9670; mixed</div></div></div>
+        <div class="lrow"><div class="lab"><b>&#8230;once an image circulates</b><span>Files with more pixels attract more reuses</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="44">&#9650; intensity</div></div></div>
+        <div class="lrow"><div class="lab"><b>Content</b><span>Posters are the most reused material in every channel; maps, book pages and prints are listed for sale far more often</span></div><div class="ltrack"><div class="lfill" style="background:#3B6EA5" data-w="52">&#9670; by type</div></div></div>
       </div>
-      <p class="note">Direction from the image-level analysis; bar widths indicate relative strength, not exact odds. Only &#8220;years online&#8221; is quantified precisely.</p>
-      <div class="plain">Open images travel far — but design decides how far. A clear licence and a friendly file format spread heritage the most.</div>
+      <p class="note">Logit and count models with content-type indicators and national-library fixed effects. Bar widths indicate relative strength, not exact odds; only &#8220;years online&#8221; is quantified precisely. Upload characteristics are institutional choices, so all estimates are conditional correlations rather than causal effects. Public-domain status holds in every robustness check; the format result weakens once the creation cohort is held fixed.</p>
+      <div class="plain">What libraries upload, and how they upload it, is reflected in where their collections end up. A public-domain label and a broadly compatible file format spread heritage the most; licence conditions act as a barrier.</div>
+
+      <p class="body" style="font-weight:700;color:var(--navy);margin-top:22px">Reuse since generative AI entered the image market</p>
+      <p class="body">Our observation window spans the release of the first large text-to-image tools and ChatGPT in late 2022. Among the 18,641 reuses we can date, social media reuse rises from 311 in 2018 to 1,482 in 2025, and its share from 17 to 43 percent. Appearances on stock platform domains move the other way, from 438 to 59, and from a quarter of dated reuses to under 2 percent. News reuse is flat at about 200 dated reuses a year. The chart holds the set of images fixed, following only the 5,541 sampled images uploaded by 2017.</p>
+      <div class="aichart" id="aiChart"></div>
+      <p class="note">Dated reuses per image, fixed set of images uploaded by 2017, 2018&ndash;2025. &ldquo;Stock platform&rdquo; covers the domains of large stock platforms; &ldquo;all other domains&rdquo; covers every other reuse site. The 2022 value on other domains includes a single free clipart aggregator. Values read from the paper&#39;s figure. Only 16 percent of detected reuses carry a date, and reuse on stock platforms was already falling from 2019, so we read this as a description of how the composition of reuse shifted rather than as an estimate of its cause.</p>
     </div>
 
     <!-- VALUE CALCULATOR -->
     <div class="calc reveal" id="value">
       <span class="ptag">Interactive &middot; built on the paper&#39;s own valuation</span>
       <h2>What is this open heritage worth?</h2>
-      <p class="body">Most detected reuses are <b>commercial</b> &mdash; the image reappears on a stock-photo or resale site that shows a price. Those are the reuses that would otherwise have paid a licence fee. Pick a reuse channel to see how each behaves, then value the commercial reuses at a Getty-style licence price.</p>
+      <p class="body">Following Heald et al. (2015) and Erickson et al. (2018), we value observed reuses at commercial licensing prices, USD 150 for a low-resolution and USD 350 for a high-resolution standard Getty Images licence. The result measures the licensing cost that reusers avoided. It is an upper bound, since at a positive price most of the observed uses would not take place. We apply it separately to the two kinds of reuse.</p>
       <div class="chanrow">
-        <button class="chan active" data-c="com">Commercial / stock<span>54% of images &middot; largest channel</span></button>
-        <button class="chan" data-c="news">News &middot; blog &middot; Wikipedia<span>26% of images &middot; editorial</span></button>
-        <button class="chan" data-c="social">Social media<span>10% of images &middot; user-driven</span></button>
+        <button class="chan active" data-v="applied">Applied reuse<span>news · blog · wiki · social media</span></button>
+        <button class="chan" data-v="listing">Listings for sale<span>stock platforms and price tags</span></button>
       </div>
-      <div class="chandesc" id="chanDesc"></div>
+      <div class="chandesc" id="valDesc"></div>
       <div class="valbox" id="valBox">
         <div class="calc-row">
-          <label for="fee">Licence price per commercial reuse</label>
+          <label for="fee">Licence price per reuse</label>
           <input type="range" id="fee" min="0" max="350" value="150" step="5">
           <span class="feeval" id="feeval">$150</span>
         </div>
         <div class="ticks"><span>$0</span><span>$150 &middot; low-res Getty</span><span>$350 &middot; high-res</span></div>
-        <div class="calc-out">
-          <div class="co-big" id="coBig">$181m</div>
-          <div class="co-sub">estimated avoided licence cost &middot; &#8776;1.21m commercial reuses &times; <span id="coFee">$150</span></div>
+        <div class="calc-row" id="convRow" style="display:none">
+          <label>Share of listings that lead to a licensed sale</label>
+          <div class="rmap-toggle">
+            <button class="rm-seg active" data-cv="1">every listing</button>
+            <button class="rm-seg" data-cv="0.01">1 in 100</button>
+            <button class="rm-seg" data-cv="0.001">1 in 1,000</button>
+          </div>
         </div>
-        <div class="perlib">
-          <div class="pl"><span class="pln">British Library</span><span class="plv" id="plBL">$129m</span></div>
-          <div class="pl"><span class="pln">Koninklijke Bibliotheek</span><span class="plv" id="plKB">$37m</span></div>
-          <div class="pl"><span class="pln">Swiss National Library</span><span class="plv" id="plSNL">$16m</span></div>
+        <div class="calc-out">
+          <div class="co-big" id="coBig">$42m</div>
+          <div class="co-sub" id="coSub"></div>
+        </div>
+        <div class="perlib" id="perlibRow">
+          <div class="pl"><span class="pln">British Library</span><span class="plv" id="plBL">$31m</span></div>
+          <div class="pl"><span class="pln">Koninklijke Bibliotheek</span><span class="plv" id="plKB">$9m</span></div>
+          <div class="pl"><span class="pln">Swiss National Library</span><span class="plv" id="plSNL">$2m</span></div>
         </div>
       </div>
-      <div class="vlock" id="vlock">Select &ldquo;Commercial / stock&rdquo; above to value these reuses.</div>
-      <p class="note">The paper benchmarks commercial reuse against a standard Getty Images licence &mdash; USD 150 (low-resolution) to 350 (high-resolution). At those prices the three collections represent a modelled <b>$181m&#8211;$423m</b> in avoided licensing cost &mdash; an explicit lower bound, since it excludes all non-commercial, educational and AI-training value.</p>
+      <p class="note">Scaled to all images each library has uploaded. Applied reuse comes closer to a consumer surplus measure, since a news article or a wiki page needs an image and the reuser would otherwise license one or produce one: roughly <b>USD 31&ndash;73 million</b> for the British Library, <b>9&ndash;22 million</b> for the Koninklijke Bibliotheek and <b>2&ndash;6 million</b> for the Swiss National Library. Listings can only be valued under an assumption about sales, which we do not observe: if every commercial appearance led to a licensed sale, <b>USD 129&ndash;301 million</b>; if one in a hundred did, 1&ndash;3 million; one in a thousand, under half a million. These figures rest on one licence price, leave out what we cannot see (print, teaching, paywalls, closed platforms, AI training) and say nothing about whether users would have bought a licence at all.</p>
     </div>
 
     <!-- PAPER 3 teaser -->
     <div class="teaser reveal" id="p3">
       <span class="ptag">Paper 3 · heritage in the AI economy</span>
       <h2>Stock or Prompt</h2>
-      <p>Since late 2022, anyone can generate a convincing picture from a sentence. So we ask a simple question of our heritage images: when synthetic images become free, does the world still want the real, authenticated one? Early evidence suggests demand splits — falling where any old-looking image will do, rising where it matters that the picture is genuine.</p>
+      <p>Generative AI has made new images nearly free to produce. A generated image can replace a heritage image wherever a buyer only needs a certain look. It cannot replace it in an article or post about a historical person, place or work. Paper 2 shows the first traces of this split in our data: appearances on stock platforms decline after 2022 while social media reuse accelerates. A further channel is gaining weight. AI developers need large, curated, legally clear collections created before generative AI, and digitised heritage has every property this demand values. Training leaves no trace that reverse-image search can detect, so this value is invisible to our method. How demand for and supply to open platforms change as this market grows is the question of the third paper.</p>
       <span class="wip">Work in progress · full results coming soon</span>
     </div>
 
@@ -409,30 +465,91 @@
   var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){fill(e.target);io.unobserve(e.target);}});},{threshold:.35});
   charts.forEach(function(c){io.observe(c);});
 })();
-(function(){ // reuse value explorer
-  var fee=document.getElementById('fee'); if(!fee)return;
-  var bases={BL:856867,KB:244467,SNL:107733}, total=bases.BL+bases.KB+bases.SNL;
-  var big=document.getElementById('coBig'),fv=document.getElementById('feeval'),cf=document.getElementById('coFee');
-  var plBL=document.getElementById('plBL'),plKB=document.getElementById('plKB'),plSNL=document.getElementById('plSNL');
-  function m(v){return v>=1e6?'$'+Math.round(v/1e6)+'m':'$'+Math.round(v).toLocaleString('en-US');}
-  function upd(){var f=+fee.value; fv.textContent='$'+f; cf.textContent='$'+f;
-    big.textContent=m(total*f); plBL.textContent=m(bases.BL*f); plKB.textContent=m(bases.KB*f); plSNL.textContent=m(bases.SNL*f);}
-  fee.addEventListener('input',upd); upd();
+(function(){ // reuse channel descriptions
   var desc={
-    com:'Commercial reuses dominate \u2014 led by Alamy, Getty Images, iStock and PICRYL, and .com is the single most common domain. These are the reuses a buyer would otherwise have paid to license.',
-    news:'\u224824,000 reuses on news, blog and Wikipedia pages \u2014 editorial use across 100+ news domains (The Guardian, NYT, plus Swiss and Dutch outlets). Public value rather than licence revenue.',
-    social:'\u224811,000 reuses on social media \u2014 Facebook, Instagram, X, Pinterest and Reddit history communities. Cultural engagement, not monetisation.'
+    list:'Listing for sale means the image is offered on a marketplace with a price next to it, as a copy or a derivative product such as a framed print: Etsy, eBay, Meisterdrucke, Posterazzi, Fine Art America. The measure is conservative, because large stock platforms such as Alamy, Getty Images or iStock rarely show a price in search results; 39 percent of all detected reuses sit on their domains. Listings measure availability on commercial channels, not demand. Sales are not observable in our data.',
+    news:'Applied reuse in editorial contexts: more than one hundred news domains (the top national outlets of each country plus the top fifty international sites), blogging platforms, and the Wikimedia projects other than Commons. News reuse on country-code domains is largely domestic, at 45 to 80 percent.',
+    social:'Applied reuse in commentary, discussion and user-generated content: Facebook, Instagram, X, Pinterest, Reddit and others. Social media reuses carry the largest copies among the categories, though nearly all are below one megapixel. They sit almost entirely on generic domains and cannot be located.'
   };
-  var cd=document.getElementById('chanDesc'),vb=document.getElementById('valBox'),vl=document.getElementById('vlock');
-  document.querySelectorAll('.chan').forEach(function(b){
+  var cd=document.getElementById('chanDesc'); if(!cd) return;
+  document.querySelectorAll('.chan[data-c]').forEach(function(b){
     b.addEventListener('click',function(){
-      document.querySelectorAll('.chan').forEach(function(x){x.classList.remove('active');});
-      b.classList.add('active'); var c=b.dataset.c; cd.textContent=desc[c];
-      if(c==='com'){vb.classList.remove('dim'); vl.style.display='none';}
-      else{vb.classList.add('dim'); vl.style.display='block';}
+      document.querySelectorAll('.chan[data-c]').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); cd.textContent=desc[b.dataset.c];
     });
   });
-  cd.textContent=desc.com;
+  cd.textContent=desc.list;
+})();
+(function(){ // value calculator: applied reuse vs listings
+  var fee=document.getElementById('fee'); if(!fee)return;
+  // applied reuses scaled to all uploads: BL 90,080 x 28.5% x 8.2 = 207,500 (paper footnote 5); KB and SNL back-calculated from the paper's USD ranges
+  var applied={BL:207500,KB:61500,SNL:16000};
+  // commercial appearances scaled to all 167,829 uploads: 50.6% x 10.13 = 860,500 (paper footnote 6)
+  var listing=860500;
+  var mode='applied', conv=1;
+  var big=document.getElementById('coBig'),sub=document.getElementById('coSub'),fv=document.getElementById('feeval');
+  var plBL=document.getElementById('plBL'),plKB=document.getElementById('plKB'),plSNL=document.getElementById('plSNL');
+  var perlib=document.getElementById('perlibRow'),convRow=document.getElementById('convRow'),vd=document.getElementById('valDesc');
+  function mm(v){return Math.round(v/1e6);}
+  function m(v){return v>=1e6?'$'+mm(v)+'m':'$'+Math.round(v/1e5)/10+'m';}
+  function upd(){var f=+fee.value; fv.textContent='$'+f;
+    if(mode==='applied'){
+      var b=mm(applied.BL*f),k=mm(applied.KB*f),s=mm(applied.SNL*f);
+      big.textContent='$'+(b+k+s)+'m';
+      sub.innerHTML='avoided licence cost of applied reuse &middot; &#8776;'+Math.round((applied.BL+applied.KB+applied.SNL)/1000)+'k applied reuses across all uploads &times; $'+f;
+      plBL.textContent='$'+b+'m'; plKB.textContent='$'+k+'m'; plSNL.textContent='$'+s+'m';
+      perlib.style.display='flex'; convRow.style.display='none';
+    } else {
+      var v=listing*conv*f; big.textContent=m(v);
+      sub.innerHTML='&#8776;860,500 commercial appearances across all uploads &times; '+(conv===1?'every listing sold':conv===0.01?'1 in 100 sold':'1 in 1,000 sold')+' &times; $'+f;
+      perlib.style.display='none'; convRow.style.display='flex';
+    }}
+  fee.addEventListener('input',upd);
+  document.querySelectorAll('.chan[data-v]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.chan[data-v]').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); mode=b.dataset.v; vd.textContent=vdesc[mode]; upd();
+    });
+  });
+  document.querySelectorAll('#convRow .rm-seg').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#convRow .rm-seg').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); conv=+b.dataset.cv; upd();
+    });
+  });
+  var vdesc={
+    applied:'Someone placed the image into their own content, a news article, a blog post, a Wikipedia page or a social media post. Applied reuse is itself a form of demand: a user chose the image and put it to work, even though no transaction records it. Valued as if each use had been licensed.',
+    listing:'The image is offered for sale on a stock platform or with a price tag. Half of the sampled images (50.6 percent) carry at least one commercial appearance, with 10.13 on average among those images. Listings can only be valued under an assumption about how many lead to a sale, which we do not observe.'
+  };
+  vd.textContent=vdesc.applied; upd();
+})();
+(function(){ // AI-era chart: dated reuses per image, fixed set of images (paper figure 7)
+  var host=document.getElementById('aiChart'); if(!host) return;
+  var years=[2018,2019,2020,2021,2022,2023,2024,2025];
+  var other=[0.16,0.17,0.20,0.21,0.32,0.19,0.27,0.37];
+  var stock=[0.030,0.033,0.020,0.017,0.026,0.010,0.003,0.005];
+  var W=680,H=250,ml=46,mr=14,mt=14,mb=30,top=0.40;
+  var NS='http://www.w3.org/2000/svg';
+  function el(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);return e;}
+  function X(i){return ml+i*(W-ml-mr)/(years.length-1);} function Y(v){return H-mb-(v/top)*(H-mt-mb);}
+  var svg=el('svg',{viewBox:'0 0 '+W+' '+H});
+  for(var v=0;v<=top+1e-9;v+=0.1){svg.appendChild(el('line',{x1:ml,x2:W-mr,y1:Y(v),y2:Y(v),stroke:v<1e-9?'#c9d3e6':'#e8edf6','stroke-width':1}));
+    var t=el('text',{x:ml-7,y:Y(v)+3.5,'text-anchor':'end'});t.textContent=v.toFixed(2);svg.appendChild(t);}
+  years.forEach(function(y,i){var t=el('text',{x:X(i),y:H-mb+16,'text-anchor':'middle'});t.textContent=y;svg.appendChild(t);});
+  var xc=X(4)+(X(5)-X(4))*0.85; // Nov 2022
+  svg.appendChild(el('line',{x1:xc,x2:xc,y1:mt,y2:H-mb,stroke:'#0E1A40','stroke-dasharray':'4 3','stroke-width':1}));
+  var lt=el('text',{x:xc+5,y:mt+10});lt.textContent='ChatGPT · Nov 2022';svg.appendChild(lt);
+  [[other,'#1E4B7E','All other domains'],[stock,'#C0392B','Stock platform']].forEach(function(s,k){
+    svg.appendChild(el('polyline',{points:s[0].map(function(v,i){return X(i)+','+Y(v);}).join(' '),fill:'none',stroke:s[1],'stroke-width':2.2,'stroke-linejoin':'round'}));
+    s[0].forEach(function(v,i){svg.appendChild(el('circle',{cx:X(i),cy:Y(v),r:3,fill:s[1]}));});
+    var lg=el('text',{x:ml+8,y:mt+12+k*15,'font-weight':'700'});lg.style.fill=s[1];lg.textContent='● '+s[2];svg.appendChild(lg);
+  });
+  var tip=document.createElement('div');tip.className='pgc-tip';host.style.position='relative';host.appendChild(tip);
+  var band=(W-ml-mr)/(years.length-1);
+  years.forEach(function(y,i){var r=el('rect',{x:X(i)-band/2,y:mt,width:band,height:H-mt-mb,fill:'transparent'});
+    r.addEventListener('mousemove',function(ev){var rr=host.getBoundingClientRect();tip.innerHTML='<b>'+y+'</b><br>other domains: '+other[i].toFixed(2)+'<br>stock platforms: '+stock[i].toFixed(3);tip.style.left=(ev.clientX-rr.left)+'px';tip.style.top=(ev.clientY-rr.top)+'px';tip.style.opacity=1;});
+    r.addEventListener('mouseleave',function(){tip.style.opacity=0;}); svg.appendChild(r);});
+  host.appendChild(svg);
 })();
 (function(){ // lightbox
   var lb=document.getElementById('lb'); if(!lb)return; var img=lb.querySelector('img');
@@ -471,13 +588,13 @@
       var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=row[0]; col.appendChild(x);
       pl.appendChild(col);
     });
-    cap.textContent='Share of uploads by file format. The Swiss National Library uploads mostly TIFF-format files (processed, downscaled derivatives); the British Library and KB are almost entirely JPEG or other formats.';
+    cap.textContent='Share of uploaded files by format. The British Library and the KB upload almost exclusively JPEG files (96% and close to 100%), the Swiss National Library almost exclusively TIFF (90%). JPEG is a compressed format suited to display on screens; TIFF stores files with little or no loss of information. According to the Swiss National Library, its Wikimedia files are downsized derivatives of its production files.';
   }
   function renderCuration(){
     fig.style.display='none'; chart.style.display='block';
     legend([[libNames[0],libCols[0]],[libNames[1],libCols[1]],[libNames[2],libCols[2]]]);
     clearChart(); var pl=mkPlot();
-    var groups=[['Description present',[74,93,100]],['Creator / artist named',[74,62,95]],['Templated description',[52,0,0]]];
+    var groups=[['Description present',[73.7,93.3,99.8]],['Creator named',[74.0,61.5,95.3]],['Templated description',[51.5,0,0]]];
     groups.forEach(function(g){
       var grp=document.createElement('div'); grp.className='pgc-grp';
       g[1].forEach(function(v,i){
@@ -489,7 +606,7 @@
       var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=g[0]; grp.appendChild(x);
       pl.appendChild(grp);
     });
-    cap.textContent='Descriptive-metadata richness: share of uploads with a description present, a named creator/artist, and — for the British Library — templated (auto-generated) descriptions.';
+    cap.textContent='Descriptive metadata: share of files with a free-text description, with a named creator, and matching an automated boilerplate template. Every file carries an object title. Mean description length is 68.5 words for the British Library, 22.5 for the KB and 13.7 for the Swiss National Library; the British Library text is mostly a platform caption ("This image is taken from page X of ... click here to download") generated during the 2013 Mechanical Curator release. Languages: English only (BL), Dutch and English (KB), German, French and Italian (SNL).';
   }
   function renderRights(){
     fig.style.display='none'; chart.style.display='block';
@@ -519,7 +636,46 @@
       var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=row[0]; col.appendChild(x);
       pl.appendChild(col);
     });
-    cap.textContent='Rights / licence labels declared on uploads. KB and the Swiss National Library are almost entirely explicit public domain; nearly half the British Library’s uploads carry the more ambiguous “no known restrictions” label. No files are unlabelled. Hover a segment for exact shares and file counts.';
+    cap.textContent='Rights labels on uploaded files. The KB (98%) and the Swiss National Library (99.5%) apply an explicit public-domain mark to almost their entire corpus. In the British Library corpus only 40% carry an explicit public-domain mark, 48% the weaker “no known restrictions” label inherited from the Flickr Commons release, 10% CC0 and a small share an open-government licence. “No known restrictions” states that the institution is not aware of restrictions without asserting that none exist. Hover a segment for shares and file counts.';
+  }
+  function renderSize(){
+    fig.style.display='none'; chart.style.display='block';
+    legend([['Median file size (MB)','#3B6EA5'],['Median pixel count (megapixels)','#E0894A']]);
+    clearChart(); var pl=mkPlot();
+    var groups=[[libNames[0],[0.74,2.6]],[libNames[1],[0.79,5.0]],[libNames[2],[69.82,35.0]]];
+    var maxs=[69.82,35.0], cols=['#3B6EA5','#E0894A'], lab=['median file size','median pixel count'], unit=[' MB',' MP'];
+    groups.forEach(function(g){
+      var grp=document.createElement('div'); grp.className='pgc-grp';
+      g[1].forEach(function(v,i){
+        var b=document.createElement('div'); b.className='pgc-bar'; b.style.height=Math.max(v/maxs[i]*100,1.5)+'%'; b.style.background=cols[i];
+        b.addEventListener('mousemove',function(ev){showTip('<b>'+g[0]+'</b> · '+lab[i]+' '+v+unit[i],ev);});
+        b.addEventListener('mouseleave',hideTip);
+        grp.appendChild(b);
+      });
+      var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=g[0]; grp.appendChild(x);
+      pl.appendChild(grp);
+    });
+    cap.textContent='Median file size and pixel count of uploaded files (each series scaled to its own maximum). The British Library and the KB distribute small files, median 0.74 MB and 0.79 MB, 2.6 and 5.0 megapixels. The Swiss National Library distributes far larger files, median 69.8 MB and 35.0 megapixels, with a tight distribution at the high end: even its lower quartile lies above the upper quartiles of the other two institutions.';
+  }
+  function renderWho(){
+    fig.style.display='none'; chart.style.display='block';
+    legend([[libNames[0],libCols[0]],[libNames[1],libCols[1]],[libNames[2],libCols[2]]]);
+    clearChart(); var pl=mkPlot();
+    var groups=[['Share from top account',[35.0,51.3,96.7]],['Share from top three accounts',[66.4,90.7,99.4]],['Contributing accounts (of 576)',[100,37.7,9.2]]];
+    var raw=[[35.0,51.3,96.7],[66.4,90.7,99.4],[576,217,53]];
+    groups.forEach(function(g,gi){
+      var grp=document.createElement('div'); grp.className='pgc-grp';
+      g[1].forEach(function(v,i){
+        var b=document.createElement('div'); b.className='pgc-bar'; b.style.height=v+'%'; b.style.background=libCols[i];
+        var txt=gi===2?raw[gi][i]+' accounts':raw[gi][i]+'%';
+        b.addEventListener('mousemove',function(ev){showTip('<b>'+libNames[i]+'</b> · '+g[0].replace(' (of 576)','')+': '+txt,ev);});
+        b.addEventListener('mouseleave',hideTip);
+        grp.appendChild(b);
+      });
+      var x=document.createElement('div'); x.className='pgc-xlab'; x.textContent=g[0]; grp.appendChild(x);
+      pl.appendChild(grp);
+    });
+    cap.textContent='Who does the uploading. The Swiss National Library corpus is uploaded almost entirely (97%) through a single official institutional account, and only 53 accounts appear at all. The KB concentrates uploads in a small number of identifiable staff accounts; its top account contributes 51% of files and its top three 91%. The British Library corpus is the most decentralised, with 576 contributing accounts, of which the largest contributes 35%. The leading accounts are volunteer community members rather than the institution itself.';
   }
   function renderTiming(){
     fig.style.display='none'; chart.style.display='block'; clearChart();
@@ -584,9 +740,9 @@
       b.addEventListener('click',function(){ sub.querySelectorAll('.pgt-btn').forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); mode=b.dataset.m; draw(); });
     });
     draw();
-    cap.textContent='Uploads to Wikimedia Commons, 2012–2025 — three very different rhythms: the British Library’s big-bang releases (2014, 2018), KB’s steady drip, and the Swiss National Library’s recent acceleration. Hover a year for exact counts, switch to cumulative totals, or click a library in the legend to hide it.';
+    cap.textContent='Uploads to Wikimedia Commons, 2012–2025. The British Library corpus grew in two large episodes, around 2013–2014 with the transfer of the Mechanical Curator release and in 2018, when 39,021 files were added in a single year. The KB rises gradually to a peak in 2020 (10,694) and continues at a moderate pace. The Swiss National Library uploaded very little before 2017 and accelerates sharply from 2023, with its largest year in 2024 (14,458). Hover a year for counts, switch to cumulative totals, or click a library in the legend to hide it.';
   }
-  var R={ format:renderFormat, curation:renderCuration, rights:renderRights, timing:renderTiming };
+  var R={ format:renderFormat, size:renderSize, curation:renderCuration, rights:renderRights, who:renderWho, timing:renderTiming };
   document.querySelectorAll('.pg-seg').forEach(function(b){
     b.addEventListener('click',function(){
       document.querySelectorAll('.pg-seg').forEach(function(x){x.classList.remove('active');});
