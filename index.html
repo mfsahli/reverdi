@@ -115,11 +115,14 @@
   .teamlegend{display:flex;gap:16px;flex-wrap:wrap;margin-top:22px;font-size:12.5px;color:var(--muted)}
   .teamlegend span{display:inline-flex;align-items:center;gap:6px}
   .teamlegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
-  .assoc{display:flex;gap:14px;align-items:center;margin-top:28px;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:12px}
-  .assoc .avatar{width:52px;height:52px;flex:0 0 52px;font-size:15px}
-  .assoc .lbl{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--rose)}
-  .assoc p{font-size:14px;color:var(--muted)}
-  .assoc a{color:var(--navy);font-weight:700}
+  /* Co-authors of published papers: smaller circles, smaller heading */
+  .coauth-title{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:44px}
+  .coauth-note{font-size:13.5px;color:var(--muted);margin-top:6px}
+  .team-grid.coauth{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px 10px;margin-top:20px}
+  .coauth .avatar{width:44px;height:44px;font-size:13px;margin-bottom:7px}
+  .coauth .member .nm{font-size:12.5px}
+  .coauth .member .rl{font-size:11px}
+  .avatar.i-co{background:#8A94AE}
 
   /* EXPLORE cards */
   .explore{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
@@ -206,9 +209,11 @@
   /* --- Library Game: restrained nav link (no yellow, site font) --- */
   .explorer-link{position:relative;display:inline-flex;align-items:center;gap:7px;
     font-size:13.5px;font-weight:700;color:var(--navy);
-    border:1px solid var(--border);border-radius:999px;padding:5px 13px;margin-left:2px;transition:.16s}
+    border:1px solid var(--border);border-radius:999px;padding:5px 13px;margin-left:2px;
+    line-height:1.2;transition:.16s}
   .explorer-link:hover{border-color:#b9c6e2;background:#F4F7FD;color:var(--navy)}
   .explorer-link .xdot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
+  .nav-links{align-items:center}
   @media(max-width:860px){.nav-links .explorer-link{margin:10px 24px;align-self:flex-start}}
 
   /* ===================== HERO — physical ⇄ digital =============================
@@ -608,12 +613,31 @@
       <span><i style="background:#C8102E"></i>British Library</span>
       <span><i style="background:#2E7D4F"></i>Swiss National Library</span>
     </div>
-    <div class="assoc">
-      <div class="avatar i-turin"><span>EB</span></div>
-      <div>
-        <div class="lbl">Co-author</div>
-        <p><a href="https://nexa.polito.it/people/ebertacchini" target="_blank" rel="noopener">Enrico Bertacchini</a> (University of Turin) co-authors the open cultural heritage strand, bringing deep expertise in cultural economics and Wikimedia / GLAM research.</p>
-      </div>
+    <h3 class="coauth-title">Co-authors of papers</h3>
+    <p class="coauth-note">Researchers outside the consortium who co-authored ReVerDi publications with the team: Enrico Bertacchini on the open cultural heritage strand, and the co-authors of two published papers on digitalisation and climate impact (npj Climate Action, 2025; Renewable and Sustainable Energy Reviews, 2026).</p>
+    <div class="team-grid coauth">
+      <div class="member"><div class="avatar i-turin"><span>EB</span></div><div class="nm"><a href="https://nexa.polito.it/people/ebertacchini" target="_blank" rel="noopener">Enrico Bertacchini</a></div><div class="rl">University of Turin</div></div>
+      <div class="member"><div class="avatar i-co"><span>HB</span></div><div class="nm">Hannes Bluhm</div><div class="rl">Europa-Universität Flensburg / IÖW</div></div>
+      <div class="member"><div class="avatar i-co"><span>DW</span></div><div class="nm">Daniela Wohlschlager</div><div class="rl">TU Munich</div></div>
+      <div class="member"><div class="avatar i-co"><span>JP</span></div><div class="nm">Johanna Pohl</div><div class="rl">Intep / ZKSD</div></div>
+      <div class="member"><div class="avatar i-co"><span>SB</span></div><div class="nm">Severin Beucker</div><div class="rl">Borderstep Institute</div></div>
+      <div class="member"><div class="avatar i-co"><span>DS</span></div><div class="nm">Daniel Schien</div><div class="rl">University of Bristol</div></div>
+      <div class="member"><div class="avatar i-co"><span>KW</span></div><div class="nm">Kelly Widdicks</div><div class="rl">UK Centre for Ecology & Hydrology</div></div>
+      <div class="member"><div class="avatar i-co"><span>AF</span></div><div class="nm">Adrian Friday</div><div class="rl">Lancaster University</div></div>
+      <div class="member"><div class="avatar i-co"><span>GB</span></div><div class="nm">Gordon Blair</div><div class="rl">UK Centre for Ecology & Hydrology</div></div>
+      <div class="member"><div class="avatar i-co"><span>AF</span></div><div class="nm">Anna Furberg</div><div class="rl">KTH</div></div>
+      <div class="member"><div class="avatar i-co"><span>SA</span></div><div class="nm">Shoaib Azizi</div><div class="rl">KTH</div></div>
+      <div class="member"><div class="avatar i-co"><span>DB</span></div><div class="nm">David Bol</div><div class="rl">UCLouvain</div></div>
+      <div class="member"><div class="avatar i-co"><span>VC</span></div><div class="nm">Vlad Coroamă</div><div class="rl">Roegen Centre</div></div>
+      <div class="member"><div class="avatar i-co"><span>EE</span></div><div class="nm">Elina Eriksson</div><div class="rl">KTH</div></div>
+      <div class="member"><div class="avatar i-co"><span>FN</span></div><div class="nm">Francesco Fuso-Nerini</div><div class="rl">KTH</div></div>
+      <div class="member"><div class="avatar i-co"><span>LG</span></div><div class="nm">Louis Golard</div><div class="rl">UCLouvain</div></div>
+      <div class="member"><div class="avatar i-co"><span>MH</span></div><div class="nm">Mattias Höjer</div><div class="rl">KTH</div></div>
+      <div class="member"><div class="avatar i-co"><span>GK</span></div><div class="nm">George Kamiya</div><div class="rl">Independent</div></div>
+      <div class="member"><div class="avatar i-co"><span>DL</span></div><div class="nm">Dag Lundén</div><div class="rl">Telia</div></div>
+      <div class="member"><div class="avatar i-co"><span>NL</span></div><div class="nm">Nina Lövehagen</div><div class="rl">Ericsson</div></div>
+      <div class="member"><div class="avatar i-co"><span>JM</span></div><div class="nm">Jens Malmodin</div><div class="rl">Ericsson</div></div>
+      <div class="member"><div class="avatar i-co"><span>GF</span></div><div class="nm">Göran Finnveden</div><div class="rl">KTH</div></div>
     </div>
   </div>
 </section>
