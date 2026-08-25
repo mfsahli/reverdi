@@ -116,8 +116,14 @@
   .teamlegend span{display:inline-flex;align-items:center;gap:6px}
   .teamlegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
   /* Co-authors of published papers: smaller circles, smaller heading */
-  .coauth-title{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:44px}
-  .coauth-note{font-size:13.5px;color:var(--muted);margin-top:6px}
+  .coauth{margin-top:36px;border-top:1px solid var(--border);padding-top:18px}
+  .coauth summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .coauth summary::-webkit-details-marker{display:none}
+  .coauth summary::before{content:"▸";font-size:12px;transition:transform .16s}
+  .coauth[open] summary::before{transform:rotate(90deg)}
+  .coauth summary:hover{color:var(--navy)}
+  .coauth-note{font-size:13.5px;color:var(--muted);margin-top:10px}
   .team-grid.coauth{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:16px 10px;margin-top:20px}
   .coauth .avatar{width:44px;height:44px;font-size:13px;margin-bottom:7px}
   .coauth .member .nm{font-size:12.5px}
@@ -613,10 +619,11 @@
       <span><i style="background:#C8102E"></i>British Library</span>
       <span><i style="background:#2E7D4F"></i>Swiss National Library</span>
     </div>
-    <h3 class="coauth-title">Co-authors of papers</h3>
-    <p class="coauth-note">Researchers outside the consortium who co-authored ReVerDi publications with the team: Enrico Bertacchini on the open cultural heritage strand, and the co-authors of two published papers on digitalisation and climate impact (npj Climate Action, 2025; Renewable and Sustainable Energy Reviews, 2026).</p>
+    <details class="coauth">
+      <summary>Co-authors of papers</summary>
+      <p class="coauth-note">Researchers outside the consortium who co-authored ReVerDi publications with the team.</p>
     <div class="team-grid coauth">
-      <div class="member"><div class="avatar i-turin"><span>EB</span></div><div class="nm"><a href="https://nexa.polito.it/people/ebertacchini" target="_blank" rel="noopener">Enrico Bertacchini</a></div><div class="rl">University of Turin</div></div>
+      <div class="member"><div class="avatar i-co"><span>EB</span></div><div class="nm"><a href="https://nexa.polito.it/people/ebertacchini" target="_blank" rel="noopener">Enrico Bertacchini</a></div><div class="rl">University of Turin</div></div>
       <div class="member"><div class="avatar i-co"><span>HB</span></div><div class="nm">Hannes Bluhm</div><div class="rl">Europa-Universität Flensburg / IÖW</div></div>
       <div class="member"><div class="avatar i-co"><span>DW</span></div><div class="nm">Daniela Wohlschlager</div><div class="rl">TU Munich</div></div>
       <div class="member"><div class="avatar i-co"><span>JP</span></div><div class="nm">Johanna Pohl</div><div class="rl">Intep / ZKSD</div></div>
@@ -639,6 +646,7 @@
       <div class="member"><div class="avatar i-co"><span>JM</span></div><div class="nm">Jens Malmodin</div><div class="rl">Ericsson</div></div>
       <div class="member"><div class="avatar i-co"><span>GF</span></div><div class="nm">Göran Finnveden</div><div class="rl">KTH</div></div>
     </div>
+    </details>
   </div>
 </section>
 
