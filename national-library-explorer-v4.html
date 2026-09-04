@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Folio's Reading Journey · ReVerDi Library Game — Newspaper Edition</title>
+<title>The Newspaper Game · ReVerDi</title>
 <!--
   ============================================================================
   LIBRARY GAME — "FOLIO'S READING JOURNEY", NEWSPAPER EDITION
@@ -244,11 +244,11 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     <span class="cl" style="top:78%;animation-duration:96s;animation-delay:-10s">💾</span>
   </div>
   <div class="g-box">
-    <div class="g-mark">📖🚶</div>
+    <div class="g-mark">📰🚶</div>
     <div class="g-eyebrow">A ReVerDi interactive · prototype</div>
-    <h1>Folio's <em>Reading Journey</em></h1>
-    <p class="g-lede">You are <b>Folio</b> — curious about cultural heritage, and about what it costs to keep it. Somewhere to the right, an old newspaper is waiting for you, and three decisions lie between you and it. Where the road forks, <b>the road you take is your answer</b>; where a wall of doors blocks the way, <b>step through the one you choose</b>.</p>
-    <p class="g-lede">Which paper depends on where you play: <b>The Daily Mirror</b> at the British Library, <b>De Telegraaf</b> at the KB, the <b>Basler Zeitung</b> at the Swiss National Library. The journey ends at a door — the <b>reading room</b> if you chose paper, the library's <b>digital space</b> if you chose the screen — and behind it, the life-cycle emissions of that single reading.</p>
+    <h1>The <em>Newspaper</em> Game</h1>
+    <p class="g-lede"><b>You want to read your favourite newspaper.</b> At the British Library that is <b>The Daily Mirror</b>, at the KB <b>De Telegraaf</b>, at the Swiss National Library the <b>Basler Zeitung</b>. Between you and your paper lie three decisions — let's walk through them together.</p>
+    <p class="g-lede">You play <b>Folio</b>. Where the road forks, <b>the road you take is your answer</b>; where a wall of doors blocks the way, <b>step through the one you choose</b>. The journey ends at a door — the <b>reading room</b> if you chose paper, the library's <b>digital space</b> if you chose the screen — and behind it, the footprint of that single reading.</p>
     <p class="g-lede">🏅 <b>Bonus:</b> papers 📗 and discs 💿 lie along the road — some in tricky spots. Gather <b>every single one</b> and Folio earns the <b>Golden Library Card</b>.</p>
     <div class="g-steps">
       <div class="g-step"><b>Decision 1</b><span>The whole paper, or your favourite section?</span></div>
@@ -271,7 +271,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
 <header class="top">
   <div class="wrap">
     <a class="backlink" href="../index.html" title="Back to the ReVerDi site">← ReVerDi</a>
-    <div class="brand">Folio's Reading Journey<small>ReVerDi · Library Game · newspaper pilot</small></div>
+    <div class="brand">The Newspaper Game<small>ReVerDi · Library Game · pilot</small></div>
     <nav class="libs" aria-label="Choose a library">
       <button class="libbtn" data-lib="bl"  style="--c:var(--bl)"  aria-pressed="true"><span class="dot"></span>British Library</button>
       <button class="libbtn" data-lib="kb"  style="--c:var(--kb)"  aria-pressed="false"><span class="dot"></span>KB</button>
@@ -373,7 +373,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
 
 <footer>
   <div class="wrap">
-    <span><strong>Folio's Reading Journey</strong> — ReVerDi Library Game, newspaper pilot.</span>
+    <span><strong>The Newspaper Game</strong> — a ReVerDi Library Game, pilot.</span>
     <span>Figures partly derived from the draft ReVerDi newspaper LCA, partly placeholders — not published results.</span>
   </div>
 </footer>
@@ -509,7 +509,7 @@ var player={x:40,y:GY-22,w:14,h:22,vx:0,vy:0,onGround:true,face:1};
 
 var FORKS=[
   { key:'scope', x0:300, x1:580, top:GY-104, done:false, chosen:null,
-    up:  {v:'section', icon:'⭐', label:'MY FAVOURITE PART', sub:'straight to the good pages'},
+    up:  {v:'section', icon:'⭐', label:'FAVOURITE PART', sub:'straight to the good pages'},
     low: {v:'whole',   icon:'🗞️', label:'THE WHOLE PAPER',   sub:'cover to cover'} },
   { key:'mode', x0:780, x1:1020, top:GY-104, done:false, chosen:null,
     up:  {v:'digital',  icon:'💾', label:'ON A SCREEN', sub:'from where you are'},
@@ -851,7 +851,7 @@ function drawProps(){
   /* start area */
   R(150,GY-56,5,56,'#7a4a2a'); R(118,GY-92,72,36,'#f6efdd'); R(120,GY-90,68,32,'#fffdf4');
   T('START',154,GY-72,'#1a2440',17);
-  T('walk right →',154,GY-59,'#5c6680',10);
+  T('your paper awaits →',154,GY-59,'#5c6680',10);
   for(var cvx=200;cvx<300;cvx+=26){
     ctx.globalAlpha=0.3+0.25*Math.sin((frame*0.06)-(cvx*0.05));
     T('>',cvx,GY+30,'#ffffff',12); ctx.globalAlpha=1;
@@ -1065,8 +1065,11 @@ function drawFore(){
 function drawTopBanner(){
   if(sayT>0) return;
   var AF=activeFork(), AD=activeDoors(), title=null, sub=null, n=0;
-  if(AF && Math.abs(player.x-(AF.x0+AF.x1)/2)<460){
-    title = (AF.key==='scope') ? 'HOW MUCH OF THE PAPER?' : 'ON PAPER, OR ON A SCREEN?';
+  if(progress()===0 && player.x<260 && !finished){
+    title = 'YOU WANT TO READ YOUR FAVOURITE NEWSPAPER';
+    sub   = 'THREE DECISIONS LIE BETWEEN YOU AND IT — WALK RIGHT →';
+  } else if(AF && Math.abs(player.x-(AF.x0+AF.x1)/2)<460){
+    title = (AF.key==='scope') ? 'READ ALL OF IT, OR JUST YOUR FAVOURITE PART?' : 'ON PAPER, OR ON A SCREEN?';
     sub   = 'CHOOSE YOUR ROAD — THE ONE YOU TAKE IS YOUR ANSWER';
     n     = (AF.key==='scope')?1:2;
   } else if(AD && Math.abs(player.x-AD.x)<520){
@@ -1082,7 +1085,7 @@ function drawTopBanner(){
   RS(x-3,y-3,w+6,h+6,'rgba(6,10,24,.5)');
   RS(x,y,w,h,'#0b1633');
   RS(x,y,w,4,LIBCOL[lib]); RS(x,y+h-3,w,3,'rgba(0,0,0,.45)');
-  TS('DECISION '+n+' OF 3',VW/2,y+20,LIBCOL[lib],10);
+  TS(n?('DECISION '+n+' OF 3'):'THE NEWSPAPER GAME',VW/2,y+20,LIBCOL[lib],10);
   TS(title,VW/2,y+44,'#ffffff',22);
   TS(sub,VW/2,y+58,'#9fb0d6',9);
 }
@@ -1266,8 +1269,9 @@ function renderResult(){
   drawRange(all,r.total);
   $('#minLbl').textContent='lightest way · '+fmt(min.total)+' g';
   $('#maxLbl').textContent=fmt(max.total)+' g · heaviest way';
-  $('#rangeNote').textContent='Each tick is one of the '+all.length+' ways of reading '+scopeName+
-    ' of the same newspaper at this library — on paper with any travel, or on a screen with any device. '+
+  $('#rangeNote').innerHTML='<span style="color:#E8B83A">▮</span> paper routes · '+
+    '<span style="color:#4FC2C9">▮</span> screen routes — each tick is one of the '+all.length+
+    ' ways of reading '+scopeName+' of the same newspaper at this library. Ticks that stack share almost the same footprint. '+
     'The same amount of reading is only ever compared with itself.';
   $('#verdict').innerHTML=(pL>=50
     ? 'Your route is lighter than <b>'+pL+'%</b> of the '+all.length+' ways of reading '+scopeName+' here.'
@@ -1332,7 +1336,14 @@ function drawRange(all,mine){
   function x(v){ return pad+(v-min)/span*(W-pad*2); }
   function E(t,a){ var e=document.createElementNS('http://www.w3.org/2000/svg',t); for(var k in a) e.setAttribute(k,a[k]); return e; }
   svg.appendChild(E('line',{x1:pad,y1:y,x2:W-pad,y2:y,stroke:'rgba(255,255,255,.18)','stroke-width':2}));
-  all.forEach(function(j){ svg.appendChild(E('line',{x1:x(j.total),y1:y-9,x2:x(j.total),y2:y+9,stroke:'#8FA0C8','stroke-width':1.5,opacity:.35})); });
+  /* ticks coloured by medium; near-identical values stack upward so all 9
+     stay visible even when the car route stretches the scale */
+  var buckets={};
+  all.forEach(function(j){
+    var xx=x(j.total), b=Math.round(xx/5), n=buckets[b]||0; buckets[b]=n+1;
+    var col=j.s.mode==='physical'?'#E8B83A':'#4FC2C9', yy=y-n*6;
+    svg.appendChild(E('line',{x1:xx,y1:yy-7,x2:xx,y2:yy+7,stroke:col,'stroke-width':2,opacity:.85}));
+  });
   var med=all[Math.floor(all.length/2)].total;
   svg.appendChild(E('line',{x1:x(med),y1:y-16,x2:x(med),y2:y+16,stroke:'rgba(255,255,255,.35)','stroke-width':1.5,'stroke-dasharray':'3 3'}));
   var mt=E('text',{x:x(med),y:y+32,'text-anchor':'middle',fill:'#6d7692','font-size':'11'}); mt.textContent='median'; svg.appendChild(mt);
