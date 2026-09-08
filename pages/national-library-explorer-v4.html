@@ -388,23 +388,24 @@ var $=function(s){return document.querySelector(s);};
    ========================================================================== */
 var PARAMS={
   /* per-page and per-session values marked PAPER are derived from the draft
-     "260612 Newspaper LCA Real vs Digital_BFH NL" — full derivation in
-     game/ReVerDi_newspaper_game_inputs.xlsx (orange cells = to double-check) */
+     "260612 Newspaper LCA Real vs Digital_BFH NL"; values marked JS come from
+     the LCA team's check of 2026-09-08 (actual per-phase GWP, grid factors,
+     device power) — full derivation in game/ReVerDi_newspaper_game_inputs.xlsx */
   lib:{
     bl:{ name:'British Library', city:'London', np:'The Daily Mirror',
-         grid:0.21 /*PH*/, km:334.8 /*PAPER round trip*/, pagesWhole:56 /*PAPER*/,
-         physPerPage:9.05 /*PAPER*/, boxMove:2438 /*PAPER Boston Spa→St Pancras*/,
-         digSrcPerPage:4.66 /*PAPER*/, digStorePerPage:0.93 /*PAPER*/,
+         grid:0.1327 /*JS: EDF tariff*/, km:334.8 /*PAPER round trip*/, pagesWhole:56 /*PAPER*/,
+         physPerPage:4.88 /*JS*/, boxMove:5125 /*JS Boston Spa→St Pancras*/,
+         digSrcPerPage:4.88 /*JS*/, digStorePerPage:0.83 /*JS*/,
          mbPerPage:50.0 /*PAPER*/, roomKwhPerHour:0.55 /*PH*/ },
     kb:{ name:'KB Netherlands', city:'The Hague', np:'De Telegraaf',
-         grid:0.27 /*PH*/, km:81.8 /*PAPER*/, pagesWhole:40 /*PAPER*/,
-         physPerPage:8.55 /*PAPER*/, boxMove:0,
-         digSrcPerPage:6.28 /*PAPER*/, digStorePerPage:0.56 /*PAPER*/,
+         grid:0.0425 /*JS: renewable tariff*/, km:81.8 /*PAPER*/, pagesWhole:40 /*PAPER*/,
+         physPerPage:6.35 /*JS*/, boxMove:0,
+         digSrcPerPage:6.35 /*JS*/, digStorePerPage:0.64 /*JS*/,
          mbPerPage:9.0 /*PAPER*/, roomKwhPerHour:0.48 /*PH*/ },
     snl:{name:'Swiss National Library', city:'Bern', np:'Basler Zeitung',
-         grid:0.03 /*PH*/, km:150.0 /*PAPER*/, pagesWhole:32 /*PAPER*/,
-         physPerPage:3.70 /*PAPER*/, boxMove:0,
-         digSrcPerPage:4.19 /*PAPER*/, digStorePerPage:2.79 /*PAPER*/,
+         grid:0.0321 /*JS*/, km:150.0 /*PAPER*/, pagesWhole:32 /*PAPER*/,
+         physPerPage:4.53 /*JS*/, boxMove:0,
+         digSrcPerPage:4.53 /*JS*/, digStorePerPage:2.46 /*JS*/,
          mbPerPage:69.5 /*PAPER*/, roomKwhPerHour:0.50 /*PH*/ }
   },
   scope:{
@@ -415,11 +416,11 @@ var PARAMS={
   travel:{ foot:{label:'On foot',icon:'🚶',gPerKm:0}, bike:{label:'By bike',icon:'🚲',gPerKm:5},
            tram:{label:'Tram or bus',icon:'🚌',gPerKm:75}, train:{label:'By train',icon:'🚆',gPerKm:35},
            car:{label:'By car',icon:'🚗',gPerKm:165} },                                                       // PH
-  device:{ phone:{label:'Phone',icon:'📱',watt:3 /*PH*/}, ereader:{label:'E-reader',icon:'📖',watt:8 /*PH*/},
+  device:{ phone:{label:'Phone',icon:'📱',watt:1 /*JS*/}, ereader:{label:'E-reader',icon:'📖',watt:3 /*JS: tablet*/},
            laptop:{label:'Laptop',icon:'💻',watt:50 /*PAPER*/}, desktop:{label:'Desktop',icon:'🖥️',watt:140 /*PAPER*/} },
   downloadKwhPerGb:0.15,   // PAPER (DESNZ 2025)
   minPerPageOnline:5.23,   // PAPER — 12.28 min / 2.35 pages per session
-  minPerPagePhysical:1.5,  // PH — no data in the paper
+  minPerPagePhysical:5.23, // JS — only stat available is the KB online figure; use the same
   equivGPerKmCar:165                                                                                           // PH
 };
 
