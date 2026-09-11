@@ -117,6 +117,19 @@ kbd{font:inherit;font-size:11px;color:var(--ink-2);border:1px solid var(--hair);
 .touch .tg{display:flex;gap:10px;pointer-events:auto}
 .tbtn{width:54px;height:54px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);
   background:rgba(13,18,38,.55);color:var(--ink);font-size:21px;font-weight:800;cursor:pointer}
+/* the distance question, asked after a travel door */
+#kmAsk{position:absolute;inset:0;z-index:20;display:none;place-items:center;background:rgba(7,11,24,.55)}
+#kmAsk.on{display:grid}
+.km-box{background:#0b1633;border:2px solid var(--accent);border-radius:14px;padding:22px 26px;
+  text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5);max-width:360px}
+.km-box h4{font:700 17px ui-monospace,Menlo,monospace;color:#fff;letter-spacing:.02em;margin-bottom:4px}
+.km-box p{font-size:12.5px;color:#9fb0d6;margin-bottom:12px}
+.km-box input{font:700 22px ui-monospace,Menlo,monospace;width:110px;text-align:center;color:#fff;
+  background:#0a0f22;border:1px solid var(--hair);border-radius:10px;padding:8px 10px;outline:none}
+.km-box input:focus{border-color:var(--accent)}
+.km-unit{font-size:13px;color:#b9c4de;margin-left:8px}
+.km-box .wbtn{margin-top:14px}
+.km-note{font-size:11px;color:#6d7692;margin-top:10px}
 
 #resultSec{display:none;padding:34px 0 60px}
 #resultSec.on{display:block}
@@ -301,6 +314,16 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
         <div class="tg"><button class="tbtn" id="tLeft">◀</button><button class="tbtn" id="tRight">▶</button></div>
         <div class="tg"><button class="tbtn" id="tUp">▲</button></div>
       </div>
+
+      <div id="kmAsk">
+        <div class="km-box">
+          <h4>HOW FAR TO THE LIBRARY?</h4>
+          <p>Your one-way distance — the game doubles it for the return trip.</p>
+          <div><input id="kmInput" type="number" min="0" max="5000" step="1" inputmode="numeric"><span class="km-unit">km one way</span></div>
+          <div><button class="wbtn" id="kmGo">Continue →</button></div>
+          <div class="km-note" id="kmNote"></div>
+        </div>
+      </div>
     </div>
     <div class="stage-hint">
       <span><kbd>←</kbd> <kbd>→</kbd> walk · <kbd>↑</kbd> jump · standing in a door, <kbd>↑</kbd> steps through it</span>
@@ -435,13 +458,17 @@ var PARAMS={
 /* per-page model: per-page values × pages read; travel is a per-session cost
    and never scales with pages. km are round trips already. */
 function pagesOf(s,L){ return s.scope==='whole' ? L.pagesWhole : PARAMS.sectionPages; }
+/* the player's own distance (one way, km) — null means the study's average */
+var userKm=null;
+function kmFor(libKey){ return userKm!=null ? userKm*2 : PARAMS.lib[libKey].km; }
 function calc(s,libKey){
-  var L=PARAMS.lib[libKey], o={collection:0,travel:0,energy:0,data:0};
+  var L=PARAMS.lib[libKey], o={collection:0,travel:0,npmove:0,energy:0,data:0};
   var pages=pagesOf(s,L);
   if(s.mode==='physical'){
     o.collection=L.physPerPage*pages;                                   // PAPER: printing+binding+archiving
     var g=PARAMS.travel[s.travel].gPerKm; if(typeof g==='object') g=g[libKey];
-    o.travel=g*L.km + L.boxMove;                                        // your trip + (BL) moving the volume
+    o.travel=g*kmFor(libKey);                                           // your trip (player km, or study average)
+    o.npmove=L.boxMove;                                                 // BL: the volume's own trip to the reading room
     var h=pages*PARAMS.minPerPagePhysical/60;
     o.energy=L.roomKwhPerHour*h*L.grid*1000;                            // PH: reading room
   }else{
@@ -451,7 +478,7 @@ function calc(s,libKey){
     o.data=L.digStorePerPage*pages                                      // PAPER: digitization+storage share
           +(L.mbPerPage*pages/1024)*PARAMS.downloadKwhPerGb*L.grid*1000;// PAPER: download energy
   }
-  o.total=o.collection+o.travel+o.energy+o.data; return o;
+  o.total=o.collection+o.travel+o.npmove+o.energy+o.data; return o;
 }
 /* every way of reading the SAME amount of the SAME newspaper — the range
    never mixes the whole paper with a single section */
@@ -563,14 +590,15 @@ function platforms(){
 /* ==========================================================================
    INPUT
    ========================================================================== */
-var keys={}, upEdge=false;
+var keys={}, upEdge=false, asking=false;
 addEventListener('keydown',function(e){
+  if(asking) return;                     /* the distance dialog owns the keyboard */
   var k=e.key.toLowerCase();
   if(['arrowleft','arrowright','arrowup','arrowdown',' ','a','d','w'].indexOf(k)>=0) e.preventDefault();
   if(!keys[k]&&(k==='arrowup'||k===' '||k==='w')) upEdge=true;
   keys[k]=true;
 },{passive:false});
-addEventListener('keyup',function(e){ keys[e.key.toLowerCase()]=false; });
+addEventListener('keyup',function(e){ if(asking) return; keys[e.key.toLowerCase()]=false; });
 function bind(sel,on,off){ var el=$(sel); if(!el) return;
   el.addEventListener('touchstart',function(e){e.preventDefault();on();},{passive:false});
   el.addEventListener('touchend',function(e){e.preventDefault();off();},{passive:false});
@@ -595,7 +623,28 @@ function enterDoor(D,r){
   st[key]=r.o.v;
   flash=1; paintTrail(); paintHud(); say(r.o.label);
   player.x=r.x+DOOR_W/2-player.w/2; player.y=GY-player.h; player.vy=0;
+  if(key==='travel') askKm();            /* paper readers get the distance question */
 }
+/* ---- the distance question ---- */
+function askKm(){
+  asking=true; keys={}; player.vx=0;
+  var def=Math.round(PARAMS.lib[lib].km/2);
+  $('#kmInput').value = userKm!=null ? userKm : def;
+  $('#kmNote').textContent='Press Enter to keep the study’s average for the '+PARAMS.lib[lib].name+' ('+def+' km).';
+  $('#kmAsk').classList.add('on');
+  setTimeout(function(){ var el=$('#kmInput'); el.focus(); el.select(); },60);
+}
+function answerKm(){
+  var def=Math.round(PARAMS.lib[lib].km/2);
+  var v=parseFloat($('#kmInput').value);
+  if(!isFinite(v)||v<0||v>5000) v=def;
+  userKm = (v===def && userKm==null) ? null : v;   /* kept default = stay on the study average */
+  $('#kmAsk').classList.remove('on');
+  asking=false;
+  if(finished) renderResult();
+}
+$('#kmGo').addEventListener('click',answerKm);
+$('#kmInput').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); answerKm(); } });
 
 /* ==========================================================================
    DRAW HELPERS
@@ -1215,7 +1264,9 @@ var CATS=[
   {k:'collection',nm:'The newspaper itself',c:'#8E7CE0',
    why:'Printing, binding and archiving the paper — the digital copy, too, began its life as print. Scales with the pages you read.'},
   {k:'travel',nm:'Getting there',c:'#3FB07A',
-   why:'Your return journey to the library — and, at the BL, moving the bound volume between Boston Spa and St Pancras. A per-visit cost: it does not shrink when you read fewer pages.'},
+   why:'Your return journey between home and the library. A per-visit cost: it does not shrink when you read fewer pages.'},
+  {k:'npmove',nm:'The newspaper’s journey',c:'#E0685F',
+   why:'The bound volume travels from the Boston Spa archive to the St Pancras reading room and back for your visit — this happens only at the British Library.'},
   {k:'energy',nm:'Energy while reading',c:'#E8B83A',
    why:'The reading room around you, or the device in your hands, for as long as you read.'},
   {k:'data',nm:'Digitization, storage & download',c:'#4FC2C9',
@@ -1257,7 +1308,10 @@ function renderResult(){
   }
   countUp($('#totalV'),r.total);
   $('#totalSub').textContent='for one person reading '+scopeName+' ('+pages+' pages) of one issue of '+L.np+
-    ' once, at the '+L.name+' — over the full life cycle, not just the moment of reading. Partly derived from the draft ReVerDi newspaper LCA.';
+    ' once, at the '+L.name+' — over the full life cycle, not just the moment of reading. Partly derived from the draft ReVerDi newspaper LCA.'+
+    (st.mode==='physical' ? (userKm!=null
+      ? ' Travel uses your '+userKm+' km each way.'
+      : ' Travel uses the study’s average distance ('+L.km+' km round trip).') : '');
   var km=r.total/PARAMS.equivGPerKmCar;
   $('#equiv').innerHTML='About the same as driving <b>'+(km<1?km.toFixed(1):Math.round(km))+' km</b> alone in an average car.';
   /* footprint bar and its drivers — one system: same colours, same order, same numbers */
@@ -1379,6 +1433,7 @@ function setLib(k){
 document.querySelectorAll('.libbtn').forEach(function(b){ b.addEventListener('click',function(){ setLib(b.dataset.lib); }); });
 function reset(){
   st={scope:null,mode:null,travel:null,device:null};
+  userKm=null; asking=false; $('#kmAsk').classList.remove('on');
   FORKS.forEach(function(F){ F.done=false; F.chosen=null; });
   DOORS[0].done=false; DOORS[0].opts=[];
   finished=false; enterT=0; sayT=0; flash=0; booksGot=0; buildCollect();
