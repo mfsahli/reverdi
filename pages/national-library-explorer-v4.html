@@ -413,15 +413,22 @@ var PARAMS={
     section:{label:'Favourite section', icon:'⭐'}
   },
   sectionPages:6,          // PH — pages of a favourite section
-  travel:{ foot:{label:'On foot',icon:'🚶',gPerKm:0}, bike:{label:'By bike',icon:'🚲',gPerKm:5},
-           tram:{label:'Tram or bus',icon:'🚌',gPerKm:75}, train:{label:'By train',icon:'🚆',gPerKm:35},
-           car:{label:'By car',icon:'🚗',gPerKm:165} },                                                       // PH
+  /* travel g/km from JS's SimaPro run (2026-09-10, ReCiPe 2016 H). Train is
+     per country; car and bus are global models. Bike is set to 0 on JS's
+     advice: the SimaPro bike value (11.7, incl. road infrastructure) would
+     rank cycling above the Swiss train and confuse players. Tram/trolleybus
+     left out for simplicity (JS). */
+  travel:{ foot:{label:'On foot',icon:'🚶',gPerKm:0},
+           bike:{label:'By bike',icon:'🚲',gPerKm:0 /*JS: keep simple*/},
+           tram:{label:'By bus',icon:'🚌',gPerKm:126 /*JS SimaPro, diesel bus*/},
+           train:{label:'By train',icon:'🚆',gPerKm:{bl:50.3,kb:64.2,snl:7.3} /*JS SimaPro, GB/NL/CH fleet*/},
+           car:{label:'By car',icon:'🚗',gPerKm:372 /*JS SimaPro, global fleet*/} },
   device:{ phone:{label:'Phone',icon:'📱',watt:1 /*JS*/}, ereader:{label:'E-reader',icon:'📖',watt:3 /*JS: tablet*/},
            laptop:{label:'Laptop',icon:'💻',watt:50 /*PAPER*/}, desktop:{label:'Desktop',icon:'🖥️',watt:140 /*PAPER*/} },
   downloadKwhPerGb:0.15,   // PAPER (DESNZ 2025)
   minPerPageOnline:5.23,   // PAPER — 12.28 min / 2.35 pages per session
   minPerPagePhysical:5.23, // JS — only stat available is the KB online figure; use the same
-  equivGPerKmCar:165                                                                                           // PH
+  equivGPerKmCar:372       // JS SimaPro — same global car fleet value as the car door
 };
 
 /* ---------------- model ---------------- */
@@ -433,7 +440,8 @@ function calc(s,libKey){
   var pages=pagesOf(s,L);
   if(s.mode==='physical'){
     o.collection=L.physPerPage*pages;                                   // PAPER: printing+binding+archiving
-    o.travel=PARAMS.travel[s.travel].gPerKm*L.km + L.boxMove;           // your trip + (BL) moving the volume
+    var g=PARAMS.travel[s.travel].gPerKm; if(typeof g==='object') g=g[libKey];
+    o.travel=g*L.km + L.boxMove;                                        // your trip + (BL) moving the volume
     var h=pages*PARAMS.minPerPagePhysical/60;
     o.energy=L.roomKwhPerHour*h*L.grid*1000;                            // PH: reading room
   }else{
@@ -518,7 +526,7 @@ var FORKS=[
 ];
 var TRAVEL_DOORS=[
   {v:'foot',icon:'🚶',label:'ON FOOT'},{v:'bike',icon:'🚲',label:'BY BIKE'},
-  {v:'tram',icon:'🚌',label:'TRAM/BUS'},{v:'train',icon:'🚆',label:'BY TRAIN'},{v:'car',icon:'🚗',label:'BY CAR'}
+  {v:'tram',icon:'🚌',label:'BY BUS'},{v:'train',icon:'🚆',label:'BY TRAIN'},{v:'car',icon:'🚗',label:'BY CAR'}
 ];
 var DEVICE_DOORS=[
   {v:'phone',icon:'📱',label:'PHONE'},{v:'ereader',icon:'📖',label:'E-READER'},
@@ -1314,7 +1322,7 @@ function bestChange(base){
 function renderRecs(){
   var recs = st.mode==='physical' ? [
     {i:'🚶',t:'Go light on the trip',
-     d:'How you get there is usually the biggest slice of a paper route. On foot, by bike or by public transport it almost disappears; alone in a car it can dominate the whole footprint.'},
+     d:'How you get there is usually the biggest slice of a paper route. On foot or by bike it disappears, train and bus cut it hard, and alone in a car it can dominate the whole footprint.'},
     {i:'🧺',t:'Bundle your errands',
      d:'If you do drive or ride, combine the library visit with other trips so the kilometres are shared across everything you do on the way.'},
     {i:'🤝',t:'Share the copy',
