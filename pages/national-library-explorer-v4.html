@@ -319,7 +319,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
         <div class="km-box">
           <h4>HOW FAR TO THE LIBRARY?</h4>
           <p>Your one-way distance — the game doubles it for the return trip.</p>
-          <div><input id="kmInput" type="number" min="0" max="5000" step="1" inputmode="numeric"><span class="km-unit">km one way</span></div>
+          <div><input id="kmInput" type="number" min="0" max="20000" step="1" inputmode="numeric"><span class="km-unit">km one way</span></div>
           <div><button class="wbtn" id="kmGo">Continue →</button></div>
           <div class="km-note" id="kmNote"></div>
         </div>
@@ -416,7 +416,7 @@ var PARAMS={
      device power) — full derivation in game/ReVerDi_newspaper_game_inputs.xlsx */
   lib:{
     bl:{ name:'British Library', city:'London', np:'The Daily Mirror',
-         grid:0.1327 /*JS: EDF tariff*/, km:334.8 /*PAPER round trip*/, pagesWhole:56 /*PAPER*/,
+         grid:0.1327 /*JS: EDF tariff*/, km:167.4 /*PAPER round trip, corrected 14.09 — the manuscript had reported double the modelled distance*/, pagesWhole:56 /*PAPER*/,
          physPerPage:4.88 /*JS*/, boxMove:5125 /*JS Boston Spa→St Pancras*/,
          digSrcPerPage:4.88 /*JS*/, digStorePerPage:0.83 /*JS*/,
          mbPerPage:50.0 /*PAPER*/, roomKwhPerHour:0.55 /*PH*/ },
@@ -637,7 +637,8 @@ function askKm(){
 function answerKm(){
   var def=Math.round(PARAMS.lib[lib].km/2);
   var v=parseFloat($('#kmInput').value);
-  if(!isFinite(v)||v<0||v>5000) v=def;
+  if(!isFinite(v)) v=def;
+  v=Math.max(0,Math.min(20000,v));                 /* clamp visibly, never silently reset */
   userKm = (v===def && userKm==null) ? null : v;   /* kept default = stay on the study average */
   $('#kmAsk').classList.remove('on');
   asking=false;
@@ -1312,8 +1313,17 @@ function renderResult(){
     (st.mode==='physical' ? (userKm!=null
       ? ' Travel uses your '+userKm+' km each way.'
       : ' Travel uses the study’s average distance ('+L.km+' km round trip).') : '');
-  var km=r.total/PARAMS.equivGPerKmCar;
-  $('#equiv').innerHTML='About the same as driving <b>'+(km<1?km.toFixed(1):Math.round(km))+' km</b> alone in an average car.';
+  /* the everyday anchor — except on car routes, where comparing a drive with
+     driving reads circular: there we show the drive's share instead */
+  if(st.mode==='physical'&&st.travel==='car'){
+    $('#equiv').innerHTML='Your drive is <b>'+fmt(r.travel)+' g</b> of this — '+
+      Math.round(r.travel/r.total*100)+'% of the total. The rest is the newspaper itself'+
+      (r.npmove>0?', its own journey to the reading room':'')+' and the reading room.';
+  }else{
+    var km=r.total/PARAMS.equivGPerKmCar;
+    $('#equiv').innerHTML='About the same as driving <b>'+(km<1?km.toFixed(1):fmt(km))+
+      ' km</b> alone in an average car (372 g CO₂e per km — the same value as the game’s car).';
+  }
   /* footprint bar and its drivers — one system: same colours, same order, same numbers */
   var sorted=CATS.slice().sort(function(a,b){return r[b.k]-r[a.k];});
   var stack=$('#stack'); stack.innerHTML='';
