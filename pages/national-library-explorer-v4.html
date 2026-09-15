@@ -1293,9 +1293,10 @@ function renderResult(){
   var r=calc(st,lib), all=allJourneys(lib,st.scope), min=all[0], max=all[all.length-1];
   var pages=pagesOf(st,L);
   var scopeName=st.scope==='whole'?'the whole paper':'your favourite section';
-  var lighter=all.filter(function(j){return j.total<r.total;}).length;
-  var heavier=all.filter(function(j){return j.total>r.total;}).length;
-  var pL=Math.round(heavier/(all.length-1)*100), pH=Math.round(lighter/(all.length-1)*100);
+  /* verdict in distances, not ranks — so the sentence always matches what the
+     figure shows, even when routes cluster near the lightest */
+  var ratioMin=r.total/Math.max(min.total,1), ratioMax=max.total/Math.max(r.total,1);
+  function xf(n){ return n>=20?String(Math.round(n)):String(n.toFixed(1)).replace(/\.0$/,''); }
   $('#resTitle').textContent=L.np+
     (st.mode==='physical'?', read in the reading room':', read in the digital space');
   $('#pathLine').innerHTML=[PARAMS.scope[st.scope].icon+' '+PARAMS.scope[st.scope].label+' ('+pages+' pages)',
@@ -1351,10 +1352,23 @@ function renderResult(){
   $('#rangeNote').textContent='Each symbol is one way of reading '+scopeName+' of this newspaper. '+
     'Paper routes sit above the line (🚶 🚲 🚌 🚆 🚗), screen routes below it (📱 📖 💻 🖥️). '+
     'The further right, the heavier.';
-  $('#verdict').innerHTML=(pL>=50
-    ? 'Your route is lighter than <b>'+pL+'%</b> of the '+all.length+' ways of reading '+scopeName+' here.'
-    : 'Your route is heavier than <b>'+pH+'%</b> of the '+all.length+' ways of reading '+scopeName+' here.')+
-    ' The lightest is <b>'+describe(min.s)+'</b>; the heaviest is <b>'+describe(max.s)+'</b>.';
+  var verdict;
+  if(r.total<=min.total+0.5){
+    verdict='Your route is the lightest of the '+all.length+' ways. The heaviest, <b>'+describe(max.s)+
+      '</b>, is '+xf(ratioMax)+'× your route.';
+  }else if(ratioMin<=1.5){
+    verdict='Your route is almost the lightest: only <b>'+fmt(r.total-min.total)+' g CO₂e</b> more than <b>'+
+      describe(min.s)+'</b>. The heaviest, <b>'+describe(max.s)+'</b>, is '+xf(ratioMax)+'× your route.';
+  }else if(r.total>=max.total-0.5){
+    verdict='Your route is the heaviest of the '+all.length+' ways: '+xf(ratioMin)+'× the lightest, <b>'+
+      describe(min.s)+'</b>.';
+  }else if(ratioMax<=1.5){
+    verdict='Your route is close to the heaviest: '+xf(ratioMin)+'× the lightest way, <b>'+describe(min.s)+'</b>.';
+  }else{
+    verdict='Your route is '+xf(ratioMin)+'× the lightest way, <b>'+describe(min.s)+
+      '</b>. The heaviest, <b>'+describe(max.s)+'</b>, is '+xf(ratioMax)+'× your route.';
+  }
+  $('#verdict').innerHTML=verdict;
   var best=bestChange(r.total);
   if(best){
     $('#whatifTxt').innerHTML='Keep everything else and swap <b>'+best.fromLabel+'</b> for <b>'+best.toLabel+
