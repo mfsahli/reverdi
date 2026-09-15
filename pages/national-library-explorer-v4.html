@@ -352,7 +352,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
       </div>
       <div class="panel">
         <h3>Where your journey sits</h3>
-        <div class="range"><svg id="rangeSvg" viewBox="0 0 640 150" role="img"
+        <div class="range"><svg id="rangeSvg" viewBox="0 0 640 190" role="img"
           aria-label="All ways of reading the same item from lightest to heaviest, with yours marked"></svg></div>
         <div class="rangefoot"><span id="minLbl"></span><span id="maxLbl"></span></div>
         <div class="tiny" style="margin-top:4px" id="rangeNote"></div>
@@ -363,7 +363,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     <div class="panel" style="margin-top:16px">
       <h3 id="recsTitle">Easy wins on this route</h3>
       <div class="recs" id="recs"></div>
-      <div class="tiny" style="margin-top:12px">Recommendations for the route you chose — whichever way you read, there are lighter ways to do it.</div>
+      <div class="tiny" style="margin-top:12px">Tips for the route you chose. Whichever way you read, there is a lighter way to do it.</div>
     </div>
     <div class="panel" style="margin-top:16px">
       <h3>Data &amp; recommendations based on</h3>
@@ -1261,18 +1261,22 @@ function stepGame(){
 /* ==========================================================================
    RESULT
    ========================================================================== */
+/* whyP / whyD: the explanation shown on the paper / screen route */
 var CATS=[
   {k:'collection',nm:'The newspaper itself',c:'#8E7CE0',
-   why:'Printing, binding and archiving the paper — the digital copy, too, began its life as print. Scales with the pages you read.'},
+   whyP:'Printing, binding and keeping the newspaper you read.',
+   whyD:'The file you read is a scan of a printed paper. This part covers printing, binding and keeping that original.'},
   {k:'travel',nm:'Getting there',c:'#3FB07A',
-   why:'Your return journey between home and the library. A per-visit cost: it does not shrink when you read fewer pages.'},
+   why:'Your journey to the library and back. A per-visit impact: it stays the same however many pages you read.'},
   {k:'npmove',nm:'The newspaper’s journey',c:'#E0685F',
-   why:'The bound volume travels from the Boston Spa archive to the St Pancras reading room and back for your visit — this happens only at the British Library.'},
+   why:'The bound newspaper volume travels from the Boston Spa archive to the St Pancras reading room and back for your visit. This only happens at the British Library.'},
   {k:'energy',nm:'Energy while reading',c:'#E8B83A',
-   why:'The reading room around you, or the device in your hands, for as long as you read.'},
+   whyP:'The electricity of the reading room while you read.',
+   whyD:'The electricity of your device while you read.'},
   {k:'data',nm:'Digitization, storage & download',c:'#4FC2C9',
-   why:'Scanning the pages, keeping the files online, and delivering them to your screen.'}
+   why:'Scanning the pages, storing the files, and sending them to your screen.'}
 ];
+function whyOf(c){ return c.why || (st.mode==='physical'?c.whyP:c.whyD); }
 function fmt(n){ return Math.round(n).toLocaleString('en-GB'); }
 var upT=null;
 function countUp(el,target){
@@ -1308,21 +1312,20 @@ function renderResult(){
       ' collectibles found — gather every one on your next walk to earn the <b>Golden Library Card</b>.</span>';
   }
   countUp($('#totalV'),r.total);
-  $('#totalSub').textContent='for one person reading '+scopeName+' ('+pages+' pages) of one issue of '+L.np+
-    ' once, at the '+L.name+' — over the full life cycle, not just the moment of reading. Partly derived from the draft ReVerDi newspaper LCA.'+
+  $('#totalSub').textContent='for one person reading '+scopeName+' ('+pages+' pages) of '+L.np+
+    ' once, at the '+L.name+'. The number counts everything behind that one reading: making and keeping the newspaper, the journeys involved, and the energy while you read.'+
     (st.mode==='physical' ? (userKm!=null
-      ? ' Travel uses your '+userKm+' km each way.'
-      : ' Travel uses the study’s average distance ('+L.km+' km round trip).') : '');
+      ? ' Your trip is counted with '+userKm+' km each way.'
+      : ' Your trip is counted with the study’s average distance ('+L.km+' km there and back).') : '');
   /* the everyday anchor — except on car routes, where comparing a drive with
      driving reads circular: there we show the drive's share instead */
   if(st.mode==='physical'&&st.travel==='car'){
-    $('#equiv').innerHTML='Your drive is <b>'+fmt(r.travel)+' g</b> of this — '+
-      Math.round(r.travel/r.total*100)+'% of the total. The rest is the newspaper itself'+
-      (r.npmove>0?', its own journey to the reading room':'')+' and the reading room.';
+    $('#equiv').innerHTML='Your drive alone is <b>'+fmt(r.travel)+' g CO₂e</b> of this, '+
+      Math.round(r.travel/r.total*100)+'% of the total.';
   }else{
     var km=r.total/PARAMS.equivGPerKmCar;
     $('#equiv').innerHTML='About the same as driving <b>'+(km<1?km.toFixed(1):fmt(km))+
-      ' km</b> alone in an average car (372 g CO₂e per km — the same value as the game’s car).';
+      ' km</b> alone in an average car.';
   }
   /* footprint bar and its drivers — one system: same colours, same order, same numbers */
   var sorted=CATS.slice().sort(function(a,b){return r[b.k]-r[a.k];});
@@ -1330,46 +1333,54 @@ function renderResult(){
   sorted.forEach(function(c){
     var v=r[c.k], share=r.total>0?v/r.total*100:0;
     if(share>0){ var i=document.createElement('i'); i.style.background=c.c; i.style.width=share+'%';
-      i.title=c.nm+': '+fmt(v)+' g'; stack.appendChild(i); }
+      i.title=c.nm+': '+fmt(v)+' g CO₂e'; stack.appendChild(i); }
   });
   $('#drivers').innerHTML=sorted.filter(function(c){return r[c.k]>0;}).map(function(c,i){
     var share=r[c.k]/r.total*100;
     return '<div class="driver"><span class="k" style="background:'+c.c+'">'+(i+1)+'</span>'+
-      '<span><span class="dh"><b>'+c.nm+'</b><span class="dv">'+fmt(r[c.k])+' g</span>'+
+      '<span><span class="dh"><b>'+c.nm+'</b><span class="dv">'+fmt(r[c.k])+' g CO₂e</span>'+
       '<span class="dp">'+(share<1?'<1':Math.round(share))+'%</span></span>'+
-      '<span class="dw">'+c.why+'</span></span></div>';
+      '<span class="dw">'+whyOf(c)+'</span></span></div>';
   }).join('');
   drawRange(all,r.total);
-  $('#minLbl').textContent='lightest way · '+fmt(min.total)+' g';
-  $('#maxLbl').textContent=fmt(max.total)+' g · heaviest way';
-  $('#rangeNote').innerHTML='<span style="color:#E8B83A">▮</span> paper routes · '+
-    '<span style="color:#4FC2C9">▮</span> screen routes — each tick is one of the '+all.length+
-    ' ways of reading '+scopeName+' of the same newspaper at this library. Ticks that stack share almost the same footprint. '+
-    'The same amount of reading is only ever compared with itself.';
+  $('#minLbl').textContent='lightest way · '+fmt(min.total)+' g CO₂e';
+  $('#maxLbl').textContent=fmt(max.total)+' g CO₂e · heaviest way';
+  $('#rangeNote').textContent='Each symbol is one way of reading '+scopeName+' of this newspaper: '+
+    'your travel options on paper (🚶 🚲 🚌 🚆 🚗) and your devices on screen (📱 📖 💻 🖥️). '+
+    'Symbols close together have almost the same footprint.';
   $('#verdict').innerHTML=(pL>=50
     ? 'Your route is lighter than <b>'+pL+'%</b> of the '+all.length+' ways of reading '+scopeName+' here.'
     : 'Your route is heavier than <b>'+pH+'%</b> of the '+all.length+' ways of reading '+scopeName+' here.')+
     ' The lightest is <b>'+describe(min.s)+'</b>; the heaviest is <b>'+describe(max.s)+'</b>.';
   var best=bestChange(r.total);
   if(best){
-    $('#whatifTxt').innerHTML='Same pages, still '+(st.mode==='physical'?'on paper':'on a screen')+
-      ' — but swapping <b>'+best.fromLabel+'</b> for <b>'+best.toLabel+'</b> would cut this route by <b>'+
-      fmt(best.saving)+' g</b> ('+Math.round(best.saving/r.total*100)+'%).';
+    $('#whatifTxt').innerHTML='Keep everything else and swap <b>'+best.fromLabel+'</b> for <b>'+best.toLabel+
+      '</b>: this route drops by <b>'+fmt(best.saving)+' g CO₂e</b> ('+Math.round(best.saving/r.total*100)+'%).';
     $('#whatifBtn').textContent='Try it';
     $('#whatifBtn').onclick=function(){ st[best.key]=best.to; renderResult(); paintHud(); };
   } else {
-    $('#whatifTxt').innerHTML='Nothing left to swap — '+(st.mode==='physical'?'this is already the lightest way to travel to your newspaper.':'this is already the lightest device for your newspaper.');
+    $('#whatifTxt').innerHTML=st.mode==='physical'
+      ? 'Nothing left to swap. For your distance, this is already the lightest realistic way to get there.'
+      : 'Nothing left to swap. This is already the lightest device.';
     $('#whatifBtn').textContent='Walk again'; $('#whatifBtn').onclick=reset;
   }
   renderRecs();
 }
 /* one decision, changed WITHIN the medium: another way to travel, or another
-   device — never paper→screen and never whole↔section */
+   device — never paper↔screen and never whole↔section. Travel suggestions stay
+   realistic for the player's distance: walking only up to 7 km one way,
+   cycling up to 30 km. */
 function bestChange(base){
-  var best=null;
+  var best=null, oneWay=kmFor(lib)/2;
+  function feasible(key,v){
+    if(key!=='travel') return true;
+    if(v==='foot') return oneWay<=7;
+    if(v==='bike') return oneWay<=30;
+    return true;
+  }
   function tryAll(key,dict,lab){
     Object.keys(dict).forEach(function(v){
-      if(st[key]===v) return;
+      if(st[key]===v || !feasible(key,v)) return;
       var alt=Object.assign({},st); alt[key]=v;
       var d=base-calc(alt,lib).total;
       if(d>0&&(!best||d>best.saving)) best={key:key,to:v,saving:d,fromLabel:lab(st[key]),toLabel:lab(v)};
@@ -1386,18 +1397,18 @@ function bestChange(base){
 function renderRecs(){
   var recs = st.mode==='physical' ? [
     {i:'🚶',t:'Go light on the trip',
-     d:'How you get there is usually the biggest slice of a paper route. On foot or by bike it disappears, train and bus cut it hard, and alone in a car it can dominate the whole footprint.'},
-    {i:'🧺',t:'Bundle your errands',
-     d:'If you do drive or ride, combine the library visit with other trips so the kilometres are shared across everything you do on the way.'},
-    {i:'🤝',t:'Share the copy',
-     d:'A library copy read by many people splits its production footprint across all of them. Borrowing instead of buying is the paper reader’s single easiest win.'}
+     d:'The trip to the library is usually the biggest part of a paper route. Walking or cycling brings it close to zero. Train and bus keep it small. Driving alone adds the most.'},
+    {i:'🧺',t:'Combine your trips',
+     d:'If you do drive or ride, combine the library visit with other things you need to do. The kilometres then spread across all of them.'},
+    {i:'🤝',t:'One copy, many readers',
+     d:'This is the library’s quiet strength: one copy serves many readers, so each reading carries only a small share of the printing. It works at home too. Share a paper instead of everyone buying one.'}
   ] : [
     {i:'📱',t:'Use a device you already own',
-     d:'Making the device is the biggest share of a digital route. Reading on the phone or laptop you already have beats buying a new gadget for it.'},
-    {i:'📚',t:'Don’t buy an e-reader for one book',
-     d:'A dedicated reader only pays off if you read a lot on it — studies put the break-even at roughly 25–40 books over the device’s lifetime. Use one device for many things, and for many reads.'},
+     d:'Making a new device causes far more emissions than reading on one you already have. Your phone or laptop is the better choice.'},
+    {i:'📚',t:'Don’t buy a device just for reading',
+     d:'A new e-reader only pays off after a great many reads. Use one device for many purposes, and for many reads.'},
     {i:'⏳',t:'Keep it long, keep it small',
-     d:'The longer a device lives, the smaller each reading’s share of making it — and a small screen draws far less power than a desktop while you read.'}
+     d:'The longer a device lives, the smaller the share of making it in each reading. And a small screen needs far less power than a desktop.'}
   ];
   $('#recsTitle').textContent='Easy wins '+(st.mode==='physical'?'when you read on paper':'when you read on a screen');
   $('#recs').innerHTML=recs.map(function(x){
@@ -1405,21 +1416,24 @@ function renderRecs(){
 }
 function drawRange(all,mine){
   var svg=$('#rangeSvg'); svg.innerHTML='';
-  var W=640,pad=18,y=86,min=all[0].total,max=all[all.length-1].total,span=(max-min)||1;
+  var W=640,pad=18,y=70,min=all[0].total,max=all[all.length-1].total,span=(max-min)||1;
   function x(v){ return pad+(v-min)/span*(W-pad*2); }
   function E(t,a){ var e=document.createElementNS('http://www.w3.org/2000/svg',t); for(var k in a) e.setAttribute(k,a[k]); return e; }
   svg.appendChild(E('line',{x1:pad,y1:y,x2:W-pad,y2:y,stroke:'rgba(255,255,255,.18)','stroke-width':2}));
-  /* ticks coloured by medium; near-identical values stack upward so all 9
-     stay visible even when the car route stretches the scale */
+  /* each route drawn as its own symbol so the figure explains itself; routes
+     with almost the same value stack downward instead of hiding each other */
   var buckets={};
   all.forEach(function(j){
-    var xx=x(j.total), b=Math.round(xx/5), n=buckets[b]||0; buckets[b]=n+1;
-    var col=j.s.mode==='physical'?'#E8B83A':'#4FC2C9', yy=y-n*6;
-    svg.appendChild(E('line',{x1:xx,y1:yy-7,x2:xx,y2:yy+7,stroke:col,'stroke-width':2,opacity:.85}));
+    var xx=x(j.total), b=Math.round(xx/16), n=buckets[b]||0; buckets[b]=n+1;
+    var col=j.s.mode==='physical'?'#E8B83A':'#4FC2C9';
+    var icon=j.s.mode==='physical'?PARAMS.travel[j.s.travel].icon:PARAMS.device[j.s.device].icon;
+    svg.appendChild(E('line',{x1:xx,y1:y-6,x2:xx,y2:y+8+n*15,stroke:col,'stroke-width':2,opacity:.8}));
+    var t=E('text',{x:xx,y:y+22+n*15,'text-anchor':'middle','font-size':'13'});
+    t.textContent=icon;
+    var tip=document.createElementNS('http://www.w3.org/2000/svg','title');
+    tip.textContent=describe(j.s)+' · '+fmt(j.total)+' g CO₂e';
+    t.appendChild(tip); svg.appendChild(t);
   });
-  var med=all[Math.floor(all.length/2)].total;
-  svg.appendChild(E('line',{x1:x(med),y1:y-16,x2:x(med),y2:y+16,stroke:'rgba(255,255,255,.35)','stroke-width':1.5,'stroke-dasharray':'3 3'}));
-  var mt=E('text',{x:x(med),y:y+32,'text-anchor':'middle',fill:'#6d7692','font-size':'11'}); mt.textContent='median'; svg.appendChild(mt);
   svg.appendChild(E('circle',{cx:x(min),cy:y,r:4,fill:'#3FB07A'}));
   svg.appendChild(E('circle',{cx:x(max),cy:y,r:4,fill:'#E0685F'}));
   var mx=x(mine);
@@ -1427,7 +1441,7 @@ function drawRange(all,mine){
   svg.appendChild(E('circle',{cx:mx,cy:y,r:7,fill:'var(--accent)',stroke:'#0b1020','stroke-width':2}));
   var lx=Math.min(W-58,Math.max(52,mx));
   var l1=E('text',{x:lx,y:y-56,'text-anchor':'middle',fill:'#f2f5ff','font-size':'14','font-weight':'800'});
-  l1.textContent=fmt(mine)+' g'; svg.appendChild(l1);
+  l1.textContent=fmt(mine)+' g CO₂e'; svg.appendChild(l1);
   var l2=E('text',{x:lx,y:y-40,'text-anchor':'middle',fill:'#aab3cf','font-size':'11'});
   l2.textContent='your journey'; svg.appendChild(l2);
 }
