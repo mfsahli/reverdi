@@ -211,34 +211,28 @@ a.paper:hover{border-color:var(--accent);transform:translateY(-2px)}
 footer{border-top:1px solid var(--hair);margin-top:20px;padding:22px 0 40px;font-size:12px;color:var(--muted)}
 footer .wrap{display:flex;flex-direction:column;gap:5px}
 /* ---------------- landing / password gate ---------------- */
-.gate{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;overflow:auto;
-  background:radial-gradient(ellipse at 50% 20%,#16264f,#070b18 76%);transition:opacity .6s,visibility .6s}
+.gate{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:28px 22px;overflow:auto;
+  background:radial-gradient(ellipse at 50% 12%,#141f45,#0b1020 72%);transition:opacity .6s,visibility .6s}
 .gate.hide{opacity:0;visibility:hidden;pointer-events:none}
-.gate .sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.gate .cl{position:absolute;font-size:26px;opacity:.5;animation:drift linear infinite}
-@keyframes drift{from{transform:translateX(-90px)}to{transform:translateX(110vw)}}
-.g-box{position:relative;z-index:2;max-width:720px;width:100%;text-align:center;
-  background:rgba(11,17,38,.92);border:1px solid var(--hair);border-radius:24px;
-  padding:36px 34px 30px;backdrop-filter:blur(10px);box-shadow:0 30px 90px rgba(0,0,0,.6)}
-.g-mark{font-size:38px;margin-bottom:6px}
-.g-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-2);margin-bottom:12px}
-.g-box h1{font-size:clamp(28px,5vw,46px);letter-spacing:-.03em;line-height:1.06;margin-bottom:12px}
-.g-box h1 em{font-style:normal;background:linear-gradient(90deg,var(--bl),var(--kb),var(--snl));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.g-lede{font-size:15px;color:var(--ink-2);text-align:left;margin-bottom:14px}
-.g-lede b{color:var(--ink)}
-.g-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 4px;text-align:left}
-@media(max-width:640px){.g-steps{grid-template-columns:1fr}}
-.g-step{background:rgba(255,255,255,.05);border:1px solid var(--hair);border-radius:12px;padding:11px 13px}
-.g-step b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
-.g-step span{font-size:13px;color:var(--ink-2)}
-.g-note{display:flex;gap:11px;align-items:flex-start;text-align:left;margin-top:18px;padding:13px 15px;
-  border-radius:12px;background:rgba(232,184,58,.10);border:1px solid rgba(232,184,58,.45);font-size:13px;color:#f4e6c4}
-.g-note b{color:var(--gold)}
+.g-box{max-width:680px;width:100%;text-align:center}
+.g-eyebrow{font-size:12px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-2);margin-bottom:30px}
+.g-eyebrow b{color:var(--accent)}
+.g-box h1{font-size:clamp(28px,4.6vw,40px);letter-spacing:-.02em;line-height:1.16;margin-bottom:16px}
+.g-box h1 em{font-style:normal;color:#6fd291}
+.g-lede{font-size:16px;line-height:1.65;color:var(--ink-2);max-width:580px;margin:0 auto 26px}
+.g-libs{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:20px;font-size:12.5px;color:var(--ink-2)}
+.g-libs i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:1px}
+.gd{max-width:600px;margin:10px auto 0;text-align:left;border:1px solid var(--hair);border-radius:14px;background:rgba(255,255,255,.03)}
+.gd summary{cursor:pointer;padding:13px 18px;font-size:13.5px;font-weight:700;color:var(--ink);
+  list-style:none;display:flex;justify-content:space-between;align-items:center}
+.gd summary::-webkit-details-marker{display:none}
+.gd summary::after{content:"▾";color:var(--muted);font-size:12px}
+.gd[open] summary::after{content:"▴"}
+.gd .gdb{padding:0 18px 16px;font-size:13px;color:var(--ink-2);line-height:1.65}
+.gd .gdb p{margin-bottom:9px}
+.gd .gdb a{color:var(--accent)}
+.gd .gdb b{color:var(--ink)}
 #gateForm{display:flex;gap:10px;justify-content:center;margin:20px 0 6px;flex-wrap:wrap}
-#gatePw{font:inherit;font-size:15px;color:var(--ink);background:#0a0f22;border:1px solid var(--hair);
-  border-radius:999px;padding:12px 20px;width:min(260px,100%);outline:none}
-#gatePw:focus{border-color:var(--accent)}
 .g-btn{font:inherit;font-size:15px;font-weight:800;color:#0b1020;background:var(--accent);border:0;
   border-radius:999px;padding:12px 26px;cursor:pointer;transition:.2s}
 .g-btn:hover{transform:translateY(-2px)}
@@ -252,33 +246,37 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
 
 <!-- ================= LANDING / PASSWORD GATE ================= -->
 <div class="gate" id="gate">
-  <div class="sky" aria-hidden="true">
-    <span class="cl" style="top:12%;animation-duration:64s">📚</span>
-    <span class="cl" style="top:28%;animation-duration:88s;animation-delay:-20s">📖</span>
-    <span class="cl" style="top:62%;animation-duration:74s;animation-delay:-45s">📰</span>
-    <span class="cl" style="top:78%;animation-duration:96s;animation-delay:-10s">💾</span>
-  </div>
   <div class="g-box">
-    <div class="g-mark">📰🚶</div>
-    <div class="g-eyebrow">A ReVerDi interactive · prototype</div>
-    <h1>The <em>Newspaper</em> Game</h1>
-    <p class="g-lede"><b>You want to read your favourite newspaper.</b> At the British Library that is <b>The Daily Mirror</b>, at the KB <b>De Telegraaf</b>, at the Swiss National Library the <b>Basler Zeitung</b>. Between you and your paper lie three decisions — let's walk through them together.</p>
-    <p class="g-lede">You play <b>Folio</b>. Where the road forks, <b>the road you take is your answer</b>; where a wall of doors blocks the way, <b>step through the one you choose</b>. The journey ends at a door — the <b>reading room</b> if you chose paper, the library's <b>digital space</b> if you chose the screen — and behind it, the footprint of that single reading.</p>
-    <p class="g-lede">🏅 <b>Bonus:</b> papers 📗 and discs 💿 lie along the road — some in tricky spots. Gather <b>every single one</b> and Folio earns the <b>Golden Library Card</b>.</p>
-    <div class="g-steps">
-      <div class="g-step"><b>Decision 1</b><span>The whole paper, or your favourite section?</span></div>
-      <div class="g-step"><b>Decision 2</b><span>On paper, or on a screen?</span></div>
-      <div class="g-step"><b>Decision 3</b><span>How you travel — or which device</span></div>
-    </div>
-    <div class="g-note"><span>⚠️</span><span><b>Pilot — mixed data.</b> Part of the figures are derived from the draft ReVerDi newspaper LCA (still under review), the rest are placeholders. Nothing here is a published result: please don't quote, screenshot or share the numbers as findings.</span></div>
+    <div class="g-eyebrow"><b>ReVerDi</b> · A research game on reading and climate</div>
+    <h1>Good news: reading shared cultural heritage is a <em>sustainable choice</em>.</h1>
+    <p class="g-lede">One library copy serves many readers, so each reading carries only a small footprint. This short game shows what drives the emissions of a single newspaper reading, and how your own choices change them. Built on life-cycle data from three national libraries.</p>
     <form id="gateForm" autocomplete="off">
-      <input id="gatePw" type="password" placeholder="Access word" aria-label="Access word">
-      <button class="g-btn" type="submit">Start walking →</button>
+      <button class="g-btn" type="submit">Start the game →</button>
     </form>
-    <div class="g-err" id="gateErr"></div>
+    <details class="gd">
+      <summary>About the game</summary>
+      <div class="gdb">
+        <p>The Newspaper Game is a pilot of the ReVerDi research project. You play one reading of a newspaper at a national library: <b>The Daily Mirror</b> at the British Library, <b>De Telegraaf</b> at the KB, the <b>Basler Zeitung</b> at the Swiss National Library. Three decisions shape your route: how much of the paper you read, paper or screen, and how you travel or which device you use. On the paper route you can enter your own distance to the library.</p>
+        <p>The game keeps things deliberately simple: one person, one reading, three decisions. Some inputs are still assumptions and will be refined as the research completes. Please treat all figures as preliminary; they are for exploring, and we ask you to leave them unquoted.</p>
+        <p>Walk with the arrow keys and jump with ↑. Where the road forks, the road you take is your answer; at a wall of doors, step through the one you choose. Collect every paper 📗 and disc 💿 on the road and you earn the Golden Library Card 🏅.</p>
+      </div>
+    </details>
+    <details class="gd">
+      <summary>About the numbers</summary>
+      <div class="gdb">
+        <p>Every result is in grams of CO₂ equivalents for one reading, counting everything behind it: making and keeping the newspaper, the journeys involved, and the energy while you read.</p>
+        <p>The values build on real life-cycle research. The per-page figures and distances come from the ReVerDi newspaper life-cycle assessment carried out with the three libraries (publication in preparation), the transport values come from the same LCA model, and the recommendations follow our <a href="https://doi.org/10.1016/j.clrc.2026.100440" target="_blank" rel="noopener">published paper on the digitalization of the book industry</a> (open access).</p>
+        <p>More about the project and its studies: <a href="../index.html">reverdi.org</a> · <a href="../pages/outputs.html">research outputs</a> · <a href="../pages/method-lcsa.html">our LCSA method</a></p>
+      </div>
+    </details>
+    <div class="g-libs">
+      <span><i style="background:var(--bl)"></i>British Library</span>
+      <span><i style="background:var(--kb)"></i>KB Netherlands</span>
+      <span><i style="background:var(--snl)"></i>Swiss National Library</span>
+    </div>
     <div class="g-foot">
       <a href="../index.html">← Back to the ReVerDi site</a>
-      <span>Internal preview · not for circulation</span>
+      <span>Research pilot · figures are preliminary</span>
     </div>
   </div>
 </div>
@@ -1499,7 +1497,6 @@ $('#compareBtn').addEventListener('click',function(){ var o=['bl','kb','snl']; s
 buildCollect(); paintTrail(); paintHud(); setLib('bl');
 
 /* ---------------- gate ---------------- */
-var GATE_WORD='nl4green2026';           /* client-side only — a doorbell, not a lock */
 var started=false;
 function openGame(){
   if(started) return; started=true;
@@ -1507,13 +1504,7 @@ function openGame(){
   setTimeout(sizeUI,50);
   stepGame();
 }
-$('#gateForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  var v=$('#gatePw').value.trim().toLowerCase();
-  if(v===GATE_WORD){ openGame(); }
-  else { $('#gateErr').textContent='Not quite — ask Matthias for the access word.'; $('#gatePw').select(); }
-});
-setTimeout(function(){ var el=$('#gatePw'); if(el) el.focus(); },300);
+$('#gateForm').addEventListener('submit',function(e){ e.preventDefault(); openGame(); });
 })();
 </script>
 </body>
