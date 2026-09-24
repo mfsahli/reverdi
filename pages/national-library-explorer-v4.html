@@ -318,7 +318,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
       <div id="kmAsk">
         <div class="km-box">
           <h4>HOW FAR TO THE LIBRARY?</h4>
-          <p>Your one-way distance — the game doubles it for the return trip.</p>
+          <p>Your one-way distance — the game doubles it for the return trip.<br>A rough guess is fine. Type whatever feels about right.</p>
           <div><input id="kmInput" type="number" min="0" max="20000" step="1" inputmode="numeric"><span class="km-unit">km one way</span></div>
           <div><button class="wbtn" id="kmGo">Continue →</button></div>
           <div class="km-note" id="kmNote"></div>
@@ -343,7 +343,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     <div class="grid2">
       <div class="panel">
         <h3>Footprint of this route</h3>
-        <div class="total"><span class="v num" id="totalV">0</span><span class="u">g CO₂e<span class="ph">pilot data</span></span></div>
+        <div class="total"><span class="v num" id="totalV">0</span><span class="u"><span id="totalUnit">g</span> CO₂e<span class="ph">pilot data</span></span></div>
         <div class="total-sub" id="totalSub"></div>
         <div class="equiv" id="equiv"></div>
         <h3 style="margin-top:22px">What drives it</h3>
@@ -444,7 +444,7 @@ var PARAMS={
   travel:{ foot:{label:'On foot',icon:'🚶',gPerKm:0},
            bike:{label:'By bike',icon:'🚲',gPerKm:0 /*JS: keep simple*/},
            tram:{label:'By bus',icon:'🚌',gPerKm:126 /*JS SimaPro, diesel bus*/},
-           train:{label:'By train',icon:'🚆',gPerKm:{bl:50.3,kb:64.2,snl:7.3} /*JS SimaPro, GB/NL/CH fleet*/},
+           train:{label:'By train',icon:'🚄',gPerKm:{bl:50.3,kb:64.2,snl:7.3} /*JS SimaPro, GB/NL/CH fleet*/},
            car:{label:'By car',icon:'🚗',gPerKm:372 /*JS SimaPro, global fleet*/} },
   device:{ phone:{label:'Phone',icon:'📱',watt:1 /*JS*/}, ereader:{label:'E-reader',icon:'📖',watt:3 /*JS: tablet*/},
            laptop:{label:'Laptop',icon:'💻',watt:50 /*PAPER*/}, desktop:{label:'Desktop',icon:'🖥️',watt:140 /*PAPER*/} },
@@ -540,20 +540,20 @@ var VW=800, VH=450, GY=380, WORLD_W=2040;
 var LIBCOL={bl:'#3987e5',kb:'#c98500',snl:'#d55181'};
 
 var st={scope:null,mode:null,travel:null,device:null};
-var lib='bl', frame=0, camX=0, finished=false, enterT=0, flash=0, sayTxt='', sayT=0;
+var lib='bl', frame=0, camX=0, finished=false, enterT=0, youT=0, flash=0, sayTxt='', sayT=0;
 var player={x:40,y:GY-22,w:14,h:22,vx:0,vy:0,onGround:true,face:1};
 
 var FORKS=[
-  { key:'scope', x0:300, x1:580, top:GY-104, done:false, chosen:null,
+  { key:'scope', x0:300, x1:580, top:GY-64, done:false, chosen:null,
     up:  {v:'section', icon:'⭐', label:'FAVOURITE PART', sub:'straight to the good pages'},
     low: {v:'whole',   icon:'🗞️', label:'THE WHOLE PAPER',   sub:'cover to cover'} },
-  { key:'mode', x0:780, x1:1020, top:GY-104, done:false, chosen:null,
+  { key:'mode', x0:780, x1:1020, top:GY-64, done:false, chosen:null,
     up:  {v:'digital',  icon:'💾', label:'ON A SCREEN', sub:'from where you are'},
     low: {v:'physical', icon:'📚', label:'ON PAPER',    sub:'in the reading room'} }
 ];
 var TRAVEL_DOORS=[
   {v:'foot',icon:'🚶',label:'ON FOOT'},{v:'bike',icon:'🚲',label:'BY BIKE'},
-  {v:'tram',icon:'🚌',label:'BY BUS'},{v:'train',icon:'🚆',label:'BY TRAIN'},{v:'car',icon:'🚗',label:'BY CAR'}
+  {v:'tram',icon:'🚌',label:'BY BUS'},{v:'train',icon:'🚄',label:'BY TRAIN'},{v:'car',icon:'🚗',label:'BY CAR'}
 ];
 var DEVICE_DOORS=[
   {v:'phone',icon:'📱',label:'PHONE'},{v:'ereader',icon:'📖',label:'E-READER'},
@@ -575,14 +575,15 @@ function doorRects(D){
 function activeDoors(){ for(var i=0;i<DOORS.length;i++) if(!DOORS[i].done && DOORS[i].opts.length) return DOORS[i]; return null; }
 function progress(){ return (st.scope?1:0)+(st.mode?1:0)+((st.travel||st.device)?1:0); }
 function paintTrail(){ /* the status bar inside the stage carries this now */ }
-/* the raised road of a fork, plus its steps */
+/* the raised road of a fork: one small step up to it. The straight road is
+   fenced before the decision line, so BOTH options take one active move:
+   hop up for the high road, or jump the fence for the low road. */
+function fenceX(F){ return F.x1-150; }
 function platforms(){
   var out=[];
   FORKS.forEach(function(F){
     if(F.done && F.chosen!=='up') return;
-    out.push({x:F.x0, y:F.top, w:(F.x1-F.x0)+40, h:10});
-    out.push({x:F.x0-130, y:GY-34, w:64, h:10, step:true});
-    out.push({x:F.x0-66,  y:GY-69, w:64, h:10, step:true});
+    out.push({x:F.x0+30, y:F.top, w:(F.x1-F.x0)+10, h:10});
   });
   return out;
 }
@@ -831,8 +832,8 @@ function buildCollect(){
   COLLECT=[];
   var spots=[];
   FORKS.forEach(function(F){                       /* a trail of books up each staircase */
-    spots.push([F.x0-140,GY-64],[F.x0-76,GY-100],[F.x0-6,GY-136]);
-    spots.push([F.x0-140,GY-30],[F.x0-76,GY-30]); /* and a couple along the low road */
+    spots.push([F.x0-60,GY-60],[F.x0+70,GY-96],[F.x0+140,GY-96]);
+    spots.push([F.x0-150,GY-30],[F.x1-190,GY-30]); /* and a couple along the low road */
   });
   spots.push([1150,GY-56],[1190,GY-56],[1230,GY-56]);
   spots.push([1560,GY-56],[1600,GY-56],[1640,GY-56]);
@@ -942,7 +943,7 @@ function drawProps(){
 
   /* the chosen item rides along above Folio */
   if(st.scope){
-    var iy=player.y-20+Math.sin(frame*0.08)*2;
+    var iy=player.y-34+Math.sin(frame*0.08)*2;
     EM(st.scope==='section'?'⭐':'🗞️', player.x+7, iy, 17);
   }
   /* companion */
@@ -1005,23 +1006,32 @@ function drawForks(){
     var acc=LIBCOL[lib], live=(!F.done && F===AF);
     if(!F.done && F!==AF) return;
 
+    var fx=fenceX(F);
     if(live){
-      /* the checkpoint light where the answer is locked in */
-      ctx.globalAlpha=.20+Math.sin(frame*0.08)*0.08; R(F.x1-5,F.top-50,14,GY-F.top+50,acc); ctx.globalAlpha=1;
-      R(F.x1-5,F.top-50,14,4,acc);
-      /* arrows: up the stairs, or straight on */
-      chevrons(F.x0-100,GY-118,'up','#ffffff');       /* up the stairs */
-      chevrons(F.x0-172,GY-12,'right','#ffffff');      /* or straight on */
+      /* the DECISION LINE — a checkered post with a flag, where the answer locks in */
+      for(var seg=F.top-46;seg<GY;seg+=10){
+        R(F.x1-3,seg,6,10, ((seg/10|0)%2)?acc:'#f2f5ff');
+      }
+      EM('🚩',F.x1+12,F.top-48,17);
+      plate(F.x1-76,F.top-88,152,24,'#0b1633',acc);
+      T('DECISION LINE',F.x1,F.top-71,'#ffffff',11);
+      /* arrows: one hop up, or jump the fence and stay low */
+      chevrons(F.x0,GY-46,'up','#ffffff');            /* onto the step and platform */
+      chevrons(F.x0-160,GY-12,'right','#ffffff');      /* or straight on to the fence */
+      /* the fence on the straight road — jump it to choose the low road */
+      R(fx-2,GY-26,16,26,'#5e3720');
+      R(fx-6,GY-24,24,4,'#8a5a33'); R(fx-6,GY-14,24,4,'#8a5a33');
+      ctx.globalAlpha=.55+Math.sin(frame*0.12)*0.25;
+      T('↑ JUMP',fx+6,GY-34,'#ffffff',10); ctx.globalAlpha=1;
     }
     /* THE UPPER ROAD — sign stands on the platform */
     if(!F.done||F.chosen==='up'){
-      signpost(F.x0+96, F.top, 44, F.up.label, F.up.sub, F.up.icon, acc, F.chosen==='up');
-      if(live) T('▲  HIGH ROAD',F.x0+96,F.top-74,'#ffffff',11);
+      signpost(F.x0+130, F.top, 44, F.up.label, F.up.sub, F.up.icon, acc, F.chosen==='up');
+      if(live) T('▲  HIGH ROAD',F.x0+130,F.top-74,'#ffffff',11);
     }
-    /* THE LOWER ROAD — sign stands on the ground */
+    /* THE LOWER ROAD — sign tucked under the platform, on the straight road */
     if(!F.done||F.chosen==='low'){
-      signpost(F.x0+96, GY, 44, F.low.label, F.low.sub, F.low.icon, acc, F.chosen==='low');
-      if(live) T('▶  LOW ROAD',F.x0+96,GY-74,'#ffffff',11);
+      signpost(F.x0+96, GY, 34, F.low.label, F.low.sub, F.low.icon, acc, F.chosen==='low');
     }
   });
 }
@@ -1095,6 +1105,8 @@ function drawEnd(){
 function drawPlayer(){
   if(finished){ var fa=Math.max(0,1-enterT/55); if(fa<=0) return; ctx.globalAlpha=fa; }
   var p=player, walking=Math.abs(p.vx)>0.2, s=Math.floor(frame/5)%4;
+  var S=1.45, ax=(p.x+7-camX), ay=p.y+p.h;      /* draw Folio 45% larger, feet anchored */
+  ctx.save(); ctx.translate(ax*(1-S),ay*(1-S)); ctx.scale(S,S);
   var y=p.y+((walking&&p.onGround)?(s===1?-1:s===3?1:0):0);
   var cover = LIBCOL[lib];
   var dark  = mix(cover,'#000000',0.42);
@@ -1110,7 +1122,17 @@ function drawPlayer(){
   R(ex+1,y+7,1,1,'#ffffff'); R(ex+6,y+7,1,1,'#ffffff');
   R(ex+1,y+12,5,1,'rgba(17,26,48,.65)');
   R(p.x+(p.face>0?14:-2),y+8,2,5,cover);
+  ctx.restore();
   ctx.globalAlpha=1;
+}
+/* animated marker so players spot their figure right away */
+function drawYou(){
+  if(youT>420||finished) return;
+  var bob=Math.sin(frame*0.12)*4;
+  var ax=player.x+7, ay=player.y-40+bob;
+  plate(ax-27,ay-32,54,20,'#0b1633',LIBCOL[lib]);
+  T('YOU',ax,ay-18,'#ffffff',10);
+  T('▼',ax,ay,'#ffffff',14);
 }
 function drawFore(){
   var t=dayT(), d=dig(), off=camX*1.35;
@@ -1184,7 +1206,7 @@ function paintHud(){
    LOOP
    ========================================================================== */
 function stepGame(){
-  frame++;
+  frame++; youT++;
   var mv=finished?0:(keys['arrowright']||keys['d']?1:0)-(keys['arrowleft']||keys['a']?1:0);
   player.vx += mv*0.7; player.vx *= 0.80;
   if(mv) player.face=mv;
@@ -1199,7 +1221,7 @@ function stepGame(){
       if(upEdge && player.onGround && player.x+player.w>r.x+4 && player.x<r.x+r.w-4){ enterDoor(D,r); used=true; }
     });
   }
-  if(upEdge && !used && player.onGround){ player.vy=-6.4; player.onGround=false; }
+  if(upEdge && !used && player.onGround){ player.vy=-7.0; player.onGround=false; }
   upEdge=false;
 
   player.vy += 0.34;
@@ -1220,6 +1242,10 @@ function stepGame(){
 
   FORKS.forEach(function(F){
     if(F.done) return;
+    var fx=fenceX(F);   /* the fence on the straight road — jump it to choose low */
+    if(player.y+player.h>GY-26 && player.x<fx && player.x+player.w>fx){
+      player.x=fx-player.w; if(player.vx>0) player.vx=0;
+    }
     if(player.x+player.w > F.x1) lockFork(F, (player.y+player.h) <= F.top+8 ? 'up' : 'low');
   });
   if(D){
@@ -1254,7 +1280,7 @@ function stepGame(){
   uctx.clearRect(0,0,uic.width,uic.height);
   drawSky(); drawClouds(); drawSkyline(); drawHills(); drawFly();
   drawGround(); drawProps(); drawCollect();
-  drawForks(); drawDoors(); drawEnd(); drawPlayer(); drawFore(); drawTopBanner(); drawHud();
+  drawForks(); drawDoors(); drawEnd(); drawPlayer(); drawYou(); drawFore(); drawTopBanner(); drawHud();
   requestAnimationFrame(stepGame);
 }
 
@@ -1278,11 +1304,17 @@ var CATS=[
 ];
 function whyOf(c){ return c.why || (st.mode==='physical'?c.whyP:c.whyD); }
 function fmt(n){ return Math.round(n).toLocaleString('en-GB'); }
+/* grams below 1 kg, kilograms above — easier to read than long gram numbers */
+function fmtU(n){
+  if(n<1000) return Math.round(n)+' g';
+  var k=n/1000;
+  return (k>=100?Math.round(k).toLocaleString('en-GB'):k.toFixed(1).replace(/\.0$/,''))+' kg';
+}
 var upT=null;
-function countUp(el,target){
-  if(upT) cancelAnimationFrame(upT); var t0=null;
+function countUp(el,target,disp){
+  if(upT) cancelAnimationFrame(upT); var t0=null; disp=disp||fmt;
   function f(ts){ if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/900), e=1-Math.pow(1-p,3);
-    el.textContent=fmt(target*e); if(p<1) upT=requestAnimationFrame(f); }
+    el.textContent=disp(target*e); if(p<1) upT=requestAnimationFrame(f); }
   upT=requestAnimationFrame(f);
 }
 function renderResult(){
@@ -1312,7 +1344,13 @@ function renderResult(){
     bl.innerHTML='📗&nbsp;<span>'+booksGot+' of '+COLLECT.length+
       ' collectibles found — gather every one on your next walk to earn the <b>Golden Library Card</b>.</span>';
   }
-  countUp($('#totalV'),r.total);
+  if(r.total>=1000){
+    $('#totalUnit').textContent='kg';
+    countUp($('#totalV'),r.total,function(v){ var k=v/1000; return k>=100?Math.round(k).toLocaleString('en-GB'):k.toFixed(1); });
+  }else{
+    $('#totalUnit').textContent='g';
+    countUp($('#totalV'),r.total);
+  }
   $('#totalSub').textContent='for one person reading '+scopeName+' ('+pages+' pages) of '+L.np+
     ' once, at the '+L.name+'. The number counts everything behind that one reading: making and keeping the newspaper, the journeys involved, and the energy while you read.'+
     (st.mode==='physical' ? (userKm!=null
@@ -1321,7 +1359,7 @@ function renderResult(){
   /* the everyday anchor — except on car routes, where comparing a drive with
      driving reads circular: there we show the drive's share instead */
   if(st.mode==='physical'&&st.travel==='car'){
-    $('#equiv').innerHTML='Your drive alone is <b>'+fmt(r.travel)+' g CO₂e</b> of this, '+
+    $('#equiv').innerHTML='Your drive alone is <b>'+fmtU(r.travel)+' CO₂e</b> of this, '+
       Math.round(r.travel/r.total*100)+'% of the total.';
   }else{
     var km=r.total/PARAMS.equivGPerKmCar;
@@ -1334,27 +1372,27 @@ function renderResult(){
   sorted.forEach(function(c){
     var v=r[c.k], share=r.total>0?v/r.total*100:0;
     if(share>0){ var i=document.createElement('i'); i.style.background=c.c; i.style.width=share+'%';
-      i.title=c.nm+': '+fmt(v)+' g CO₂e'; stack.appendChild(i); }
+      i.title=c.nm+': '+fmtU(v)+' CO₂e'; stack.appendChild(i); }
   });
   $('#drivers').innerHTML=sorted.filter(function(c){return r[c.k]>0;}).map(function(c,i){
     var share=r[c.k]/r.total*100;
     return '<div class="driver"><span class="k" style="background:'+c.c+'">'+(i+1)+'</span>'+
-      '<span><span class="dh"><b>'+c.nm+'</b><span class="dv">'+fmt(r[c.k])+' g CO₂e</span>'+
+      '<span><span class="dh"><b>'+c.nm+'</b><span class="dv">'+fmtU(r[c.k])+' CO₂e</span>'+
       '<span class="dp">'+(share<1?'<1':Math.round(share))+'%</span></span>'+
       '<span class="dw">'+whyOf(c)+'</span></span></div>';
   }).join('');
   drawRange(all,r.total);
-  $('#minLbl').textContent='lightest way · '+fmt(min.total)+' g CO₂e';
-  $('#maxLbl').textContent=fmt(max.total)+' g CO₂e · heaviest way';
+  $('#minLbl').textContent='lightest way · '+fmtU(min.total)+' CO₂e';
+  $('#maxLbl').textContent=fmtU(max.total)+' CO₂e · heaviest way';
   $('#rangeNote').textContent='Each symbol is one way of reading '+scopeName+' of this newspaper. '+
-    'Paper routes sit above the line (🚶 🚲 🚌 🚆 🚗), screen routes below it (📱 📖 💻 🖥️). '+
-    'The further right, the heavier.';
+    'Paper routes sit above the line (🚶 🚲 🚌 🚄 🚗), screen routes below it (📱 📖 💻 🖥️). '+
+    'Your own route is circled in blue. The further right, the heavier.';
   var verdict;
   if(r.total<=min.total+0.5){
     verdict='Your route is the lightest of the '+all.length+' ways. The heaviest, <b>'+describe(max.s)+
       '</b>, is '+xf(ratioMax)+'× your route.';
   }else if(ratioMin<=1.5){
-    verdict='Your route is almost the lightest: only <b>'+fmt(r.total-min.total)+' g CO₂e</b> more than <b>'+
+    verdict='Your route is almost the lightest: only <b>'+fmtU(r.total-min.total)+' CO₂e</b> more than <b>'+
       describe(min.s)+'</b>. The heaviest, <b>'+describe(max.s)+'</b>, is '+xf(ratioMax)+'× your route.';
   }else if(r.total>=max.total-0.5){
     verdict='Your route is the heaviest of the '+all.length+' ways: '+xf(ratioMin)+'× the lightest, <b>'+
@@ -1369,7 +1407,7 @@ function renderResult(){
   var best=bestChange(r.total);
   if(best){
     $('#whatifTxt').innerHTML='Keep everything else and swap <b>'+best.fromLabel+'</b> for <b>'+best.toLabel+
-      '</b>: this route drops by <b>'+fmt(best.saving)+' g CO₂e</b> ('+Math.round(best.saving/r.total*100)+'%).';
+      '</b>: this route drops by <b>'+fmtU(best.saving)+' CO₂e</b> ('+Math.round(best.saving/r.total*100)+'%).';
     $('#whatifBtn').textContent='Try it';
     $('#whatifBtn').onclick=function(){ st[best.key]=best.to; renderResult(); paintHud(); };
   } else {
@@ -1440,7 +1478,7 @@ function drawRange(all,mine){
   svg.appendChild(E('circle',{cx:mx,cy:y,r:6,fill:'var(--accent)',stroke:'#0b1020','stroke-width':2}));
   var lx=Math.min(W-64,Math.max(58,mx));
   var l1=E('text',{x:lx,y:y-60,'text-anchor':'middle',fill:'#f2f5ff','font-size':'14','font-weight':'800'});
-  l1.textContent=fmt(mine)+' g CO₂e'; svg.appendChild(l1);
+  l1.textContent=fmtU(mine)+' CO₂e'; svg.appendChild(l1);
   var l2=E('text',{x:lx,y:y-46,'text-anchor':'middle',fill:'#aab3cf','font-size':'11'});
   l2.textContent='your journey'; svg.appendChild(l2);
   /* two lanes so the figure explains itself: paper routes above the line,
@@ -1448,16 +1486,27 @@ function drawRange(all,mine){
      overlapping symbols are nudged to the right. Hovering a symbol names it. */
   var tipEl=document.getElementById('rangeTip');
   if(!tipEl){ tipEl=document.createElement('div'); tipEl.id='rangeTip'; document.body.appendChild(tipEl); }
-  var lastX={physical:-1e9,digital:-1e9};
+  /* light scale: end ticks, a labelled middle tick, and an arrowhead */
+  var midV=min+ (max-min)/2, mxid=x(midV);
+  [[pad,''],[mxid,fmtU(midV)],[W-pad,'']].forEach(function(g){
+    svg.appendChild(E('line',{x1:g[0],y1:y-4,x2:g[0],y2:y+4,stroke:'rgba(255,255,255,.28)','stroke-width':1.5}));
+    if(g[1]){ var gt=E('text',{x:g[0],y:y+18,'text-anchor':'middle',fill:'#6d7692','font-size':'10'}); gt.textContent=g[1]; svg.appendChild(gt); }
+  });
+  svg.appendChild(E('path',{d:'M '+(W-pad+2)+' '+(y-5)+' L '+(W-pad+11)+' '+y+' L '+(W-pad+2)+' '+(y+5)+' Z',fill:'rgba(255,255,255,.35)'}));
+  var lastX={physical:-1e9,digital:-1e9}, laneIdx={physical:0,digital:0};
   all.forEach(function(j){
     var xx=x(j.total), ph=j.s.mode==='physical';
-    var col=ph?'#E8B83A':'#4FC2C9';
+    var isMine=(j.s.mode===st.mode)&&(ph?j.s.travel===st.travel:j.s.device===st.device);
+    var col=isMine?'var(--accent)':(ph?'#E8B83A':'#4FC2C9');
     var icon=ph?PARAMS.travel[j.s.travel].icon:PARAMS.device[j.s.device].icon;
-    var label=(ph?PARAMS.travel[j.s.travel].label:PARAMS.device[j.s.device].label)+' · '+fmt(j.total)+' g CO₂e';
-    var laneY=ph?y-16:y+30;                       /* icon baseline, clear of the line */
-    var ix=Math.max(xx,lastX[j.s.mode]+20); lastX[j.s.mode]=ix;
-    svg.appendChild(E('line',{x1:xx,y1:y-4,x2:xx,y2:y+4,stroke:col,'stroke-width':2,opacity:.9}));
-    var t=E('text',{x:ix,y:laneY,'text-anchor':'middle','font-size':'14',style:'cursor:help'});
+    var label=(ph?PARAMS.travel[j.s.travel].label:PARAMS.device[j.s.device].label)+' · '+fmtU(j.total)+' CO₂e'+(isMine?' · your route':'');
+    var laneY=ph?y-16:y+32;
+    var ix=Math.max(xx,lastX[j.s.mode]+22); lastX[j.s.mode]=ix;
+    var m=laneIdx[j.s.mode]++;               /* varied tick lengths keep clustered routes apart */
+    var tl=5+(m%3)*3;
+    svg.appendChild(E('line',{x1:xx,y1:y-tl,x2:xx,y2:y+tl,stroke:col,'stroke-width':isMine?3:2,opacity:.95}));
+    if(isMine) svg.appendChild(E('circle',{cx:ix,cy:laneY-(ph?5:5),r:13,fill:'rgba(57,135,229,.22)',stroke:'var(--accent)','stroke-width':2}));
+    var t=E('text',{x:ix,y:laneY,'text-anchor':'middle','font-size':isMine?'17':'14',style:'cursor:help'});
     t.textContent=icon;
     t.addEventListener('mousemove',function(e){
       tipEl.textContent=label; tipEl.style.display='block';
@@ -1484,7 +1533,7 @@ function reset(){
   userKm=null; asking=false; $('#kmAsk').classList.remove('on');
   FORKS.forEach(function(F){ F.done=false; F.chosen=null; });
   DOORS[0].done=false; DOORS[0].opts=[];
-  finished=false; enterT=0; sayT=0; flash=0; booksGot=0; buildCollect();
+  finished=false; enterT=0; youT=0; sayT=0; flash=0; booksGot=0; buildCollect();
   player.x=40; player.y=GY-player.h; player.vx=0; player.vy=0; camX=0;
   paintTrail(); paintHud();
   $('#resultSec').classList.remove('on');
@@ -1505,6 +1554,8 @@ function openGame(){
   stepGame();
 }
 $('#gateForm').addEventListener('submit',function(e){ e.preventDefault(); openGame(); });
+/* small debug hook for automated testing */
+window.NPG={get x(){return player.x;},get y(){return player.y;},get st(){return st;},get onGround(){return player.onGround;}};
 })();
 </script>
 </body>
