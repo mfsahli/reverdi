@@ -23,9 +23,11 @@
 
   You never leave the game to decide. The decisions ARE the level:
 
-    · two-option decisions  -> the road ends at a WALL. Jump UP onto a cloud
-      to pass over it, or drop DOWN a shaft and crawl under it; the level you
-      are on when you cross the decision line is your answer.
+    · two-option decisions  -> stairs lead to a walkway in the middle of the
+      sky, and the walkway ends. Jump UP onto the cloud steps to the upper
+      road, or hop DOWN onto the steps to the lower road; the road you cross
+      the decision line on is your answer. Walking straight off the end just
+      lands you on the ground below, deciding nothing.
     · many-option decisions -> a WALL OF DOORS. Stand in the one you want and
       press UP to step through it.
 
@@ -258,7 +260,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
       <div class="gdb">
         <p>The Newspaper Game is a pilot of the ReVerDi research project. You play one reading of a newspaper at a national library: <b>The Daily Mirror</b> at the British Library, <b>De Telegraaf</b> at the KB, the <b>Basler Zeitung</b> at the Swiss National Library. Three decisions shape your route: how much of the paper you read, paper or screen, and how you travel or which device you use. On the paper route you can enter your own distance to the library.</p>
         <p>The game keeps things deliberately simple: one person, one reading, three decisions. Some inputs are still assumptions and will be refined as the research completes. Please treat all figures as preliminary; they are for exploring, and we ask you to leave them unquoted.</p>
-        <p>Walk with the arrow keys and jump with ↑. Where the road ends at a wall, jump up onto the cloud or drop down the shaft — the level you are on is your answer; at a wall of doors, step through the one you choose. Collect every paper 📗 and disc 💿 on the road and you earn the Golden Library Card 🏅.</p>
+        <p>Walk with the arrow keys and jump with ↑. Stairs carry you up to a walkway in the sky. Where it ends, jump up to the upper road or hop down to the lower one — the road you cross the line on is your answer; at a wall of doors, step through the one you choose. Collect every paper 📗 and disc 💿 along the way and you earn the Golden Library Card 🏅.</p>
       </div>
     </details>
     <details class="gd">
@@ -327,7 +329,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     </div>
     <div class="stage-hint">
       <span><kbd>←</kbd> <kbd>→</kbd> walk · <kbd>↑</kbd> jump · standing in a door, <kbd>↑</kbd> steps through it</span>
-      <span id="hint">Cloud or shaft — the level you cross the line on is your answer.</span>
+      <span id="hint">Upper road or lower road — the one you cross the line on is your answer.</span>
     </div>
   </div>
 </section>
@@ -536,20 +538,22 @@ function UPILL(x,y,w,h,fill,stroke,r){          /* rounded plate in world coords
   if(fill){ uctx.fillStyle=fill; uctx.fill(); }
   if(stroke){ uctx.lineWidth=2*UIS; uctx.strokeStyle=stroke; uctx.stroke(); }
 }
-var VW=800, VH=450, GY=380, WORLD_W=2040;
+var VW=800, VH=450, GY=380, WORLD_W=2600;
 var LIBCOL={bl:'#3987e5',kb:'#c98500',snl:'#d55181'};
 
 var st={scope:null,mode:null,travel:null,device:null};
 var lib='bl', frame=0, camX=0, finished=false, enterT=0, youT=0, flash=0, sayTxt='', sayT=0;
 var player={x:40,y:GY-22,w:14,h:22,vx:0,vy:0,onGround:true,face:1};
 
+/* the three flying levels of a fork */
+var FML=GY-120, FUL=GY-190, FLL=GY-50;
 var FORKS=[
-  { key:'scope', x0:300, x1:580, top:GY-64, done:false, chosen:null,
-    up:  {v:'section', icon:'⭐', label:'FAVOURITE PART', sub:'a quick hop, up on the cloud'},
-    low: {v:'whole',   icon:'🗞️', label:'THE WHOLE PAPER',   sub:'a deep dive, down the shaft'} },
-  { key:'mode', x0:780, x1:940, top:GY-64, done:false, chosen:null,
-    up:  {v:'digital',  icon:'💾', label:'ON A SCREEN', sub:'up into the cloud'},
-    low: {v:'physical', icon:'📚', label:'ON PAPER',    sub:'down into the archive'} }
+  { key:'scope', x0:150, r:440, x1:680, done:false, chosen:null,
+    up:  {v:'section', icon:'⭐', label:'FAVOURITE PART', sub:'take the upper road'},
+    low: {v:'whole',   icon:'🗞️', label:'THE WHOLE PAPER',   sub:'take the lower road'} },
+  { key:'mode', x0:880, r:1170, x1:1410, done:false, chosen:null,
+    up:  {v:'digital',  icon:'💾', label:'ON A SCREEN', sub:'take the upper road'},
+    low: {v:'physical', icon:'📚', label:'ON PAPER',    sub:'take the lower road'} }
 ];
 var TRAVEL_DOORS=[
   {v:'foot',icon:'🚶',label:'ON FOOT'},{v:'bike',icon:'🚲',label:'BY BIKE'},
@@ -560,11 +564,11 @@ var DEVICE_DOORS=[
   {v:'laptop',icon:'💻',label:'LAPTOP'},{v:'desktop',icon:'🖥️',label:'DESKTOP'}
 ];
 var DOORS=[
-  { key:'third', x:1280, done:false, opts:[],
+  { key:'third', x:1884, done:false, opts:[],
     title:function(){ return st.mode==='digital'?'WHAT DO YOU READ IT ON?':'HOW DO YOU GET THERE?'; } }
 ];
 var DOOR_W=88, DOOR_H=112, DOOR_GAP=20;
-var PORTAL={x:1780};
+var PORTAL={x:2360};
 
 function doorRects(D){
   var n=D.opts.length; if(!n) return [];
@@ -575,15 +579,35 @@ function doorRects(D){
 function activeDoors(){ for(var i=0;i<DOORS.length;i++) if(!DOORS[i].done && DOORS[i].opts.length) return DOORS[i]; return null; }
 function progress(){ return (st.scope?1:0)+(st.mode?1:0)+((st.travel||st.device)?1:0); }
 function paintTrail(){ /* the status bar inside the stage carries this now */ }
-/* a fork: you approach in the middle and the road ends at a wall. To pass
-   the decision line you take one active move — jump UP onto the cloud, or
-   drop DOWN the shaft into the underground and crawl under the wall. */
-function pitGeom(F){ return {a:F.x1-150, b:F.x1+40, wx:F.x1-80, ty:GY+34}; }
+/* a fork, variant B: stairs carry you from the road up to a walkway in the
+   MIDDLE of the sky. The walkway ends. Ahead, cloud steps lead UP to the
+   upper road and DOWN to the lower road — both symmetric, both need a jump
+   off the walkway's end. Walking straight off the edge lands you safely on
+   the ground below, deciding nothing (a bollard blocks the ground at the
+   line), and you climb back up to choose. */
 function platforms(){
   var out=[], AF=activeFork();
   FORKS.forEach(function(F){
-    if(F.done ? F.chosen!=='up' : F!==AF) return;   /* only the fork at hand, or a cloud you chose */
-    out.push({x:F.x1-260, y:F.top, w:300, h:10, cloud:true});
+    var live = F===AF && !F.done;
+    if(!live && !F.done) return;                 /* only the fork at hand, or one already decided */
+    var R0=F.r;
+    /* approach stairs and the middle walkway — always */
+    out.push({x:R0-290,y:GY-40,w:48,h:10});
+    out.push({x:R0-232,y:GY-80,w:48,h:10});
+    out.push({x:R0-176,y:FML,w:176,h:10});
+    /* the upper road */
+    if(live || F.chosen==='up'){
+      out.push({x:R0-10, y:FML-25,w:90,h:10,cloud:true});
+      out.push({x:R0+92, y:FML-48,w:60,h:10,cloud:true});
+      out.push({x:R0+154,y:FUL,w:176,h:10});
+      out.push({x:R0+336,y:GY-120,w:44,h:10,cloud:true});   /* steps back down after the line */
+      out.push({x:R0+390,y:GY-60,w:44,h:10,cloud:true});
+    }
+    /* the lower road */
+    if(live || F.chosen==='low'){
+      out.push({x:R0+95, y:FML+40,w:70,h:10,cloud:true});
+      out.push({x:R0+177,y:FLL,w:153,h:10});
+    }
   });
   return out;
 }
@@ -844,13 +868,13 @@ var COLLECT=[];
 function buildCollect(){
   COLLECT=[];
   var spots=[];
-  FORKS.forEach(function(F){                       /* books on the approach, the cloud and in the tunnel */
-    spots.push([F.x0-90,GY-30],[F.x0-30,GY-30]);
-    spots.push([F.x1-200,F.top-30],[F.x1-140,F.top-30]);
-    spots.push([F.x1-120,GY+6],[F.x1-60,GY+6]);
+  FORKS.forEach(function(F){                       /* books on the walkway and along both roads */
+    spots.push([F.r-130,FML-30],[F.r-70,FML-30]);
+    spots.push([F.x1-40,FUL-30],[F.x1+20,FUL-30]);
+    spots.push([F.x1-40,FLL-30],[F.x1+20,FLL-30]);
   });
-  spots.push([1150,GY-56],[1190,GY-56],[1230,GY-56]);
-  spots.push([1560,GY-56],[1600,GY-56],[1640,GY-56]);
+  spots.push([1660,GY-56],[1700,GY-56],[1740,GY-56]);
+  spots.push([2200,GY-56],[2240,GY-56],[2280,GY-56]);
   spots.forEach(function(p){ COLLECT.push({x:p[0],y:p[1],got:false,t:0}); });
 }
 var booksGot=0;
@@ -916,16 +940,16 @@ function drawSkyline(){
 
 /* --------- everything that stands on the road --------- */
 function forkZone(x){                    /* no scenery where a decision happens */
-  for(var i=0;i<FORKS.length;i++){ var F=FORKS[i]; if(x>F.x0-190 && x<F.x1+90) return true; }
+  for(var i=0;i<FORKS.length;i++){ var F=FORKS[i]; if(x>F.x0-60 && x<F.x1+220) return true; }
   return false;
 }
 function drawProps(){
   var t=dayT(), d=dig();
 
   /* start area */
-  R(150,GY-56,5,56,'#7a4a2a'); R(118,GY-92,72,36,'#f6efdd'); R(120,GY-90,68,32,'#fffdf4');
-  T('START',154,GY-72,'#1a2440',17);
-  T('your paper awaits →',154,GY-59,'#5c6680',10);
+  R(88,GY-56,5,56,'#7a4a2a'); R(56,GY-92,72,36,'#f6efdd'); R(58,GY-90,68,32,'#fffdf4');
+  T('START',92,GY-72,'#1a2440',17);
+  T('your paper awaits →',92,GY-59,'#5c6680',10);
   for(var cvx=200;cvx<300;cvx+=26){
     ctx.globalAlpha=0.3+0.25*Math.sin((frame*0.06)-(cvx*0.05));
     T('>',cvx,GY+30,'#ffffff',12); ctx.globalAlpha=1;
@@ -1022,56 +1046,39 @@ function optPlate(cx,cy,o,acc,on){        /* a floating option billboard */
   T(o.label,x+w/2+18,y+h/2-2, on?'#0b1020':'#ffffff',14);
   T(o.sub,  x+w/2+18,y+h/2+12, on?'rgba(11,16,32,.8)':'#9fb0d6',8);
 }
-function dropArrow(x){                    /* animated ▼ falling into the shaft */
+function dropArrow(x,y0){                 /* animated ▼ pointing down */
   for(var i=0;i<3;i++){
     var t=((frame*0.05)+i*0.33)%1;
     ctx.globalAlpha=0.35+0.65*(1-Math.abs(t*2-1));
-    T('▼',x,GY+12+i*9,'#ffffff',14);
+    T('▼',x,y0+i*9,'#ffffff',14);
   }
   ctx.globalAlpha=1;
 }
 function drawForks(){
   var AF=activeFork();
   FORKS.forEach(function(F){
-    if(F.x1-camX<-360||F.x0-camX>VW+360) return;
+    if(F.x1-camX<-560||F.x0-camX>VW+560) return;
     var acc=LIBCOL[lib], live=(!F.done && F===AF);
     if(!F.done && F!==AF) return;
-    var G=pitGeom(F);
-
-    /* THE SHAFT — carved into the road, with a pipe mouth and an exit ladder */
-    R(G.a,GY,G.b-G.a,G.ty-GY+6,'#0a0e20');
-    R(G.a,G.ty+2,G.b-G.a,5,'#1c2547');
-    R(G.a,G.ty+2,G.b-G.a,2,'rgba(255,255,255,.10)');
-    for(var lx=G.a+26;lx<G.b-24;lx+=52){                 /* little tunnel lamps */
-      R(lx,GY+2,4,3,'#ffe27a');
-      ctx.globalAlpha=.13; R(lx-8,GY+2,20,G.ty-GY,'#ffe27a'); ctx.globalAlpha=1;
-    }
-    R(G.a-6,GY-8,26,8,'#2c9646');                        /* green pipe mouth at the entrance */
-    R(G.a-10,GY-16,34,10,'#37b558');
-    R(G.a-10,GY-16,34,2,'rgba(255,255,255,.35)');
-    R(G.b-14,GY-4,2,G.ty-GY+6,'#8a5a33');                /* ladder out at the far end */
-    R(G.b-4,GY-4,2,G.ty-GY+6,'#8a5a33');
-    for(var ly=GY+2;ly<G.ty+2;ly+=7) R(G.b-13,ly,10,2,'#c9a15a');
+    var R0=F.r, X=F.x1;
 
     if(live){
-      /* the wall that ends the middle road (the cloud passes over, the shaft goes under) */
-      R(G.wx,F.top+6,16,(GY+8)-(F.top+6),'#5e3720');
-      R(G.wx-3,F.top+2,22,6,'#8a5a33');
-      for(var wy=F.top+14;wy<GY+2;wy+=12) R(G.wx+2,wy,12,4,'rgba(0,0,0,.25)');
-      /* the DECISION LINE — a checkered post through cloud, road and tunnel */
-      for(var seg=F.top-46;seg<G.ty;seg+=10){
-        R(F.x1-3,seg,6,10, ((seg/10|0)%2)?acc:'#f2f5ff');
+      /* the bollard on the ground under the line — the roads pass above it */
+      for(var bz=0;bz<4;bz++) R(X-6,GY-34+bz*9,12,9, bz%2?'#f2f5ff':'#c0392b');
+      R(X-9,GY-38,18,5,'#c0392b');
+      /* the DECISION LINE — a checkered post through both roads */
+      for(var seg=FUL-16;seg<GY-6;seg+=10){
+        R(X-3,seg,6,10, ((seg/10|0)%2)?acc:'#f2f5ff');
       }
-      EM('🚩',F.x1+12,F.top-48,17);
-      plate(F.x1-76,F.top-88,152,24,'#0b1633',acc);
-      T('DECISION LINE',F.x1,F.top-71,'#ffffff',11);
-      /* arrows: jump up to the cloud, or drop down the shaft */
-      chevrons(G.a-40,F.top-8,'up','#ffffff');
-      dropArrow(G.a+36);
+      plate(X-76,FML-20,152,24,'#0b1633',acc);        /* the label sits between the roads */
+      T('DECISION LINE',X,FML-3,'#ffffff',11);
+      /* arrows at the walkway's end: jump up, or hop down */
+      chevrons(R0+18,FML-38,'up','#ffffff');
+      dropArrow(R0+124,FML+6);
     }
-    /* option billboards: cloud above, shaft below */
-    if(!F.done||F.chosen==='up')  optPlate(F.x1-200, F.top-58, F.up,  acc, F.chosen==='up');
-    if(!F.done||F.chosen==='low') optPlate(G.a-95,  GY-8,     F.low, acc, F.chosen==='low');
+    /* option billboards above each road */
+    if(!F.done||F.chosen==='up')  optPlate(X+40, FUL-22, F.up,  acc, F.chosen==='up');
+    if(!F.done||F.chosen==='low') optPlate(X+40, FLL-16, F.low, acc, F.chosen==='low');
   });
 }
 function drawDoors(){
@@ -1190,7 +1197,7 @@ function drawTopBanner(){
     sub   = 'THREE DECISIONS LIE BETWEEN YOU AND IT — WALK RIGHT →';
   } else if(AF && Math.abs(player.x-(AF.x0+AF.x1)/2)<460){
     title = (AF.key==='scope') ? 'READ ALL OF IT, OR JUST YOUR FAVOURITE PART?' : 'ON PAPER, OR ON A SCREEN?';
-    sub   = 'JUMP UP TO THE CLOUD, OR DROP DOWN THE SHAFT — YOUR PATH IS YOUR ANSWER';
+    sub   = 'THE WALKWAY ENDS — JUMP UP TO THE UPPER ROAD, OR HOP DOWN TO THE LOWER ONE';
     n     = (AF.key==='scope')?1:2;
   } else if(AD && Math.abs(player.x-AD.x)<520){
     title = AD.title();
@@ -1269,11 +1276,7 @@ function stepGame(){
 
   var wasBottom=player.y+player.h-player.vy;
   player.onGround=false;
-  /* the floor: normal ground, or the tunnel floor inside a fork's shaft */
-  var fl=GY, pcx=player.x+player.w/2;
-  for(var fi=0;fi<FORKS.length;fi++){ var FG=pitGeom(FORKS[fi]);
-    if(pcx>FG.a && pcx<FG.b){ fl=FG.ty; break; } }
-  if(player.y+player.h>=fl){ player.y=fl-player.h; player.vy=0; player.onGround=true; }
+  if(player.y+player.h>=GY){ player.y=GY-player.h; player.vy=0; player.onGround=true; }
   platforms().forEach(function(p){
     if(player.vy>=0 && wasBottom<=p.y+3 &&
        player.y+player.h>=p.y && player.y+player.h<=p.y+p.h+10 &&
@@ -1285,11 +1288,11 @@ function stepGame(){
 
   FORKS.forEach(function(F){
     if(F.done) return;
-    var G=pitGeom(F);   /* the wall that ends the middle road — over it on the cloud, or under it through the shaft */
-    if(player.y+player.h>F.top+8 && player.y<GY+8 && player.x<G.wx && player.x+player.w>G.wx){
-      player.x=G.wx-player.w; if(player.vx>0) player.vx=0;
+    /* the bollard on the ground under the decision line — the two roads pass above it */
+    if(player.y+player.h>GY-38 && player.x<F.x1 && player.x+player.w>F.x1){
+      player.x=F.x1-player.w; if(player.vx>0) player.vx=0;
     }
-    if(player.x+player.w > F.x1) lockFork(F, (player.y+player.h) <= F.top+8 ? 'up' : 'low');
+    if(player.x+player.w > F.x1) lockFork(F, (player.y+player.h) <= FML ? 'up' : 'low');
   });
   if(D){
     /* an undecided wall stops you at the last doorway — never beyond it, so
@@ -1598,7 +1601,8 @@ function openGame(){
 }
 $('#gateForm').addEventListener('submit',function(e){ e.preventDefault(); openGame(); });
 /* small debug hook for automated testing */
-window.NPG={get x(){return player.x;},get y(){return player.y;},get st(){return st;},get onGround(){return player.onGround;}};
+window.NPG={get x(){return player.x;},get y(){return player.y;},get st(){return st;},get onGround(){return player.onGround;},
+  tp:function(x,y){player.x=x;player.y=y;player.vx=0;player.vy=0;camX=Math.max(0,Math.min(WORLD_W-VW,x-300));}};
 })();
 </script>
 </body>
