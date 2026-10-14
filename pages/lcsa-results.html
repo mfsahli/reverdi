@@ -42,7 +42,9 @@
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
   .crumb a{color:var(--lblue)}
 
-  main{padding:56px 0 20px}
+  main{padding:0 0 20px}
+
+  main > .phead{margin-bottom:56px}
   .lead{font-size:18px;color:var(--muted);max-width:720px;margin-bottom:8px}
   h2{font-size:26px;color:var(--navy);font-weight:800;margin:46px 0 6px;letter-spacing:-.01em}
   h2 .num{color:var(--yellow)}
@@ -56,7 +58,7 @@
   .keys{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:22px 0}
   @media(max-width:680px){.keys{grid-template-columns:1fr}}
   .keycard{border:1px solid var(--border);border-radius:12px;background:#fff;padding:18px 20px}
-  .keycard h4{font-size:16px;color:var(--navy);margin-bottom:4px}
+  .keycard h4,.keycard h3{font-size:16px;color:var(--navy);margin-bottom:4px}
   .keycard p{font-size:14px;color:var(--muted)}
   .keycard.accent{border-left:4px solid var(--teal);border-radius:0 12px 12px 0}
   .statrow{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}
@@ -77,12 +79,12 @@
   .psec .peb .d{width:11px;height:11px;border-radius:50%;background:var(--pc)}
   .psec h2{margin-top:3px}
   .psec.env{--pc:#4F8A72;--pcd:#3E6F5B}
-  .psec.econ{--pc:#D0803A;--pcd:#A65F22}
+  .psec.econ{--pc:#D0803A;--pcd:#8E4F1A}
   .psec.social{--pc:#7A6AA0;--pcd:#5E5083}
   .scard{flex:1 1 150px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--sc)}
   .scard .v{font-size:26px;font-weight:800;color:var(--scd)}
   .scard .l{font-size:12.5px;color:var(--muted);margin-top:2px}
-  .scard.econ{--sc:#D0803A;--scd:#A65F22}
+  .scard.econ{--sc:#D0803A;--scd:#8E4F1A}
   .scard.soc{--sc:#7A6AA0;--scd:#5E5083}
   /* interactive chart */
   .ic{border:1px solid var(--border);border-radius:14px;background:#fff;padding:22px 24px 16px;margin:24px 0 8px}
@@ -154,9 +156,26 @@
   :root{--maxw:900px}
   h2 .num{color:var(--accent)}
   .stat .v,.ic-tip b{color:var(--accent-l)}
+
+  /* ===== accessibility (WCAG 2.2 AA), 2026-10 ===== */
+  .skip{position:absolute;left:-9999px;top:8px;z-index:1000;background:#fff;color:#1D2B5E;font-weight:700;padding:10px 16px;border-radius:8px}
+  .skip:focus{left:16px;outline:3px solid #2F6FDB;outline-offset:2px}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2F6FDB;outline-offset:2px;border-radius:4px}
+  .crumb a,main p a,.lead a,p.body a,footer a{text-decoration:underline;text-underline-offset:2px}
+  .datatable{margin:10px 0 4px;font-size:14px;text-align:left}
+  .datatable summary{cursor:pointer;font-weight:700;color:#2456C7;padding:6px 0}
+  .datatable table{border-collapse:collapse;width:100%;margin-top:8px}
+  .datatable th,.datatable td{border:1px solid #E3E8F1;padding:7px 10px;text-align:left}
+  .datatable th{background:#F5F7FB}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .k{font-size:19px}
+  .ic-bar:focus-visible{outline:3px solid #2F6FDB}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
   <div class="nav-inner">
@@ -176,6 +195,7 @@
   </div>
 </header>
 
+<main id="main">
 <section class="phead">
   <div class="wrap">
     <div class="crumb"><a href="../index.html">Home</a> · First results</div>
@@ -185,7 +205,7 @@
   </div>
 </section>
 
-<main>
+
   <div class="wrap">
     <p class="lead">We compared the British Library (UK), the Koninklijke Bibliotheek (Netherlands) and the Swiss National Library as organisations for the year 2024, combining three established methods into one <span class="term" data-tip="Life Cycle Sustainability Assessment — brings environmental (LCA), economic (LCC) and social (S-LCA) assessment together in a single framework.">Life Cycle Sustainability Assessment (LCSA)</span>.</p>
     <div class="pillstrip">
@@ -207,7 +227,13 @@
         </div>
         <div class="ic-title" id="icTitle"></div>
         <div class="ic-unit" id="icUnit"></div>
-        <div class="ic-bars" id="icBars"></div>
+        <div class="ic-bars" id="icBars" aria-hidden="true"></div>
+        <details class="datatable"><summary>Show the chart data as a table</summary>
+          <table><caption class="sr-only">Greenhouse-gas emissions and cost per library, 2024</caption>
+          <thead><tr><th scope="col">Library</th><th scope="col">Emissions (t CO₂-eq per year)</th><th scope="col">Share of national emissions</th><th scope="col">Emissions per item (kg CO₂-eq)</th><th scope="col">Cost per item</th></tr></thead>
+          <tbody><tr><th scope="row">British Library</th><td>17,258</td><td>≈ 0.0036 %</td><td>0.10</td><td>€1.05</td></tr>
+          <tr><th scope="row">Koninklijke Bibliotheek</th><td>4,829</td><td>≈ 0.0033 %</td><td>1.19</td><td>€14.34</td></tr>
+          <tr><th scope="row">Swiss National Library</th><td>1,799</td><td>≈ 0.0044 %</td><td>0.25</td><td>€5.37</td></tr></tbody></table></details>
         <div class="ic-hint">Hover a bar for the exact figure · use the buttons to switch view. Bar colours mark the three libraries (not the pillars).</div>
       </div>
 
@@ -220,7 +246,15 @@
         </div>
         <div class="ic-title">Relative environmental impact by category</div>
         <div class="ic-unit">each library shown relative to the largest in that category (largest = 100 %)</div>
-        <div class="rc-plot" id="rcPlot"></div>
+        <div class="rc-plot" id="rcPlot" aria-hidden="true"></div>
+        <details class="datatable"><summary>Show the chart data as a table</summary>
+          <table><caption class="sr-only">Environmental impact relative to the largest library, by category (largest = 100 %)</caption>
+          <thead><tr><th scope="col">Category</th><th scope="col">British Library</th><th scope="col">Koninklijke Bibliotheek</th><th scope="col">Swiss National Library</th></tr></thead>
+          <tbody><tr><th scope="row">Greenhouse gas</th><td>100 %</td><td>28.0 %</td><td>10.4 %</td></tr>
+          <tr><th scope="row">Human toxicity</th><td>100 %</td><td>45.1 %</td><td>13.6 %</td></tr>
+          <tr><th scope="row">Land use</th><td>100 %</td><td>29.4 %</td><td>33.7 %</td></tr>
+          <tr><th scope="row">Mineral resources</th><td>100 %</td><td>9.1 %</td><td>4.3 %</td></tr>
+          <tr><th scope="row">Water</th><td>100 %</td><td>22.4 %</td><td>26.1 %</td></tr></tbody></table></details>
         <div class="rc-hint">Hover any bar for the exact figure. The British Library is largest in every category (100 %); the others are a fraction of it.</div>
       </div>
     </section>
@@ -260,13 +294,13 @@
 
     <h2>What it means in practice</h2>
     <div class="keys">
-      <div class="keycard accent"><h4>Digital access is a powerful lever</h4><p>Online access expands social reach enormously without raising the environmental footprint proportionally — libraries reach many times their in-person audience online.</p></div>
-      <div class="keycard accent"><h4>Buildings &amp; energy: big lever, shared responsibility</h4><p>A third to a half of emissions come from buildings and energy. The levers are renovation and procurement — often shared with the property owner rather than the library alone.</p></div>
-      <div class="keycard accent"><h4>Trade-offs made visible</h4><p>There are tensions between emissions, cost and social reach. The LCSA makes them explicit and gives a basis for informed decisions.</p></div>
+      <div class="keycard accent"><h3>Digital access is a powerful lever</h3><p>Online access expands social reach enormously without raising the environmental footprint proportionally — libraries reach many times their in-person audience online.</p></div>
+      <div class="keycard accent"><h3>Buildings &amp; energy: big lever, shared responsibility</h3><p>A third to a half of emissions come from buildings and energy. The levers are renovation and procurement — often shared with the property owner rather than the library alone.</p></div>
+      <div class="keycard accent"><h3>Trade-offs made visible</h3><p>There are tensions between emissions, cost and social reach. The LCSA makes them explicit and gives a basis for informed decisions.</p></div>
     </div>
 
     <div class="glam" id="glam">
-      <div class="eyebrow" style="color:#A65F22">For the wider GLAM sector</div>
+      <div class="eyebrow" style="color:#8E4F1A">For the wider GLAM sector</div>
       <h2>Relevant beyond national libraries</h2>
       <p class="body" style="margin-top:6px">These insights are not only for national libraries. Any galleries, libraries, archives and museums (GLAM) that manage both physical and digital collections face the same trade-offs between environmental impact, cost and public value. The LCSA approach offers a transferable way to measure and compare them — and to make the case for openness and digital access.</p>
       <a class="btn primary" href="../index.html#contact">Get in touch</a>
@@ -278,7 +312,7 @@
 
 <footer>
   <div class="wrap foot-in">
-    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a> · <a href="accessible-results.html">Accessible results</a> · <a href="accessibility.html">Accessibility</a></span>
     <span>Environmental · Economic · Social</span>
   </div>
 </footer>

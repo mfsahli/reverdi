@@ -44,7 +44,7 @@
 :root{
   color-scheme:dark;
   --bg0:#0b1020; --bg1:#111831; --card:#141b33; --card2:#18213c;
-  --ink:#f2f5ff; --ink-2:#aab3cf; --muted:#6d7692;
+  --ink:#f2f5ff; --ink-2:#aab3cf; --muted:#8E97B3;
   --hair:rgba(255,255,255,.10);
   --bl:#3987e5; --kb:#c98500; --snl:#d55181; --gold:#E8B83A;
   --accent:var(--bl); --accent-soft:rgba(57,135,229,.16);
@@ -269,9 +269,25 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
 .gw .ground{position:absolute;left:0;right:0;bottom:0;height:70px;background:#c9824e;border-top:12px solid #5cbf6e}
 #gFolio{position:absolute;bottom:68px;left:-120px;image-rendering:pixelated;width:76px;height:112px}
 @media(max-width:700px){.gate .g-box{padding:28px 22px 22px;margin-bottom:120px}#gFolio{width:57px;height:84px}}
+
+  /* ===== accessibility (WCAG 2.2 AA), 2026-10 ===== */
+  .skip{position:absolute;left:-9999px;top:8px;z-index:1000;background:#fff;color:#1D2B5E;font-weight:700;padding:10px 16px;border-radius:8px}
+  .skip:focus{left:16px;outline:3px solid #2F6FDB;outline-offset:2px}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2F6FDB;outline-offset:2px;border-radius:4px}
+  .crumb a,main p a,.lead a,p.body a,footer a{text-decoration:underline;text-underline-offset:2px}
+  .datatable{margin:10px 0 4px;font-size:14px;text-align:left}
+  .datatable summary{cursor:pointer;font-weight:700;color:#2456C7;padding:6px 0}
+  .datatable table{border-collapse:collapse;width:100%;margin-top:8px}
+  .datatable th,.datatable td{border:1px solid #E3E8F1;padding:7px 10px;text-align:left}
+  .datatable th{background:#F5F7FB}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .gate .g-foot,.gate .g-foot span{color:#5C6680}
 </style>
 </head>
 <body data-lib="bl">
+<a class="skip" href="#main">Skip to content</a>
 
 <!-- ================= LANDING / PASSWORD GATE ================= -->
 <div class="gate" id="gate">
@@ -285,7 +301,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     <div class="ground"></div>
     <canvas id="gFolio" width="19" height="28"></canvas>
   </div>
-  <div class="g-box">
+  <div class="g-box" id="main" role="region" aria-label="Start the Newspaper Game">
     <div class="g-eyebrow"><b>ReVerDi</b> · A research game on reading and climate</div>
     <h1>Good news: reading shared cultural heritage is a <em>sustainable choice</em>.</h1>
     <p class="g-lede">One library copy serves many readers, so each reading carries only a small footprint. This short game shows what drives the emissions of a single newspaper reading, and how your own choices change them. Built on life-cycle data from three national libraries.</p>
@@ -316,6 +332,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
     <div class="g-foot">
       <a href="../index.html">← Back to the ReVerDi site</a>
       <span>Research pilot · figures are preliminary</span>
+      <a href="accessible-results.html#game">Text version without the game</a>
     </div>
   </div>
 </div>
@@ -338,7 +355,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
 <section id="stageSec">
   <div class="wrap">
     <div class="stage">
-      <canvas id="game" width="800" height="450"></canvas>
+      <canvas id="game" width="800" height="450" role="img" aria-label="Platform game: Folio walks through a library world and makes three decisions. A text version of the results is on the accessible results page."></canvas>
       <canvas id="ui"></canvas>
       <div class="hud">
         <div class="hud-l">

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessibility statement · ReVerDi</title>
+<meta name="description" content="Accessibility statement for the ReVerDi project website.">
+<style>
+  /* Accessible version: WCAG 2.2 AAA target.
+     Text contrast at least 7:1, no colour-only information, no motion,
+     text resizes to 200 % without loss, every chart given as a table. */
+  :root{--ink:#111827;--navy:#14204A;--link:#1A3D99;--line:#9AA3B8;--bg:#FFFFFF;--soft:#F3F5F9}
+  *{box-sizing:border-box}
+  html{font-size:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:1.125rem;line-height:1.7;letter-spacing:.01em}
+  .wrap{max-width:46rem;margin:0 auto;padding:0 1.25rem}
+  .skip{position:absolute;left:-9999px;top:.5rem;background:#fff;color:var(--navy);font-weight:700;padding:.6rem 1rem;border:3px solid var(--navy)}
+  .skip:focus{left:1rem}
+  a{color:var(--link);text-decoration:underline;text-underline-offset:3px}
+  a:hover{text-decoration-thickness:3px}
+  :focus-visible{outline:4px solid #000;outline-offset:3px;box-shadow:0 0 0 7px #FFD700}
+  header{border-bottom:2px solid var(--line);padding:1rem 0}
+  header .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem 1.5rem}
+  .brand{font-weight:800;font-size:1.25rem;color:var(--navy);text-decoration:none}
+  header nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.25rem 1.25rem}
+  header nav a{display:inline-block;padding:.35rem 0}
+  h1{font-size:2.25rem;line-height:1.2;color:var(--navy);margin:2.5rem 0 1rem}
+  h2{font-size:1.6rem;line-height:1.3;color:var(--navy);margin:3rem 0 .75rem;padding-top:1.5rem;border-top:2px solid var(--line)}
+  h3{font-size:1.25rem;color:var(--navy);margin:2rem 0 .5rem}
+  p,li{max-width:70ch}
+  ul.points{padding-left:1.4rem}
+  ul.points li{margin:.4rem 0}
+  .summary{background:var(--soft);border:2px solid var(--line);padding:1rem 1.25rem;margin:1.5rem 0}
+  .summary h2{border:0;margin:0 0 .5rem;padding:0;font-size:1.3rem}
+  table{border-collapse:collapse;width:100%;margin:1rem 0 .5rem;font-size:1rem}
+  caption{text-align:left;font-weight:700;margin-bottom:.5rem;color:var(--navy)}
+  th,td{border:2px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top}
+  thead th{background:var(--soft)}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .note{font-size:1rem}
+  .toc{margin:1.5rem 0}
+  .toc ol{padding-left:1.4rem}
+  footer{border-top:2px solid var(--line);margin-top:4rem;padding:1.5rem 0 3rem;font-size:1rem}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:40rem){h1{font-size:1.85rem} table{font-size:.95rem} th,td{padding:.45rem .5rem}}
+  @media print{header nav,.skip{display:none} a{color:#000}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="../index.html">ReVerDi</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="accessible-results.html">Accessible results</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <h1>Accessibility statement</h1>
+    <p>We want everyone to be able to use this website, including people who use a screen reader, a keyboard, magnification or other assistive technology.</p>
+
+    <h2 id="standard">Standard</h2>
+    <p>The website aims to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. The page <a href="accessible-results.html">Main results in plain language</a> aims to meet level AAA. It has stronger contrast, larger text, plain language, and tables instead of charts.</p>
+
+    <h2 id="done">What we have done</h2>
+    <ul class="points">
+      <li>All pages can be used with a keyboard, with a visible focus outline and a “Skip to content” link.</li>
+      <li>Text meets the contrast ratios of WCAG 2.2 AA. Information does not rely on colour alone.</li>
+      <li>Pages use headings, landmarks and labelled buttons for screen readers.</li>
+      <li>Charts on the results page come with the same data as a table.</li>
+      <li>Animation stops when your device is set to reduce motion.</li>
+      <li>We test the pages with the automated checker axe-core and by keyboard. Last check: 14 October 2026.</li>
+    </ul>
+
+    <h2 id="limits">Known limitations</h2>
+    <ul class="points">
+      <li><strong>The Newspaper Game</strong> is a visual platform game. It works with a keyboard, but a screen reader cannot follow it. Its content is available <a href="accessible-results.html#game">as text</a>.</li>
+      <li><strong>Interactive maps and charts</strong> on the Wikimedia page show details on mouse hover. The same findings are given in the text and in the <a href="accessible-results.html#heritage">accessible results</a>.</li>
+      <li><strong>The Library 2050 scenarios</strong> page is an experimental visual page. Its scenario brief is available as a PDF.</li>
+      <li>Some partner logos and older PDF documents come from third parties and may not be fully accessible.</li>
+    </ul>
+
+    <h2 id="contact">Feedback and contact</h2>
+    <p>If something on this website does not work for you, please tell us. We will try to send you the information in a form that suits you.</p>
+    <p>Dr. Matthias Sahli, Bern University of Applied Sciences, <a href="mailto:matthias.sahli@bfh.ch">matthias.sahli@bfh.ch</a></p>
+    <p class="note">Statement prepared on 14 October 2026.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 ReVerDi consortium · <a href="../index.html">Home</a> · <a href="accessible-results.html">Accessible results</a></p>
+  </div>
+</footer>
+</body>
+</html>

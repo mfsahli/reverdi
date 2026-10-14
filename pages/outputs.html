@@ -35,7 +35,8 @@
   .phead p{color:#B9C4DE;font-size:17px;max-width:680px}
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
   .crumb a{color:var(--lblue)}
-  main{padding:44px 0 20px}
+  main{padding:0 0 20px}
+  main > .phead{margin-bottom:44px}
 
   /* pillar legend + filter */
   .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:18px}
@@ -63,9 +64,9 @@
   .output p{font-size:14px;color:var(--muted);margin-top:7px}
   .tags{margin-top:9px;display:flex;gap:7px;flex-wrap:wrap}
   .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
-  .t-env{background:#E6F0EB;color:#3E6F5B}.t-econ{background:#FAEBDD;color:#A65F22}.t-soc{background:#EEEBF5;color:#5E5083}
+  .t-env{background:#E6F0EB;color:#3E6F5B}.t-econ{background:#FAEBDD;color:#8E4F1A}.t-soc{background:#EEEBF5;color:#5E5083}
   .badge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
-  .b-pub{background:#E6F4EA;color:#1E7B45}.b-rev{background:#E7EEFB;color:#2456C7}.b-prep{background:#FAEBDD;color:#A65F22}
+  .b-pub{background:#E6F4EA;color:#1E7B45}.b-rev{background:#E7EEFB;color:#2456C7}.b-prep{background:#FAEBDD;color:#8E4F1A}
   .more{display:inline-block;margin-top:10px;font-weight:700;font-size:13.5px;color:#2456C7}
   footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
   footer a{color:var(--lblue)}
@@ -91,9 +92,26 @@
   .new{display:inline-block;font-size:11px;font-weight:700;color:#2F6FDB;letter-spacing:.01em;margin-left:2px}
 
   :root{--maxw:900px}
+
+  /* ===== accessibility (WCAG 2.2 AA), 2026-10 ===== */
+  .skip{position:absolute;left:-9999px;top:8px;z-index:1000;background:#fff;color:#1D2B5E;font-weight:700;padding:10px 16px;border-radius:8px}
+  .skip:focus{left:16px;outline:3px solid #2F6FDB;outline-offset:2px}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2F6FDB;outline-offset:2px;border-radius:4px}
+  .crumb a,main p a,.lead a,p.body a,footer a{text-decoration:underline;text-underline-offset:2px}
+  .datatable{margin:10px 0 4px;font-size:14px;text-align:left}
+  .datatable summary{cursor:pointer;font-weight:700;color:#2456C7;padding:6px 0}
+  .datatable table{border-collapse:collapse;width:100%;margin-top:8px}
+  .datatable th,.datatable td{border:1px solid #E3E8F1;padding:7px 10px;text-align:left}
+  .datatable th{background:#F5F7FB}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .k{font-size:19px}
+  .ic-bar:focus-visible{outline:3px solid #2F6FDB}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
   <div class="nav-inner">
@@ -113,6 +131,7 @@
   </div>
 </header>
 
+<main id="main">
 <section class="phead">
   <div class="wrap">
     <div class="crumb"><a href="../index.html">Home</a> · Outputs</div>
@@ -122,13 +141,14 @@
   </div>
 </section>
 
-<main>
+
+<h2 class="sr-only">Publications and outputs</h2>
   <div class="wrap">
     <div class="legend">
       <span><span class="ldot env"></span> Environmental</span>
       <span><span class="ldot econ"></span> Economic</span>
       <span><span class="ldot soc"></span> Social</span>
-      <span style="color:#9aa6c4">· a filled dot means the output addresses that pillar</span>
+      <span style="color:#6B7593">· a filled dot means the output addresses that pillar</span>
     </div>
 
     <div class="filterbar">
@@ -256,7 +276,7 @@
 
 <footer>
   <div class="wrap foot-in">
-    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a> · <a href="accessible-results.html">Accessible results</a> · <a href="accessibility.html">Accessibility</a></span>
     <span>Environmental · Economic · Social</span>
   </div>
 </footer>

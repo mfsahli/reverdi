@@ -33,7 +33,8 @@
   .phead p{color:#B9C4DE;font-size:17px;max-width:640px}
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
   .crumb a{color:var(--lblue)}
-  main{padding:52px 0 20px}
+  main{padding:0 0 20px}
+  main > .phead{margin-bottom:52px}
   .split{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
   @media(max-width:760px){.split{grid-template-columns:1fr;gap:20px}}
   .split img{max-width:100%;height:auto}
@@ -43,7 +44,7 @@
   @media(max-width:760px){.cards{grid-template-columns:1fr}}
   .card{border:1px solid var(--border);border-radius:14px;padding:20px 22px;background:#fff}
   .card .k{display:inline-flex;width:38px;height:38px;border-radius:9px;align-items:center;justify-content:center;font-weight:800;color:#fff;margin-bottom:10px}
-  .card h4{font-size:16px;color:var(--navy);margin-bottom:4px}
+  .card h4,.card h3{font-size:16px;color:var(--navy);margin-bottom:4px}
   .card .sub{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
   .card p{font-size:14px;color:var(--muted)}
   h2{font-size:24px;color:var(--navy);font-weight:800;margin:34px 0 6px}
@@ -51,7 +52,7 @@
   .keys{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
   @media(max-width:680px){.keys{grid-template-columns:1fr}}
   .keycard{border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:16px 18px;background:var(--card)}
-  .keycard h4{font-size:15px;color:var(--navy);margin-bottom:3px}
+  .keycard h4,.keycard h3{font-size:15px;color:var(--navy);margin-bottom:3px}
   .keycard p{font-size:14px;color:var(--muted)}
   .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14.5px;margin-top:10px}
   .btn.primary{background:var(--yellow);color:#fff}
@@ -96,9 +97,26 @@
 
   :root{--maxw:900px}
   .venn-tip b{color:var(--accent-l)}
+
+  /* ===== accessibility (WCAG 2.2 AA), 2026-10 ===== */
+  .skip{position:absolute;left:-9999px;top:8px;z-index:1000;background:#fff;color:#1D2B5E;font-weight:700;padding:10px 16px;border-radius:8px}
+  .skip:focus{left:16px;outline:3px solid #2F6FDB;outline-offset:2px}
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2F6FDB;outline-offset:2px;border-radius:4px}
+  .crumb a,main p a,.lead a,p.body a,footer a{text-decoration:underline;text-underline-offset:2px}
+  .datatable{margin:10px 0 4px;font-size:14px;text-align:left}
+  .datatable summary{cursor:pointer;font-weight:700;color:#2456C7;padding:6px 0}
+  .datatable table{border-collapse:collapse;width:100%;margin-top:8px}
+  .datatable th,.datatable td{border:1px solid #E3E8F1;padding:7px 10px;text-align:left}
+  .datatable th{background:#F5F7FB}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .k{font-size:19px}
+  .ic-bar:focus-visible{outline:3px solid #2F6FDB}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
   <div class="nav-inner">
@@ -118,6 +136,7 @@
   </div>
 </header>
 
+<main id="main">
 <section class="phead">
   <div class="wrap">
     <div class="crumb"><a href="../index.html">Home</a> · Method</div>
@@ -127,7 +146,7 @@
   </div>
 </section>
 
-<main>
+
   <div class="wrap">
     <div class="split">
       <div>
@@ -135,7 +154,7 @@
         <div class="formula">LCSA&nbsp; = &nbsp;LCA&nbsp; + &nbsp;LCC&nbsp; + &nbsp;S-LCA</div>
       </div>
       <div class="venn-wrap">
-        <svg class="venn" viewBox="0 0 380 360" role="img" aria-label="Interactive diagram: the three sustainability pillars — environmental (LCA), economic (LCC) and social (S-LCA) — combine into LCSA. Each pillar links to its results.">
+        <svg class="venn" viewBox="0 0 380 360" role="group" aria-label="Interactive diagram: the three sustainability pillars — environmental (LCA), economic (LCC) and social (S-LCA) — combine into LCSA. Each pillar links to its results.">
           <a href="lcsa-results.html#env" data-tip="<b>Environmental — LCA</b><br>energy, CO₂, water &amp; resources across the life cycle<br>click to see the results →">
             <circle cx="140" cy="140" r="100" fill="#4F8A72" fill-opacity=".5" style="mix-blend-mode:multiply"/>
             <text class="sub" x="83" y="110" text-anchor="middle">LCA</text>
@@ -160,9 +179,10 @@
     </div>
 
     <div class="cards">
-      <a class="card" href="lcsa-results.html#env"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h4>Environmental</h4><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p><span class="go">See results →</span></a>
-      <a class="card" href="lcsa-results.html#econ"><span class="k" style="background:var(--yellow);color:#fff">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p><span class="go">See results →</span></a>
-      <a class="card" href="lcsa-results.html#social"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h4>Social</h4><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p><span class="go">See results →</span></a>
+      <h2 class="sr-only">The three pillars</h2>
+      <a class="card" href="lcsa-results.html#env"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h3>Environmental</h3><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p><span class="go">See results →</span></a>
+      <a class="card" href="lcsa-results.html#econ"><span class="k" style="background:var(--yellow);color:#fff">€</span><div class="sub">LCC</div><h3>Economic</h3><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p><span class="go">See results →</span></a>
+      <a class="card" href="lcsa-results.html#social"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h3>Social</h3><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p><span class="go">See results →</span></a>
     </div>
 
     <h2>Why combine them?</h2>
@@ -170,10 +190,10 @@
 
     <h2>How it works</h2>
     <div class="keys">
-      <div class="keycard"><h4>Functional unit</h4><p>A clear, quantifiable unit of a library's service — e.g. one year of operating a collection, or one reading session of a newspaper — so physical and digital can be compared like for like.</p></div>
-      <div class="keycard"><h4>System boundaries</h4><p>An explicit definition of what is in and out of scope, from acquisition and storage to digitisation and access.</p></div>
-      <div class="keycard"><h4>Consistent indicators</h4><p>Standardised environmental indicators, life-cycle costs, and a set of social indicators adapted for libraries.</p></div>
-      <div class="keycard"><h4>Interpretation</h4><p>Results are read together to surface hotspots, trade-offs and “low-hanging fruit” for improvement.</p></div>
+      <div class="keycard"><h3>Functional unit</h3><p>A clear, quantifiable unit of a library's service — e.g. one year of operating a collection, or one reading session of a newspaper — so physical and digital can be compared like for like.</p></div>
+      <div class="keycard"><h3>System boundaries</h3><p>An explicit definition of what is in and out of scope, from acquisition and storage to digitisation and access.</p></div>
+      <div class="keycard"><h3>Consistent indicators</h3><p>Standardised environmental indicators, life-cycle costs, and a set of social indicators adapted for libraries.</p></div>
+      <div class="keycard"><h3>Interpretation</h3><p>Results are read together to surface hotspots, trade-offs and “low-hanging fruit” for improvement.</p></div>
     </div>
 
     <a class="btn primary" href="lcsa-results.html">See the first results →</a>
@@ -183,7 +203,7 @@
 
 <footer>
   <div class="wrap foot-in">
-    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a></span>
+    <span>© 2026 ReVerDi consortium · <a href="../index.html">Back to home</a> · <a href="accessible-results.html">Accessible results</a> · <a href="accessibility.html">Accessibility</a></span>
     <span>Environmental · Economic · Social</span>
   </div>
 </footer>
