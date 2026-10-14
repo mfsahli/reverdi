@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ReVerDi — The LCSA method</title>
 <style>
-  :root{--navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;--violet:#7C5CBF;
+  :root{--navy:#1D2B5E;--ink:#1F2A44;--muted:#5C6680;--yellow:#B08445;--teal:#4F8A72;--violet:#7A6AA0;
     --lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -28,7 +28,7 @@
     .nav-links.open{display:flex}
     .nav-links a{padding:12px 24px}
   }
-  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#2A3C75 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
   .phead h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
   .phead p{color:#B9C4DE;font-size:17px;max-width:640px}
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
@@ -54,7 +54,7 @@
   .keycard h4{font-size:15px;color:var(--navy);margin-bottom:3px}
   .keycard p{font-size:14px;color:var(--muted)}
   .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14.5px;margin-top:10px}
-  .btn.primary{background:var(--yellow);color:var(--navy)}
+  .btn.primary{background:var(--yellow);color:#fff}
   .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:12px}
   footer{background:var(--navy);color:#B9C4DE;padding:40px 0;margin-top:44px;font-size:14px}
   footer a{color:var(--lblue)}
@@ -83,6 +83,19 @@
   .explorer-link .xdot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
   .nav-links{align-items:center}
   @media(max-width:860px){.nav-links .explorer-link{margin:10px 24px;align-self:flex-start}}
+
+  /* ===== 2026-10 palette: one blue, muted pillar colours, text and cards share one width ===== */
+  :root{--accent:#3B5BA5;--accent-l:#A9BCE8}
+  .eyebrow{color:var(--accent)}
+  .brand .dot{background:var(--accent)}
+  .btn.primary{background:var(--navy);color:#fff}
+  .phead .eyebrow,.hero .eyebrow{color:var(--accent-l)}
+  .lead,p.body,.phead p,.news-item p,.teaser p{max-width:none}
+  .explorer-link .xdot{display:none}
+  .new{display:inline-block;font-size:11px;font-weight:700;color:#2F6FDB;letter-spacing:.01em;margin-left:2px}
+
+  :root{--maxw:900px}
+  .venn-tip b{color:var(--accent-l)}
 </style>
 </head>
 <body>
@@ -97,7 +110,7 @@
       <a href="lcsa-results.html">Results</a>
       <a href="open-heritage.html">Wikimedia</a>
       <a href="outputs.html">Outputs</a>
-      <a class="explorer-link" href="national-library-explorer-v4.html"><span class="xdot"></span>Library Game</a>
+      <a class="explorer-link" href="../game/national-library-explorer-v4.html">Library Game <span class="new">New</span></a>
       <a href="../index.html#team">Team</a>
       <a href="../index.html#news">News</a>
       <a href="../index.html#contact">Contact</a>
@@ -124,17 +137,17 @@
       <div class="venn-wrap">
         <svg class="venn" viewBox="0 0 380 360" role="img" aria-label="Interactive diagram: the three sustainability pillars — environmental (LCA), economic (LCC) and social (S-LCA) — combine into LCSA. Each pillar links to its results.">
           <a href="lcsa-results.html#env" data-tip="<b>Environmental — LCA</b><br>energy, CO₂, water &amp; resources across the life cycle<br>click to see the results →">
-            <circle cx="140" cy="140" r="100" fill="#4FC2C9" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <circle cx="140" cy="140" r="100" fill="#4F8A72" fill-opacity=".5" style="mix-blend-mode:multiply"/>
             <text class="sub" x="83" y="110" text-anchor="middle">LCA</text>
             <text class="lbl" x="92" y="125" text-anchor="middle" font-size="11">Environmental</text>
           </a>
           <a href="lcsa-results.html#econ" data-tip="<b>Economic — LCC</b><br>investment &amp; operating costs and the value created<br>click to see the results →">
-            <circle cx="240" cy="140" r="100" fill="#E8B83A" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <circle cx="240" cy="140" r="100" fill="#B08445" fill-opacity=".5" style="mix-blend-mode:multiply"/>
             <text class="sub" x="300" y="110" text-anchor="middle">LCC</text>
             <text class="lbl" x="300" y="125" text-anchor="middle" font-size="12">Economic</text>
           </a>
           <a href="lcsa-results.html#social" data-tip="<b>Social — S-LCA</b><br>access, inclusion, working conditions &amp; heritage<br>click to see the results →">
-            <circle cx="190" cy="225" r="100" fill="#7C5CBF" fill-opacity=".5" style="mix-blend-mode:multiply"/>
+            <circle cx="190" cy="225" r="100" fill="#7A6AA0" fill-opacity=".5" style="mix-blend-mode:multiply"/>
             <text class="sub" x="190" y="300" text-anchor="middle">S-LCA</text>
             <text class="lbl" x="190" y="315" text-anchor="middle" font-size="12">Social</text>
           </a>
@@ -148,7 +161,7 @@
 
     <div class="cards">
       <a class="card" href="lcsa-results.html#env"><span class="k" style="background:var(--teal)">E</span><div class="sub">LCA</div><h4>Environmental</h4><p>Life Cycle Assessment — energy, CO₂, water and resource use across the full life cycle.</p><span class="go">See results →</span></a>
-      <a class="card" href="lcsa-results.html#econ"><span class="k" style="background:var(--yellow);color:var(--navy)">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p><span class="go">See results →</span></a>
+      <a class="card" href="lcsa-results.html#econ"><span class="k" style="background:var(--yellow);color:#fff">€</span><div class="sub">LCC</div><h4>Economic</h4><p>Life Cycle Costing — investment and operating costs (CAPEX / OPEX) and the value created.</p><span class="go">See results →</span></a>
       <a class="card" href="lcsa-results.html#social"><span class="k" style="background:var(--violet)">S</span><div class="sub">S-LCA</div><h4>Social</h4><p>Social LCA — access, inclusion, working conditions and the safeguarding of cultural heritage.</p><span class="go">See results →</span></a>
     </div>
 

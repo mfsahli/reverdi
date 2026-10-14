@@ -10,8 +10,8 @@
 <title>ReVerDi — Wikimedia: open cultural heritage</title>
 <style>
   :root{
-    --navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;
-    --violet:#7C5CBF;--lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
+    --navy:#1D2B5E;--ink:#1F2A44;--muted:#5C6680;--yellow:#B08445;--teal:#4F8A72;
+    --violet:#7A6AA0;--lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:980px;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -34,7 +34,7 @@
     .nav-links a{padding:12px 24px}
   }
 
-  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#2A3C75 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
   .phead h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
   .phead p{color:#B9C4DE;font-size:17px;max-width:680px}
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
@@ -70,7 +70,7 @@
   .drivers{margin:18px 0}
   .driver{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
   .driver .ar{font-weight:800;font-size:15px;flex:0 0 20px}
-  .driver .up{color:#1E7B45}.driver .dn{color:#A32D2D}.driver .di{color:#9A6B12}
+  .driver .up{color:#1E7B45}.driver .dn{color:#A32D2D}.driver .di{color:#8A6534}
   .driver p{font-size:14.5px;color:var(--ink)}
   .plain{background:var(--card2);border-radius:12px;padding:16px 20px;margin-top:18px;font-size:15px;color:var(--navy);font-weight:600}
   .chips{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
@@ -78,7 +78,7 @@
   .chip .v{font-size:22px;font-weight:800;color:var(--yellow)}
   .chip .l{font-size:12px;color:#B9C4DE;margin-top:2px}
 
-  .teaser{background:linear-gradient(180deg,#141f3a,#0e1a40);color:#fff;border-radius:18px;padding:30px 32px;margin:40px 0}
+  .teaser{background:linear-gradient(180deg,#18254F,#1D2B5E);color:#fff;border-radius:18px;padding:30px 32px;margin:40px 0}
   .teaser .ptag{background:rgba(255,255,255,.12);color:#fff}
   .teaser h2{color:#fff}
   .teaser p{color:#B9C4DE;font-size:15.5px;max-width:680px;margin-top:8px}
@@ -136,7 +136,7 @@
   .valbox{position:relative;transition:.2s}
   .valbox.dim{opacity:.4;filter:grayscale(.4);pointer-events:none}
   .ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:3px 2px 0}
-  .vlock{display:none;margin:12px 0 0;font-size:13px;font-weight:700;color:#9A6B12}
+  .vlock{display:none;margin:12px 0 0;font-size:13px;font-weight:700;color:#8A6534}
   .perlib{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
   .pl{flex:1 1 150px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px}
   .pl .pln{display:block;font-size:12px;color:var(--muted)}
@@ -216,6 +216,21 @@
   .explorer-link .xdot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
   .nav-links{align-items:center}
   @media(max-width:860px){.nav-links .explorer-link{margin:10px 24px;align-self:flex-start}}
+
+  /* ===== 2026-10 palette: one blue, muted pillar colours, text and cards share one width ===== */
+  :root{--accent:#3B5BA5;--accent-l:#A9BCE8}
+  .eyebrow{color:var(--accent)}
+  .brand .dot{background:var(--accent)}
+  .btn.primary{background:var(--navy);color:#fff}
+  .phead .eyebrow,.hero .eyebrow{color:var(--accent-l)}
+  .lead,p.body,.phead p,.news-item p,.teaser p{max-width:none}
+  .explorer-link .xdot{display:none}
+  .new{display:inline-block;font-size:11px;font-weight:700;color:#2F6FDB;letter-spacing:.01em;margin-left:2px}
+
+  :root{--maxw:900px}
+  .stat .v,.chip .v,.rm-tip b,.pgc-tip b{color:var(--accent-l)}
+  .rq{border-left-color:var(--accent)}
+  .teaser .wip{color:var(--accent-l)}
 </style>
 <noscript><style>.reveal{opacity:1;transform:none}.lfill{width:auto}</style></noscript>
 </head>
@@ -231,7 +246,7 @@
       <a href="lcsa-results.html">Results</a>
       <a href="open-heritage.html">Wikimedia</a>
       <a href="outputs.html">Outputs</a>
-      <a class="explorer-link" href="national-library-explorer-v4.html"><span class="xdot"></span>Library Game</a>
+      <a class="explorer-link" href="../game/national-library-explorer-v4.html">Library Game <span class="new">New</span></a>
       <a href="../index.html#team">Team</a>
       <a href="../index.html#news">News</a>
       <a href="../index.html#contact">Contact</a>
@@ -368,10 +383,10 @@
       <p class="body" style="font-weight:700;color:var(--navy);margin-top:18px">What goes with reuse (image-level analysis, holding content type and library constant)</p>
       <div class="lchart">
         <div class="lrow"><div class="lab"><b>Public domain label</b><span>Strongest association, in every channel we observe, and at both margins</span></div><div class="ltrack"><div class="lfill" style="background:#1E7B45" data-w="94">Strong &#9650;</div></div></div>
-        <div class="lrow"><div class="lab"><b>JPEG format</b><span>More likely to be reused than TIFF and other formats; listing is the exception</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="72">&#9650;</div></div></div>
-        <div class="lrow"><div class="lab"><b>Years online</b><span>Each additional year online &#8776; +31 % odds of reuse, and more reuses once reused</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="60">+31 % / yr</div></div></div>
-        <div class="lrow"><div class="lab"><b>Pixel count</b><span>No clear role in whether an image is reused at all; more news reuse and more listings</span></div><div class="ltrack"><div class="lfill" style="background:#9A6B12" data-w="34">&#9670; mixed</div></div></div>
-        <div class="lrow"><div class="lab"><b>&#8230;once an image circulates</b><span>Files with more pixels attract more reuses</span></div><div class="ltrack"><div class="lfill" style="background:#2E7D4F" data-w="44">&#9650; intensity</div></div></div>
+        <div class="lrow"><div class="lab"><b>JPEG format</b><span>More likely to be reused than TIFF and other formats; listing is the exception</span></div><div class="ltrack"><div class="lfill" style="background:#4F8A72" data-w="72">&#9650;</div></div></div>
+        <div class="lrow"><div class="lab"><b>Years online</b><span>Each additional year online &#8776; +31 % odds of reuse, and more reuses once reused</span></div><div class="ltrack"><div class="lfill" style="background:#4F8A72" data-w="60">+31 % / yr</div></div></div>
+        <div class="lrow"><div class="lab"><b>Pixel count</b><span>No clear role in whether an image is reused at all; more news reuse and more listings</span></div><div class="ltrack"><div class="lfill" style="background:#8A6534" data-w="34">&#9670; mixed</div></div></div>
+        <div class="lrow"><div class="lab"><b>&#8230;once an image circulates</b><span>Files with more pixels attract more reuses</span></div><div class="ltrack"><div class="lfill" style="background:#4F8A72" data-w="44">&#9650; intensity</div></div></div>
         <div class="lrow"><div class="lab"><b>Content</b><span>Posters are the most reused material in every channel; maps, book pages and prints are listed for sale far more often</span></div><div class="ltrack"><div class="lfill" style="background:#3B6EA5" data-w="52">&#9670; by type</div></div></div>
       </div>
       <p class="note">Logit and count models with content-type indicators and national-library fixed effects. Bar widths indicate relative strength, not exact odds; only &#8220;years online&#8221; is quantified precisely. Upload characteristics are institutional choices, so all estimates are conditional correlations rather than causal effects. Public-domain status holds in every robustness check; the format result weakens once the creation cohort is held fixed.</p>
@@ -537,7 +552,7 @@
     var t=el('text',{x:ml-7,y:Y(v)+3.5,'text-anchor':'end'});t.textContent=v.toFixed(2);svg.appendChild(t);}
   years.forEach(function(y,i){var t=el('text',{x:X(i),y:H-mb+16,'text-anchor':'middle'});t.textContent=y;svg.appendChild(t);});
   var xc=X(4)+(X(5)-X(4))*0.85; // Nov 2022
-  svg.appendChild(el('line',{x1:xc,x2:xc,y1:mt,y2:H-mb,stroke:'#0E1A40','stroke-dasharray':'4 3','stroke-width':1}));
+  svg.appendChild(el('line',{x1:xc,x2:xc,y1:mt,y2:H-mb,stroke:'#1D2B5E','stroke-dasharray':'4 3','stroke-width':1}));
   var lt=el('text',{x:xc+5,y:mt+10});lt.textContent='ChatGPT · Nov 2022';svg.appendChild(lt);
   [[other,'#1E4B7E','All other domains'],[stock,'#C0392B','Stock platform']].forEach(function(s,k){
     svg.appendChild(el('polyline',{points:s[0].map(function(v,i){return X(i)+','+Y(v);}).join(' '),fill:'none',stroke:s[1],'stroke-width':2.2,'stroke-linejoin':'round'}));
@@ -567,18 +582,18 @@
   function showTip(html,ev){ tip.innerHTML=html; var r=chart.getBoundingClientRect(); tip.style.left=(ev.clientX-r.left)+'px'; tip.style.top=(ev.clientY-r.top)+'px'; tip.style.opacity=1; }
   function hideTip(){ tip.style.opacity=0; }
   var libNames=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
-  var libCols=['#3B6EA5','#E0894A','#0E1A40'];
+  var libCols=['#3B6EA5','#E0894A','#1D2B5E'];
   function legend(items){ leg.style.display='flex'; leg.innerHTML=items.map(function(it){return '<span><i style="background:'+it[1]+'"></i>'+it[0]+'</span>';}).join(''); }
   function clearChart(){ chart.querySelectorAll('.pgc-plot,.pgt-wrap').forEach(function(e){e.remove();}); }
   function mkPlot(){ var pl=document.createElement('div'); pl.className='pgc-plot'; chart.appendChild(pl); return pl; }
   function renderFormat(){
     fig.style.display='none'; chart.style.display='block';
-    legend([['TIFF','#0E1A40'],['JPEG / other','#93BCE6']]);
+    legend([['TIFF','#1D2B5E'],['JPEG / other','#93BCE6']]);
     clearChart(); var pl=mkPlot();
     var data=[[libNames[0],3,97],[libNames[1],0,100],[libNames[2],90,10]];
     data.forEach(function(row){
       var col=document.createElement('div'); col.className='pgc-col';
-      [['JPEG / other',row[2],'#93BCE6'],['TIFF',row[1],'#0E1A40']].forEach(function(sg){
+      [['JPEG / other',row[2],'#93BCE6'],['TIFF',row[1],'#1D2B5E']].forEach(function(sg){
         var d=document.createElement('div'); d.className='pgc-seg'; d.style.height=sg[1]+'%'; d.style.background=sg[2];
         if(sg[1]>=8) d.textContent=sg[1]+'%';
         d.addEventListener('mousemove',function(ev){showTip('<b>'+row[0]+'</b> · '+sg[0]+' '+sg[1]+'%',ev);});
@@ -610,7 +625,7 @@
   }
   function renderRights(){
     fig.style.display='none'; chart.style.display='block';
-    var cols={'Public domain':'#0E1A40','CC0':'#5A93D4','No known restrictions':'#93BCE6','Open Gov. Licence':'#E0894A','CC BY / BY-SA':'#C9A227'};
+    var cols={'Public domain':'#1D2B5E','CC0':'#5A93D4','No known restrictions':'#93BCE6','Open Gov. Licence':'#E0894A','CC BY / BY-SA':'#C9A227'};
     legend([['Public domain',cols['Public domain']],['CC0',cols['CC0']],['No known restrictions',cols['No known restrictions']],['Open Gov. Licence',cols['Open Gov. Licence']],['CC BY / BY-SA',cols['CC BY / BY-SA']]]);
     clearChart(); var pl=mkPlot();
     // exact shares (%) and file counts per library, from the Wikimedia census
@@ -679,7 +694,7 @@
   }
   function renderTiming(){
     fig.style.display='none'; chart.style.display='block'; clearChart();
-    var libs=[['BL','British Library','#3B6EA5'],['KB','Koninklijke Bibliotheek','#E0894A'],['NB','Swiss National Library','#0E1A40']];
+    var libs=[['BL','British Library','#3B6EA5'],['KB','Koninklijke Bibliotheek','#E0894A'],['NB','Swiss National Library','#1D2B5E']];
     var years=[]; for(var y=2012;y<=2025;y++) years.push(y);
     var A={BL:[115,6569,22823,13424,1001,579,39021,1206,459,714,3183,568,316,273],
            KB:[27,225,1300,3793,935,5821,1104,1381,10694,1812,2002,1085,280,27],
@@ -712,7 +727,7 @@
         var t=el('text',{x:ml-7,y:Y(v)+3.5,'text-anchor':'end'}); t.textContent=v>=1000?(v/1000)+'k':v; svg.appendChild(t);
       }
       years.forEach(function(yr,i){ if(i%2===0||i===years.length-1){ var t=el('text',{x:X(i),y:H-mb+16,'text-anchor':'middle'}); t.textContent=yr; svg.appendChild(t); }});
-      var guide=el('line',{y1:mt,y2:H-mb,stroke:'#0E1A40','stroke-width':1,'stroke-dasharray':'3 3',opacity:0}); svg.appendChild(guide);
+      var guide=el('line',{y1:mt,y2:H-mb,stroke:'#1D2B5E','stroke-width':1,'stroke-dasharray':'3 3',opacity:0}); svg.appendChild(guide);
       libs.forEach(function(l){ if(!on[l[0]]) return;
         var pts=D[l[0]].map(function(v,i){ return X(i)+','+Y(v); }).join(' ');
         svg.appendChild(el('polyline',{points:pts,fill:'none',stroke:l[2],'stroke-width':2.2,'stroke-linejoin':'round'}));
@@ -762,7 +777,7 @@
   var ramps={
     BL:['#EAF1FB','#C6DCF3','#93BCE6','#5A93D4','#3B6EA5','#1E4B7E'],
     KB:['#FBEEDD','#F6D3A6','#EDAE63','#E0894A','#B96A2E','#8A4D1C'],
-    SNL:['#E4E7F0','#B9C0D8','#8A93B8','#59648F','#2E3A63','#0E1A40']};
+    SNL:['#E4E7F0','#B9C0D8','#8A93B8','#59648F','#2E3A63','#1D2B5E']};
   var th=[10,50,200,500,1000], labels=['1\u20139','10\u201349','50\u2013199','200\u2013499','500\u2013999','1000+'];
   var NODATA='#EEF2F9', cur='BL';
   function bucket(v){ if(!v) return -1; for(var i=0;i<th.length;i++){ if(v<th[i]) return i;} return th.length; }

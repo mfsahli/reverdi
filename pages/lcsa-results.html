@@ -12,8 +12,8 @@
 <title>ReVerDi — First results: Life Cycle Sustainability Assessment</title>
 <style>
   :root{
-    --navy:#0E1A40;--ink:#1F2A44;--muted:#5C6680;--yellow:#E8B83A;--teal:#4FC2C9;
-    --violet:#7C5CBF;--lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:960px;
+    --navy:#1D2B5E;--ink:#1F2A44;--muted:#5C6680;--yellow:#B08445;--teal:#4F8A72;
+    --violet:#7A6AA0;--lblue:#CADCFC;--card:#F5F7FB;--card2:#EEF2F9;--border:#E3E8F1;--bg:#FFFFFF;--maxw:960px;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -36,7 +36,7 @@
     .nav-links a{padding:12px 24px}
   }
 
-  .phead{background:radial-gradient(900px 380px at 85% -20%,#1c2c58 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
+  .phead{background:radial-gradient(900px 380px at 85% -20%,#2A3C75 0,var(--navy) 60%);color:#fff;padding:70px 0 56px}
   .phead h1{font-size:40px;font-weight:800;letter-spacing:-.02em;margin:.25em 0 .2em;line-height:1.08}
   .phead p{color:#B9C4DE;font-size:17px;max-width:660px}
   .crumb{font-size:13px;color:#93a1c4;margin-bottom:6px}
@@ -66,7 +66,7 @@
   .glam{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:30px;margin:44px 0 10px}
   .glam h2{margin-top:0}
   .btn{display:inline-block;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14.5px;margin-top:8px}
-  .btn.primary{background:var(--yellow);color:var(--navy)}
+  .btn.primary{background:var(--yellow);color:#fff}
   .btn.ghost{border:1px solid var(--border);color:var(--navy);margin-left:8px}
   .note{font-size:13px;color:var(--muted);font-style:italic;margin-top:14px}
   /* pillar sections + linked pills */
@@ -76,14 +76,14 @@
   .psec .peb{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--pcd);display:inline-flex;align-items:center;gap:8px}
   .psec .peb .d{width:11px;height:11px;border-radius:50%;background:var(--pc)}
   .psec h2{margin-top:3px}
-  .psec.env{--pc:#4FC2C9;--pcd:#177C74}
-  .psec.econ{--pc:#E8B83A;--pcd:#9A6B12}
-  .psec.social{--pc:#7C5CBF;--pcd:#543C86}
+  .psec.env{--pc:#4F8A72;--pcd:#3E6F5B}
+  .psec.econ{--pc:#B08445;--pcd:#8A6534}
+  .psec.social{--pc:#7A6AA0;--pcd:#5E5083}
   .scard{flex:1 1 150px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;border-left:4px solid var(--sc)}
   .scard .v{font-size:26px;font-weight:800;color:var(--scd)}
   .scard .l{font-size:12.5px;color:var(--muted);margin-top:2px}
-  .scard.econ{--sc:#E8B83A;--scd:#9A6B12}
-  .scard.soc{--sc:#7C5CBF;--scd:#543C86}
+  .scard.econ{--sc:#B08445;--scd:#8A6534}
+  .scard.soc{--sc:#7A6AA0;--scd:#5E5083}
   /* interactive chart */
   .ic{border:1px solid var(--border);border-radius:14px;background:#fff;padding:22px 24px 16px;margin:24px 0 8px}
   .ic-toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
@@ -124,7 +124,7 @@
   .atable tbody tr:last-child td{border-bottom:none}
   /* indicator category chips */
   .icats{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 2px}
-  .icat{font-size:12px;font-weight:600;color:#543C86;background:#F1ECFA;border:1px solid #E5DBF5;border-radius:999px;padding:5px 12px}
+  .icat{font-size:12px;font-weight:600;color:#5E5083;background:#EEEBF5;border:1px solid #E3DEEE;border-radius:999px;padding:5px 12px}
   /* jargon tooltip */
   .term{border-bottom:1px dotted #9aa6c4;cursor:help;position:relative}
   .term:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 9px);width:min(300px,78vw);background:var(--navy);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;letter-spacing:0;text-transform:none;padding:10px 13px;border-radius:9px;z-index:40;box-shadow:0 8px 22px rgba(20,32,58,.24)}
@@ -140,6 +140,20 @@
   .explorer-link .xdot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
   .nav-links{align-items:center}
   @media(max-width:860px){.nav-links .explorer-link{margin:10px 24px;align-self:flex-start}}
+
+  /* ===== 2026-10 palette: one blue, muted pillar colours, text and cards share one width ===== */
+  :root{--accent:#3B5BA5;--accent-l:#A9BCE8}
+  .eyebrow{color:var(--accent)}
+  .brand .dot{background:var(--accent)}
+  .btn.primary{background:var(--navy);color:#fff}
+  .phead .eyebrow,.hero .eyebrow{color:var(--accent-l)}
+  .lead,p.body,.phead p,.news-item p,.teaser p{max-width:none}
+  .explorer-link .xdot{display:none}
+  .new{display:inline-block;font-size:11px;font-weight:700;color:#2F6FDB;letter-spacing:.01em;margin-left:2px}
+
+  :root{--maxw:900px}
+  h2 .num{color:var(--accent)}
+  .stat .v,.ic-tip b{color:var(--accent-l)}
 </style>
 </head>
 <body>
@@ -154,7 +168,7 @@
       <a href="lcsa-results.html">Results</a>
       <a href="open-heritage.html">Wikimedia</a>
       <a href="outputs.html">Outputs</a>
-      <a class="explorer-link" href="national-library-explorer-v4.html"><span class="xdot"></span>Library Game</a>
+      <a class="explorer-link" href="../game/national-library-explorer-v4.html">Library Game <span class="new">New</span></a>
       <a href="../index.html#team">Team</a>
       <a href="../index.html#news">News</a>
       <a href="../index.html#contact">Contact</a>
@@ -202,7 +216,7 @@
         <div class="rc-legend">
           <span><i style="background:#3B6EA5"></i>British Library</span>
           <span><i style="background:#E0894A"></i>Koninklijke Bibliotheek</span>
-          <span><i style="background:#0E1A40"></i>Swiss National Library</span>
+          <span><i style="background:#1D2B5E"></i>Swiss National Library</span>
         </div>
         <div class="ic-title">Relative environmental impact by category</div>
         <div class="ic-unit">each library shown relative to the largest in that category (largest = 100 %)</div>
@@ -252,7 +266,7 @@
     </div>
 
     <div class="glam" id="glam">
-      <div class="eyebrow" style="color:#9A6B12">For the wider GLAM sector</div>
+      <div class="eyebrow" style="color:#8A6534">For the wider GLAM sector</div>
       <h2>Relevant beyond national libraries</h2>
       <p class="body" style="margin-top:6px">These insights are not only for national libraries. Any galleries, libraries, archives and museums (GLAM) that manage both physical and digital collections face the same trade-offs between environmental impact, cost and public value. The LCSA approach offers a transferable way to measure and compare them — and to make the case for openness and digital access.</p>
       <a class="btn primary" href="../index.html#contact">Get in touch</a>
@@ -272,7 +286,7 @@
 <script>
 (function(){
   var el=document.getElementById('icBars'); if(!el) return;
-  var colors=['#3B6EA5','#E0894A','#0E1A40'];
+  var colors=['#3B6EA5','#E0894A','#1D2B5E'];
   var libs=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
   var views={
     abs:{t:'Absolute greenhouse-gas emissions (2024)',u:'tonnes CO₂-eq per year',max:19500,
@@ -315,7 +329,7 @@
   var el=document.getElementById('rcPlot'); if(!el) return;
   var cats=['Greenhouse gas','Toxicity','Land use','Mineral resources','Water'];
   var libs=['British Library','Koninklijke Bibliotheek','Swiss National Library'];
-  var colors=['#3B6EA5','#E0894A','#0E1A40'];
+  var colors=['#3B6EA5','#E0894A','#1D2B5E'];
   var vals=[[100,100,100,100,100],[28.0,45.1,29.4,9.1,22.4],[10.4,13.6,33.7,4.3,26.1]];
   var tip=document.createElement('div'); tip.className='ic-tip'; el.appendChild(tip);
   var bars=[];
