@@ -284,6 +284,28 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
   .gate .g-foot,.gate .g-foot span{color:#5C6680}
+
+/* ---------------- light, friendly theme (2026-10-27, variant A: sky like the start page) ---------------- */
+:root{color-scheme:light;--bg0:#ffffff;--bg1:#E6EEF8;--card:#ffffff;--card2:#F3F7FC;--ink:#1D2B5E;--ink-2:#4A5576;--muted:#5C6680;--hair:rgba(29,43,94,.13)}
+body{background:linear-gradient(180deg,#a9d1f7 0,#d6eafc 360px,#eef6fe 900px,#f7fbff 100%);background-attachment:fixed}
+header.top{background:rgba(255,255,255,.80)}
+.backlink:hover{background:rgba(29,43,94,.05);border-color:rgba(29,43,94,.3)}
+.hud{background:linear-gradient(180deg,rgba(29,43,94,.92),rgba(29,43,94,.78))}
+.hud-l b,.hud-count span{color:#fff}
+.hud-l span,.hud-count{color:#C9D3EA}
+.panel{box-shadow:0 6px 24px rgba(29,43,94,.07)}
+.driver .k,.wbtn,.pillbtn.primary,.hud-steps i.on{color:#0b1020}
+.paper.soon{opacity:1}
+.paper.soon b{color:#4A5576}
+.paper.soon small{color:#5C6680}
+.paper.soon .pdfico span{background:#6B7593}
+.pdfico span{background:#B5443A}
+.ph{color:#8E4F1A;border-color:rgba(176,110,40,.5)}
+.pdfico{background:#fff;border-color:rgba(29,43,94,.2)}
+#rangeTip{background:#1D2B5E}
+footer{color:#5C6680}
+.reshead h2{color:#1D2B5E}
+.gate .g-eyebrow{letter-spacing:0;text-transform:none;font-size:15px;font-weight:700}
 </style>
 </head>
 <body data-lib="bl">
@@ -304,7 +326,7 @@ footer .wrap{display:flex;flex-direction:column;gap:5px}
   <div class="g-box" id="main" role="region" aria-label="Start the Newspaper Game">
     <div class="g-eyebrow"><b>ReVerDi</b> · A research game on reading and climate</div>
     <h1>Good news: reading shared cultural heritage is a <em>sustainable choice</em>.</h1>
-    <p class="g-lede">One library copy serves many readers, so each reading carries only a small footprint. This short game shows what drives the emissions of a single newspaper reading, and how your own choices change them. Built on life-cycle data from three national libraries.</p>
+    <p class="g-lede">One library copy serves many readers. Walk with Folio, make three choices, and see what one newspaper reading costs the climate.</p>
     <form id="gateForm" autocomplete="off">
       <button class="g-btn" type="submit">Start the game →</button>
     </form>
@@ -1571,15 +1593,15 @@ function drawRange(all,mine){
   var W=640,pad=18,y=64,min=all[0].total,max=all[all.length-1].total,span=(max-min)||1;
   function x(v){ return pad+(v-min)/span*(W-pad*2); }
   function E(t,a){ var e=document.createElementNS('http://www.w3.org/2000/svg',t); for(var k in a) e.setAttribute(k,a[k]); return e; }
-  svg.appendChild(E('line',{x1:pad,y1:y,x2:W-pad,y2:y,stroke:'rgba(255,255,255,.18)','stroke-width':2}));
+  svg.appendChild(E('line',{x1:pad,y1:y,x2:W-pad,y2:y,stroke:'rgba(29,43,94,.25)','stroke-width':2}));
   /* your-journey marker first, so the route symbols stay on top of its line */
   var mx=x(mine);
   svg.appendChild(E('line',{x1:mx,y1:y-32,x2:mx,y2:y+8,stroke:'var(--accent)','stroke-width':2.5}));
-  svg.appendChild(E('circle',{cx:mx,cy:y,r:6,fill:'var(--accent)',stroke:'#0b1020','stroke-width':2}));
+  svg.appendChild(E('circle',{cx:mx,cy:y,r:6,fill:'var(--accent)',stroke:'#ffffff','stroke-width':2}));
   var lx=Math.min(W-64,Math.max(58,mx));
-  var l1=E('text',{x:lx,y:y-60,'text-anchor':'middle',fill:'#f2f5ff','font-size':'14','font-weight':'800'});
+  var l1=E('text',{x:lx,y:y-60,'text-anchor':'middle',fill:'#1D2B5E','font-size':'14','font-weight':'800'});
   l1.textContent=fmtU(mine)+' CO₂e'; svg.appendChild(l1);
-  var l2=E('text',{x:lx,y:y-46,'text-anchor':'middle',fill:'#aab3cf','font-size':'11'});
+  var l2=E('text',{x:lx,y:y-46,'text-anchor':'middle',fill:'#4A5576','font-size':'11'});
   l2.textContent='your journey'; svg.appendChild(l2);
   /* two lanes so the figure explains itself: paper routes above the line,
      screen routes below. Small tick on the line, symbol set clearly off it;
@@ -1589,10 +1611,10 @@ function drawRange(all,mine){
   /* light scale: end ticks, a labelled middle tick, and an arrowhead */
   var midV=min+ (max-min)/2, mxid=x(midV);
   [[pad,''],[mxid,fmtU(midV)],[W-pad,'']].forEach(function(g){
-    svg.appendChild(E('line',{x1:g[0],y1:y-4,x2:g[0],y2:y+4,stroke:'rgba(255,255,255,.28)','stroke-width':1.5}));
-    if(g[1]){ var gt=E('text',{x:g[0],y:y+18,'text-anchor':'middle',fill:'#6d7692','font-size':'10'}); gt.textContent=g[1]; svg.appendChild(gt); }
+    svg.appendChild(E('line',{x1:g[0],y1:y-4,x2:g[0],y2:y+4,stroke:'rgba(29,43,94,.35)','stroke-width':1.5}));
+    if(g[1]){ var gt=E('text',{x:g[0],y:y+18,'text-anchor':'middle',fill:'#5C6680','font-size':'10'}); gt.textContent=g[1]; svg.appendChild(gt); }
   });
-  svg.appendChild(E('path',{d:'M '+(W-pad+2)+' '+(y-5)+' L '+(W-pad+11)+' '+y+' L '+(W-pad+2)+' '+(y+5)+' Z',fill:'rgba(255,255,255,.35)'}));
+  svg.appendChild(E('path',{d:'M '+(W-pad+2)+' '+(y-5)+' L '+(W-pad+11)+' '+y+' L '+(W-pad+2)+' '+(y+5)+' Z',fill:'rgba(29,43,94,.4)'}));
   var lastX={physical:-1e9,digital:-1e9}, laneIdx={physical:0,digital:0};
   all.forEach(function(j){
     var xx=x(j.total), ph=j.s.mode==='physical';
